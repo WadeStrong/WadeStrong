@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wade Strong — VIP Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --rust:#B85A30;--rust-dark:#8C4122;--rust-light:#FAECE7;
+  --iron:#1a1a1a;--chalk:#f5f2ee;--white:#fff;--muted:#6b6560;
+  --border:rgba(0,0,0,0.1);
+  --font-display:'Bebas Neue',sans-serif;--font-body:'Instrument Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);min-height:100vh}
+
+/* VIP GATE */
+#vipGate{position:fixed;inset:0;background:var(--iron);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;transition:opacity 0.4s}
+#vipGate.hidden{opacity:0;pointer-events:none}
+.gate-box{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:40px;width:100%;max-width:400px;text-align:center}
+.gate-logo{font-family:var(--font-display);font-size:28px;letter-spacing:2px;color:var(--white);margin-bottom:6px}
+.gate-logo span{color:var(--rust)}
+.gate-tag{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:28px}
+.gate-box h2{font-family:var(--font-display);font-size:28px;color:var(--white);letter-spacing:1px;margin-bottom:8px}
+.gate-box p{font-size:14px;color:rgba(255,255,255,0.45);margin-bottom:24px;line-height:1.6}
+.gate-input{width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;background:rgba(255,255,255,0.06);color:var(--white);font-family:var(--font-body);font-size:15px;outline:none;margin-bottom:10px;text-align:center;letter-spacing:2px}
+.gate-input:focus{border-color:var(--rust)}
+.gate-input::placeholder{color:rgba(255,255,255,0.25);letter-spacing:0}
+.gate-btn{width:100%;padding:12px;background:var(--rust);color:var(--white);border:none;border-radius:6px;font-family:var(--font-body);font-size:15px;font-weight:600;cursor:pointer;margin-bottom:10px}
+.gate-btn:hover{background:var(--rust-dark)}
+.gate-error{font-size:13px;color:#f09595;margin-top:4px;display:none}
+.gate-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:rgba(255,255,255,0.2);font-size:12px}
+.gate-divider::before,.gate-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.1)}
+.gate-cta{font-size:13px;color:rgba(255,255,255,0.45);line-height:1.6}
+.gate-cta a{color:var(--rust);font-weight:600;text-decoration:none}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:18px 40px;background:var(--iron);border-bottom:1px solid rgba(255,255,255,0.06)}
+.nav-logo{font-family:var(--font-display);font-size:22px;letter-spacing:2px;color:var(--white);text-decoration:none}
+.nav-logo span{color:var(--rust)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.vip-badge{display:flex;align-items:center;gap:6px;background:rgba(184,90,48,0.2);border:1px solid rgba(184,90,48,0.3);border-radius:100px;padding:5px 12px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--rust)}
+.nav-link{font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;transition:color 0.2s}
+.nav-link:hover{color:var(--white)}
+
+.hero{background:var(--iron);padding:48px 40px;text-align:center;position:relative;overflow:hidden}
+.hero-bg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:200px;color:rgba(255,255,255,0.03);pointer-events:none;white-space:nowrap}
+.hero-tag{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--rust);margin-bottom:10px;position:relative;z-index:1}
+.hero h1{font-family:var(--font-display);font-size:52px;color:var(--white);letter-spacing:1px;margin-bottom:10px;line-height:1;position:relative;z-index:1}
+.hero p{font-size:15px;color:rgba(255,255,255,0.45);max-width:480px;margin:0 auto;line-height:1.7;position:relative;z-index:1}
+
+.store-wrap{max-width:1000px;margin:0 auto;padding:48px 24px}
+
+.section-header{margin-bottom:28px}
+.section-tag{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--rust);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.section-tag::before{content:'';display:block;width:20px;height:1px;background:var(--rust)}
+.section-title{font-family:var(--font-display);font-size:40px;letter-spacing:1px;line-height:1}
+
+.products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:48px}
+
+.product-card{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s}
+.product-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,0.08)}
+.product-card.coming-soon{opacity:0.65;border-style:dashed}
+.product-img{height:200px;background:var(--chalk);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.product-img-icon{font-size:64px;opacity:0.4}
+.product-img img{width:100%;height:100%;object-fit:cover}
+.coming-soon-overlay{position:absolute;top:12px;right:12px;background:var(--iron);color:var(--white);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:100px}
+.vip-only-overlay{position:absolute;top:12px;right:12px;background:var(--rust);color:var(--white);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:100px}
+.product-body{padding:20px}
+.product-name{font-family:var(--font-display);font-size:22px;letter-spacing:1px;margin-bottom:6px}
+.product-desc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.product-price{font-family:var(--font-display);font-size:28px;letter-spacing:1px;color:var(--iron);margin-bottom:14px}
+.product-price.vip-price{color:var(--rust)}
+.product-price span{font-family:var(--font-body);font-size:13px;font-weight:400;color:var(--muted)}
+.product-btn{width:100%;padding:11px;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s}
+.btn-buy{background:var(--iron);color:var(--white);border:none}
+.btn-buy:hover{background:var(--rust)}
+.btn-coming{background:transparent;color:var(--muted);border:1px solid var(--border);cursor:default}
+.btn-notify{background:var(--rust-light);color:var(--rust-dark);border:1px solid rgba(184,90,48,0.2)}
+.btn-notify:hover{background:var(--rust);color:var(--white)}
+
+.vip-perks{background:var(--iron);border-radius:10px;padding:36px;margin-bottom:48px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}
+.perk{text-align:center}
+.perk-icon{font-size:28px;margin-bottom:10px}
+.perk-title{font-size:14px;font-weight:600;color:var(--white);margin-bottom:4px}
+.perk-desc{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5}
+
+.coming-soon-banner{background:var(--rust-light);border:1px solid rgba(184,90,48,0.2);border-radius:8px;padding:20px 24px;margin-bottom:32px;display:flex;align-items:center;gap:16px}
+.csb-icon{font-size:24px;flex-shrink:0}
+.csb-text h4{font-size:14px;font-weight:600;color:var(--rust-dark);margin-bottom:4px}
+.csb-text p{font-size:13px;color:var(--rust-dark);opacity:0.8;line-height:1.5}
+
+.notify-form{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:28px;text-align:center;margin-bottom:48px}
+.notify-form h3{font-family:var(--font-display);font-size:28px;letter-spacing:1px;margin-bottom:8px}
+.notify-form p{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6}
+.notify-row{display:flex;gap:10px;max-width:440px;margin:0 auto}
+.notify-row input{flex:1;padding:11px 14px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;outline:none;background:var(--chalk)}
+.notify-row input:focus{border-color:var(--rust);background:var(--white)}
+.notify-row button{padding:11px 20px;background:var(--rust);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap}
+.notify-row button:hover{background:var(--rust-dark)}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--iron);color:var(--white);padding:10px 20px;border-radius:6px;font-size:13px;font-weight:500;z-index:300;transition:transform 0.3s;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:768px){
+  .products-grid{grid-template-columns:1fr 1fr}
+  .vip-perks{grid-template-columns:1fr}
+  nav{padding:16px 20px}
+  .hero{padding:36px 20px}
+  .notify-row{flex-direction:column}
+}
+@media(max-width:500px){
+  .products-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- VIP GATE -->
+<div id="vipGate">
+  <div class="gate-box">
+    <div class="gate-logo">WADE<span>.</span>STRONG</div>
+    <div class="gate-tag">VIP Members Area</div>
+    <div style="font-size:36px;margin-bottom:16px">🏆</div>
+    <h2>VIP STORE.</h2>
+    <p>Exclusive gear, supps and discounts for Wade Strong clients and alumni. Enter your access code to continue.</p>
+    <input class="gate-input" type="password" id="accessCode" placeholder="Enter your code" onkeydown="if(event.key==='Enter')checkCode()">
+    <button class="gate-btn" onclick="checkCode()">Access VIP store</button>
+    <div class="gate-error" id="gateError">Incorrect code — check your welcome email or message Wade.</div>
+    <div class="gate-divider">or</div>
+    <div class="gate-cta">Not a client yet? <a href="index.html#programs">Get a program from Wade →</a></div>
+  </div>
+</div>
+
+<nav>
+  <a href="index.html" class="nav-logo">WADE<span>.</span>STRONG</a>
+  <div class="nav-right">
+    <a href="rpe-calculator.html" class="nav-link">RPE Calculator</a>
+    <div class="vip-badge">⚡ VIP Store</div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-bg">VIP</div>
+  <div class="hero-tag">VIP Members Only</div>
+  <h1>THE VIP STORE.</h1>
+  <p>Exclusive gear, supplements and equipment for Wade Strong clients. VIP pricing, recommended by Wade personally.</p>
+</div>
+
+<div class="store-wrap">
+
+  <!-- VIP PERKS -->
+  <div class="vip-perks">
+    <div class="perk">
+      <div class="perk-icon">💰</div>
+      <div class="perk-title">VIP pricing</div>
+      <div class="perk-desc">Exclusive discounts on gear and supps — not available to the public</div>
+    </div>
+    <div class="perk">
+      <div class="perk-icon">✅</div>
+      <div class="perk-title">Wade approved</div>
+      <div class="perk-desc">Everything in here Wade uses himself or has personally vetted</div>
+    </div>
+    <div class="perk">
+      <div class="perk-icon">🚀</div>
+      <div class="perk-title">Early access</div>
+      <div class="perk-desc">New programs, merch drops and events — you hear about it first</div>
+    </div>
+  </div>
+
+  <!-- COMING SOON BANNER -->
+  <div class="coming-soon-banner">
+    <div class="csb-icon">🔨</div>
+    <div class="csb-text">
+      <h4>Store launching soon</h4>
+      <p>Wade is hand-picking the gear and supplements he actually uses. Drop your email below to be first in line when it goes live — VIP members get early access and launch discounts.</p>
+    </div>
+  </div>
+
+  <!-- MERCH SECTION -->
+  <div class="section-header">
+    <div class="section-tag">Merch</div>
+    <div class="section-title">WADE STRONG GEAR.</div>
+  </div>
+  <div class="products-grid">
+    <div class="product-card coming-soon">
+      <div class="product-img">
+        <div class="product-img-icon">👕</div>
+        <div class="coming-soon-overlay">Coming soon</div>
+      </div>
+      <div class="product-body">
+        <div class="product-name">WADE STRONG TEE</div>
+        <div class="product-desc">Heavyweight cotton. Clean logo. The kind of shirt you actually want to train in.</div>
+        <div class="product-price">~A$45 <span>VIP price</span></div>
+        <button class="product-btn btn-notify" onclick="showToast('You\'ll be notified when this drops ✓')">Notify me when live</button>
+      </div>
+    </div>
+    <div class="product-card coming-soon">
+      <div class="product-img">
+        <div class="product-img-icon">🧢</div>
+        <div class="coming-soon-overlay">Coming soon</div>
+      </div>
+      <div class="product-body">
+        <div class="product-name">WADE STRONG CAP</div>
+        <div class="product-desc">Structured 5-panel. Embroidered logo. Built for the platform and the gym.</div>
+        <div class="product-price">~A$35 <span>VIP price</span></div>
+        <button class="product-btn btn-notify" onclick="showToast('You\'ll be notified when this drops ✓')">Notify me when live</button>
+      </div>
+    </div>
+    <div class="product-card coming-soon">
+      <div class="product-img">
+        <div class="product-img-icon">🩳</div>
+        <div class="coming-soon-overlay">Coming soon</div>
+      </div>
+      <div class="product-body">
+        <div class="product-name">TRAINING SHORTS</div>
+        <div class="product-desc">Wade's preferred cut. Heavy enough for strongman, comfortable enough for everything else.</div>
+        <div class="product-price">~A$55 <span>VIP price</span></div>
+        <button class="product-btn btn-notify" onclick="showToast('You\'ll be notified when this drops ✓')">Notify me when live</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EQUIPMENT SECTION -->
+  <div class="section-header">
+    <div class="section-tag">Equipment</div>
+    <div class="section-title">WADE RECOMMENDED GEAR.</div>
+  </div>
+  <div class="products-grid">
+    <div class="product-card coming-soon">
+      <div class="product-img">
+        <div class="product-img-icon">🏋️</div>
+        <div class="coming-soon-overlay">Coming soon</div>
+      </div>
+      <div class="product-body">
+        <div class="product-name">LIFTING BELT</div>
+        <div class="product-desc">The exact belt Wade competes in. 13mm lever belt — built to last a career.</div>
+        <div class="product-price">~A$180 <span>VIP price</span></div>
+        <button class="product-btn btn-notify" onclick="showToast('You\'ll be notified when this drops ✓')">Notify me when live</button>
+      </div>
+    </div>
+    <div class="product-card coming-soon">
+      <div class="product-img">
+        <div class="product-img-icon">🤜</div>
+        <div class="coming-soon-overlay">Coming soon</div>
+      </div>
+      <div class="product-body">
+        <div class="product-name">WRIST WRAPS</div>
+        <div class="product-desc">Stiff enough for max effort pressing. Wade's go-to for log and overhead work.</div>
+        <div class="product-price">~A$40 <span>VIP price</span></div>
+        <button class="product-btn btn-notify" onclick="showToast('You\'ll be notified when this drops ✓')">Notify me when live</button>
+      </div>
+    </div>
+    <div class="product-card coming-soon">
+      <div class="product-img">
+        <div class="product-img-icon">🖐️</div>
+        <div class="coming-soon-overlay">Coming soon</div>
+      </div>
+      <div class="product-body">
+        <div class="product-name">CHALK BAG</div>
+        <div class="product-desc">Block chalk, good bag. The basics done right. Wade Strong branded.</div>
+        <div class="product-price">~A$25 <span>VIP price</span></div>
+        <button class="product-btn btn-notify" onclick="showToast('You\'ll be notified when this drops ✓')">Notify me when live</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPPS SECTION -->
+  <div class="section-header">
+    <div class="section-tag">Supplements</div>
+    <div class="section-title">WHAT WADE ACTUALLY TAKES.</div>
+  </div>
+  <div class="products-grid">
+    <div class="product-card coming-soon">
+      <div class="product-img">
+        <div class="product-img-icon">💊</div>
+        <div class="coming-soon-overlay">Coming soon</div>
+      </div>
+      <div class="product-body">
+        <div class="product-name">CREATINE</div>
+        <div class="product-desc">The most evidence-backed supplement in strength sport. Wade's brand recommendation coming soon.</div>
+        <div class="product-price">TBC <span>VIP price</span></div>
+        <button class="product-btn btn-notify" onclick="showToast('You\'ll be notified when this drops ✓')">Notify me when live</button>
+      </div>
+    </div>
+    <div class="product-card coming-soon">
+      <div class="product-img">
+        <div class="product-img-icon">🥤</div>
+        <div class="coming-soon-overlay">Coming soon</div>
+      </div>
+      <div class="product-body">
+        <div class="product-name">PROTEIN</div>
+        <div class="product-desc">Clean, high protein per serve. No fillers. Wade's preferred brand for clients.</div>
+        <div class="product-price">TBC <span>VIP price</span></div>
+        <button class="product-btn btn-notify" onclick="showToast('You\'ll be notified when this drops ✓')">Notify me when live</button>
+      </div>
+    </div>
+    <div class="product-card coming-soon">
+      <div class="product-img">
+        <div class="product-img-icon">⚡</div>
+        <div class="coming-soon-overlay">Coming soon</div>
+      </div>
+      <div class="product-body">
+        <div class="product-name">PRE-WORKOUT</div>
+        <div class="product-desc">What Wade actually uses on big training days. Not the jittery stuff — just what works.</div>
+        <div class="product-price">TBC <span>VIP price</span></div>
+        <button class="product-btn btn-notify" onclick="showToast('You\'ll be notified when this drops ✓')">Notify me when live</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFY FORM -->
+  <div class="notify-form">
+    <h3>BE FIRST WHEN IT DROPS.</h3>
+    <p>VIP members get early access and launch discounts. Drop your email and we'll hit you up the moment the store goes live.</p>
+    <div class="notify-row">
+      <input type="email" placeholder="your@email.com" id="notifyEmail">
+      <button onclick="submitNotify()">Notify me</button>
+    </div>
+    <div id="notifySuccess" style="display:none;margin-top:14px;font-size:14px;color:var(--green,#2c7a4b);font-weight:500">You're on the list ✓ Wade will be in touch when the store launches.</div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const VIP_CODES = ['WADESTRONG','STRONG2025','WADE2025'];
+
+function checkCode() {
+  const code = document.getElementById('accessCode').value.trim().toUpperCase();
+  const err = document.getElementById('gateError');
+  if (VIP_CODES.includes(code)) {
+    sessionStorage.setItem('vip_access','true');
+    document.getElementById('vipGate').classList.add('hidden');
+    setTimeout(()=>document.getElementById('vipGate').style.display='none',400);
+  } else {
+    err.style.display='block';
+    document.getElementById('accessCode').style.borderColor='#f09595';
+  }
+}
+
+if (sessionStorage.getItem('vip_access')==='true') {
+  document.getElementById('vipGate').style.display='none';
+}
+
+function submitNotify() {
+  const email = document.getElementById('notifyEmail').value;
+  if (!email || !email.includes('@')) { showToast('Please enter a valid email'); return; }
+  document.getElementById('notifySuccess').style.display='block';
+  document.getElementById('notifyEmail').style.display='none';
+  document.querySelector('.notify-row button').style.display='none';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+</script>
+</body>
+</html>

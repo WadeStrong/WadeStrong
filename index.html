@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wade Strong — My Training Portal</title>
+<title>Wade Strong — Strongman Coaching</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
@@ -11,1192 +11,549 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --rust:#B85A30;--rust-dark:#8C4122;--rust-light:#FAECE7;--rust-mid:#D85A30;
-  --iron:#1a1a1a;--chalk:#f5f2ee;--white:#fff;--muted:#6b6560;
-  --border:rgba(0,0,0,0.09);--green:#2c7a4b;--green-bg:#e6f4ed;
-  --amber:#7a5010;--amber-bg:#fef3d8;
+  --iron:#1a1a1a;--chalk:#f5f2ee;--white:#ffffff;--muted:#6b6560;
+  --border:rgba(0,0,0,0.1);
   --font-display:'Bebas Neue',sans-serif;--font-body:'Instrument Sans',sans-serif;
 }
 html{scroll-behavior:smooth}
-body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);min-height:100vh}
+body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);overflow-x:hidden}
 
-/* LOGIN SCREEN */
-#loginScreen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:var(--iron);position:fixed;inset:0;z-index:100;transition:opacity 0.4s}
-#loginScreen.hidden{opacity:0;pointer-events:none}
-.login-logo{font-family:var(--font-display);font-size:32px;letter-spacing:3px;color:var(--white);margin-bottom:40px}
-.login-logo span{color:var(--rust)}
-.login-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:36px;width:100%;max-width:380px;text-align:center}
-.login-card h2{font-family:var(--font-display);font-size:28px;color:var(--white);letter-spacing:1px;margin-bottom:8px}
-.login-card p{font-size:14px;color:rgba(255,255,255,0.45);margin-bottom:28px;line-height:1.6}
-.login-input{width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;background:rgba(255,255,255,0.06);color:var(--white);font-family:var(--font-body);font-size:15px;outline:none;margin-bottom:12px}
-.login-input:focus{border-color:var(--rust)}
-.login-input::placeholder{color:rgba(255,255,255,0.25)}
-.login-btn{width:100%;padding:13px;background:var(--rust);color:var(--white);border:none;border-radius:6px;font-family:var(--font-body);font-size:15px;font-weight:600;cursor:pointer;transition:background 0.2s}
-.login-btn:hover{background:var(--rust-dark)}
-.login-note{font-size:12px;color:rgba(255,255,255,0.3);margin-top:14px;line-height:1.6}
-
-/* TOP NAV */
-nav{background:var(--iron);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:50}
-.nav-logo{font-family:var(--font-display);font-size:22px;letter-spacing:2px;color:var(--white)}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(245,242,238,0.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--font-display);font-size:26px;letter-spacing:2px;color:var(--iron)}
 .nav-logo span{color:var(--rust)}
-.nav-user{display:flex;align-items:center;gap:10px}
-.nav-avatar{width:30px;height:30px;border-radius:50%;background:var(--rust);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--white)}
-.nav-name{font-size:13px;color:rgba(255,255,255,0.7)}
-.nav-logout{font-size:12px;color:rgba(255,255,255,0.3);cursor:pointer;padding:4px 8px;border:1px solid rgba(255,255,255,0.1);border-radius:4px;transition:all 0.2s}
-.nav-logout:hover{color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.3)}
+.nav-links{display:flex;gap:32px}
+.nav-links a{font-size:14px;color:var(--muted);text-decoration:none;letter-spacing:0.5px;transition:color 0.2s}
+.nav-links a:hover{color:var(--iron)}
+.nav-cta{background:var(--iron);color:var(--white);border:none;padding:11px 24px;border-radius:4px;font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s}
+.nav-cta:hover{background:var(--rust)}
 
-/* BOTTOM TAB NAV (mobile) */
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);z-index:50;padding:8px 0 max(8px,env(safe-area-inset-bottom))}
-.bottom-nav-inner{display:flex}
-.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px;cursor:pointer;color:var(--muted);font-size:10px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;transition:color 0.15s}
-.bnav-item.active{color:var(--rust)}
-.bnav-icon{font-size:20px;line-height:1}
+/* HERO */
+.hero{min-height:100vh;display:grid;grid-template-columns:55% 45%;padding-top:72px}
+.hero-left{padding:80px 64px;display:flex;flex-direction:column;justify-content:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;margin-bottom:28px;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--rust)}
+.eyebrow-line{width:32px;height:1px;background:var(--rust)}
+.hero-left h1{font-family:var(--font-display);font-size:112px;line-height:0.92;letter-spacing:2px;margin-bottom:32px}
+.hero-left h1 .accent{color:var(--rust)}
+.hero-sub{font-size:17px;color:var(--muted);line-height:1.75;max-width:420px;margin-bottom:44px}
+.hero-actions{display:flex;gap:14px}
+.btn-primary{background:var(--rust);color:var(--white);border:none;padding:16px 36px;border-radius:4px;font-family:var(--font-body);font-size:15px;font-weight:600;cursor:pointer;transition:background 0.2s,transform 0.15s}
+.btn-primary:hover{background:var(--rust-dark);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);padding:16px 36px;border-radius:4px;font-family:var(--font-body);font-size:15px;cursor:pointer;transition:all 0.2s}
+.btn-ghost:hover{border-color:var(--iron);color:var(--iron)}
+.hero-right{background:var(--iron);display:flex;flex-direction:column;justify-content:flex-end;padding:48px;position:relative;overflow:hidden}
+.hero-bg-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:280px;line-height:1;color:rgba(255,255,255,0.03);white-space:nowrap;pointer-events:none;letter-spacing:4px}
+.hero-photo-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.photo-note{border:1px dashed rgba(255,255,255,0.15);padding:16px 28px;border-radius:4px;font-size:13px;color:rgba(255,255,255,0.3);letter-spacing:0.5px}
+.hero-stats-bar{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid rgba(255,255,255,0.1);border-radius:6px;overflow:hidden;position:relative;z-index:2}
+.stat{padding:20px 24px;border-right:1px solid rgba(255,255,255,0.1)}
+.stat:last-child{border-right:none}
+.stat-val{font-family:var(--font-display);font-size:28px;color:#fff;letter-spacing:1px}
+.stat-label{font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px;letter-spacing:0.5px}
 
-/* PAGE LAYOUT */
-.page-wrap{max-width:800px;margin:0 auto;padding:24px 20px 100px}
+/* SHARED */
+.section{padding:96px 64px}
+.section-tag{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--rust);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.section-tag::before{content:'';display:block;width:24px;height:1px;background:var(--rust)}
+.section-title{font-family:var(--font-display);font-size:64px;letter-spacing:1px;line-height:0.95;margin-bottom:48px;color:var(--iron)}
 
-/* HERO BANNER */
-.portal-hero{background:var(--iron);border-radius:10px;padding:28px 28px 24px;margin-bottom:20px;position:relative;overflow:hidden}
-.portal-hero-bg{position:absolute;right:-20px;top:-10px;font-family:var(--font-display);font-size:140px;color:rgba(255,255,255,0.03);line-height:1;pointer-events:none}
-.hero-greeting{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:4px}
-.hero-name{font-family:var(--font-display);font-size:36px;color:var(--white);letter-spacing:1px;line-height:1;margin-bottom:16px;position:relative;z-index:1}
-.hero-name span{color:var(--rust)}
-.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;position:relative;z-index:1}
-.hs{background:rgba(255,255,255,0.06);border-radius:6px;padding:10px 12px}
-.hs-val{font-family:var(--font-display);font-size:22px;color:var(--white);letter-spacing:1px}
-.hs-lbl{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px}
+/* ABOUT */
+.about{background:var(--white)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.about-text p{font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:18px}
+.flag-row{display:flex;gap:8px;margin-top:28px;flex-wrap:wrap}
+.flag-pill{font-size:12px;padding:6px 16px;border-radius:100px;border:1px solid var(--border);color:var(--muted);background:var(--chalk);font-weight:500}
+.about-pull{padding:40px;background:var(--iron);border-radius:8px;position:relative;overflow:hidden}
+.about-pull-bg{position:absolute;bottom:-20px;right:-10px;font-family:var(--font-display);font-size:160px;color:rgba(255,255,255,0.04);line-height:1;pointer-events:none}
+.about-pull blockquote{font-family:var(--font-display);font-size:38px;line-height:1.1;color:var(--white);letter-spacing:1px;position:relative;z-index:1}
+.about-pull blockquote span{color:var(--rust-mid)}
+.pull-note{margin-top:20px;font-size:13px;color:rgba(255,255,255,0.4);position:relative;z-index:1}
 
-/* MESSAGE BANNER */
-.message-banner{background:var(--white);border:1px solid var(--border);border-left:3px solid var(--rust);border-radius:8px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px}
-.msg-icon{font-size:18px;flex-shrink:0;margin-top:1px}
-.msg-content{flex:1;min-width:0}
-.msg-from{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--rust);margin-bottom:3px}
-.msg-text{font-size:14px;color:var(--iron);line-height:1.55}
-.msg-time{font-size:11px;color:var(--muted);margin-top:4px}
+/* PROGRAMS */
+.programs{background:var(--chalk)}
+.programs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.program-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:36px;display:flex;flex-direction:column;transition:transform 0.2s,box-shadow 0.2s}
+.program-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.15);background:var(--iron);border-color:var(--iron)}
+.program-card:hover .prog-name{color:var(--white)}
+.program-card:hover .prog-desc{color:rgba(255,255,255,0.5)}
+.program-card:hover .prog-price{color:var(--white)}
+.program-card:hover .prog-price-note{color:rgba(255,255,255,0.4)}
+.program-card:hover .prog-divider{border-color:rgba(255,255,255,0.1)}
+.program-card:hover .prog-features li{color:rgba(255,255,255,0.55);border-color:rgba(255,255,255,0.08)}
+.program-card:hover .feat-check{color:var(--rust-mid,#D85A30)}
+.program-card:hover .btn-outline{background:transparent;color:var(--white);border-color:rgba(255,255,255,0.3)}
+.program-card:hover .prog-tag{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);border-color:transparent}
+.program-card.featured{background:var(--iron);border-color:var(--iron)}
+.prog-tag{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:5px 12px;border-radius:100px;display:inline-block;width:fit-content;margin-bottom:24px}
+.tag-start{background:var(--chalk);color:var(--muted);border:1px solid var(--border)}
+.tag-comp{background:var(--rust-light);color:var(--rust-dark)}
+.prog-name{font-family:var(--font-display);font-size:36px;letter-spacing:1px;margin-bottom:8px;color:var(--iron)}
+.program-card.featured .prog-name{color:var(--white)}
+.prog-desc{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:28px}
+.program-card.featured .prog-desc{color:rgba(255,255,255,0.5)}
+.prog-price{font-family:var(--font-display);font-size:52px;letter-spacing:1px;color:var(--iron);line-height:1}
+.program-card.featured .prog-price{color:var(--white)}
+.prog-price sup{font-family:var(--font-body);font-size:22px;vertical-align:top;margin-top:8px;display:inline-block;font-weight:400}
+.prog-price-note{font-size:13px;color:var(--muted);margin-top:4px;margin-bottom:28px}
+.program-card.featured .prog-price-note{color:rgba(255,255,255,0.4)}
+.prog-divider{border:none;border-top:1px solid var(--border);margin-bottom:24px}
+.program-card.featured .prog-divider{border-color:rgba(255,255,255,0.1)}
+.prog-features{list-style:none;flex:1}
+.prog-features li{font-size:14px;color:var(--muted);padding:9px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px;line-height:1.45}
+.program-card.featured .prog-features li{color:rgba(255,255,255,0.55);border-color:rgba(255,255,255,0.08)}
+.prog-features li:last-child{border-bottom:none}
+.feat-check{color:var(--rust);font-weight:700;font-size:13px;flex-shrink:0;padding-top:1px}
+.program-card.featured .feat-check{color:var(--rust-mid)}
+.prog-btn{margin-top:32px;width:100%;padding:14px;border-radius:4px;font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s}
+.btn-outline{background:transparent;color:var(--iron);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--iron)}
+.btn-rust{background:var(--rust);color:var(--white);border:none}
+.btn-rust:hover{background:var(--rust-dark)}
 
-/* SECTION HEADERS */
-.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.section-title{font-family:var(--font-display);font-size:24px;letter-spacing:1px}
-.section-action{font-size:13px;color:var(--rust);cursor:pointer;font-weight:500}
+/* PAYMENT */
+.payment{background:var(--white)}
+.payment-intro{font-size:16px;color:var(--muted);line-height:1.75;max-width:600px;margin-bottom:56px}
+.payment-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+.pay-card{border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s}
+.pay-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.07)}
+.pay-card-header{padding:28px 32px 24px;border-bottom:1px solid var(--border);background:var(--chalk)}
+.pay-card-header.dark{background:var(--iron)}
+.pay-card-name{font-family:var(--font-display);font-size:30px;letter-spacing:1px;color:var(--iron);margin-bottom:4px}
+.pay-card-header.dark .pay-card-name{color:var(--white)}
+.pay-card-sub{font-size:13px;color:var(--muted);line-height:1.5}
+.pay-card-header.dark .pay-card-sub{color:rgba(255,255,255,0.4)}
+.pay-card-body{padding:28px 32px}
+.pay-amount{font-family:var(--font-display);font-size:56px;letter-spacing:1px;color:var(--iron);line-height:1;margin-bottom:6px}
+.pay-amount sup{font-family:var(--font-body);font-size:22px;vertical-align:top;margin-top:8px;display:inline-block;font-weight:400}
+.pay-options{display:flex;flex-direction:column;gap:10px;margin-top:24px}
+.pay-btn{width:100%;padding:14px;border-radius:4px;font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;border:none}
+.pay-btn-stripe{background:var(--iron);color:var(--white)}
+.pay-btn-stripe:hover{background:var(--rust)}
+.pay-btn-afterpay{background:#B2FCE4;color:#000;font-weight:700}
+.pay-btn-afterpay:hover{background:#8ff0d0}
+.afterpay-split{font-size:12px;color:var(--muted);margin-top:4px;text-align:center}
+.stripe-badge{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--muted);margin-top:20px}
+.afterpay-strip{background:#B2FCE4;border-radius:8px;padding:22px 32px;display:flex;align-items:center;gap:24px}
+.afterpay-logo{font-family:var(--font-display);font-size:24px;letter-spacing:1px;color:#000;flex-shrink:0}
+.afterpay-text{font-size:14px;color:#000;line-height:1.6}
+.afterpay-text strong{font-weight:600}
 
-/* WEEK SELECTOR */
-.week-selector{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:20px}
-.week-pill{padding:7px 14px;border-radius:100px;border:1px solid var(--border);background:var(--white);font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;flex-shrink:0}
-.week-pill:hover{border-color:var(--iron);color:var(--iron)}
-.week-pill.active{background:var(--iron);color:var(--white);border-color:var(--iron)}
-.week-pill.current{border-color:var(--rust);color:var(--rust)}
-.week-pill.active.current{background:var(--rust);border-color:var(--rust);color:var(--white)}
-.week-pill.complete{color:var(--green);border-color:rgba(44,122,75,0.3);background:var(--green-bg)}
+/* PHILOSOPHY */
+.philosophy{background:var(--iron)}
+.philosophy .section-tag{color:rgba(255,255,255,0.4)}
+.philosophy .section-tag::before{background:rgba(255,255,255,0.3)}
+.philosophy .section-title{color:var(--white)}
+.phil-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.08);border-radius:8px;overflow:hidden}
+.phil-card{background:var(--iron);padding:32px 28px;transition:background 0.2s}
+.phil-card:hover{background:#222}
+.phil-num{font-family:var(--font-display);font-size:48px;color:rgba(255,255,255,0.06);margin-bottom:16px;line-height:1}
+.phil-card h4{font-size:15px;font-weight:600;color:var(--white);margin-bottom:10px}
+.phil-card p{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.7}
 
-/* SESSION CARDS */
-.session-card{background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden;transition:box-shadow 0.2s}
-.session-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.07)}
-.session-card.rest{opacity:0.55}
-.sc-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:12px;border-bottom:1px solid var(--border)}
-.sc-left{display:flex;align-items:center;gap:12px}
-.sc-day{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);min-width:60px}
-.sc-name{font-family:var(--font-display);font-size:20px;letter-spacing:1px}
-.sc-badge{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:100px}
-.badge-complete{background:var(--green-bg);color:var(--green)}
-.badge-today{background:var(--rust-light);color:var(--rust-dark)}
-.badge-upcoming{background:var(--chalk);color:var(--muted);border:1px solid var(--border)}
-.badge-rest{background:var(--chalk);color:var(--muted)}
-.sc-toggle{color:var(--muted);font-size:14px;transition:transform 0.2s;flex-shrink:0}
-.sc-toggle.open{transform:rotate(180deg)}
-.sc-body{display:none;padding:16px 18px}
-.sc-body.open{display:block}
-.sc-note{font-size:13px;color:var(--muted);background:var(--chalk);border-radius:5px;padding:10px 12px;margin-bottom:14px;line-height:1.55;font-style:italic}
+/* TESTIMONIALS */
+.testimonials{background:var(--chalk)}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.testi-card{border:1px solid var(--border);border-radius:8px;padding:28px;background:var(--white)}
+.testi-stars{color:var(--rust);font-size:13px;margin-bottom:14px;letter-spacing:2px}
+.testi-text{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:20px;font-style:italic}
+.testi-author{font-size:14px;font-weight:600;color:var(--iron)}
+.testi-role{font-size:12px;color:var(--muted);margin-top:2px}
 
-/* EXERCISE TABLE */
-.ex-table{width:100%;border-collapse:collapse;margin-bottom:16px}
-.ex-table th{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:4px 8px;text-align:left;border-bottom:1px solid var(--border)}
-.ex-table td{padding:10px 8px;border-bottom:1px solid rgba(0,0,0,0.04);font-size:14px;vertical-align:middle}
-.ex-table tr:last-child td{border-bottom:none}
-.ex-table tr:hover td{background:rgba(245,242,238,0.5)}
-.ex-name-cell{font-weight:500}
-.ex-detail{font-size:11px;color:var(--muted);margin-top:1px}
-.ex-metric{font-weight:600;text-align:center}
-.rpe-chip{display:inline-flex;align-items:center;justify-content:center;width:28px;height:24px;border-radius:4px;font-size:11px;font-weight:700}
-.rpe-chip.r6{background:#e8f4e8;color:#2d6a2d}
-.rpe-chip.r7{background:#f0f4e0;color:#4a6020}
-.rpe-chip.r8{background:#f8f0d8;color:#7a5010}
-.rpe-chip.r9{background:#fce8d8;color:#8c3020}
-.rpe-chip.r10{background:var(--iron);color:var(--white)}
-.ex-check{width:20px;height:20px;accent-color:var(--rust);cursor:pointer}
+/* CONTACT */
+.contact{background:var(--chalk)}
+.quote-card{border:1px solid var(--border);border-radius:8px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr}
+.quote-left{padding:48px;background:var(--iron)}
+.quote-left h3{font-family:var(--font-display);font-size:36px;color:var(--white);letter-spacing:1px;margin-bottom:14px}
+.quote-left p{font-size:14px;color:rgba(255,255,255,0.45);line-height:1.7;margin-bottom:28px}
+.quote-includes{list-style:none}
+.quote-includes li{font-size:14px;color:rgba(255,255,255,0.55);padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;gap:10px;line-height:1.4}
+.quote-includes li:last-child{border-bottom:none}
+.q-check{color:var(--rust-mid);font-weight:700;flex-shrink:0}
+.quote-right{padding:48px;background:var(--white)}
+.quote-right h4{font-size:16px;font-weight:600;color:var(--iron);margin-bottom:28px}
+.form-row{margin-bottom:16px}
+.form-row label{display:block;font-size:11px;font-weight:600;letter-spacing:1px;color:var(--muted);margin-bottom:6px;text-transform:uppercase}
+.form-row input,.form-row select,.form-row textarea{width:100%;padding:12px 14px;border-radius:4px;border:1px solid var(--border);background:var(--chalk);font-family:var(--font-body);font-size:14px;color:var(--iron);transition:border-color 0.2s;outline:none}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--rust);background:var(--white)}
+.form-row textarea{resize:vertical;min-height:90px}
+.form-row-split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-submit{width:100%;margin-top:8px;padding:15px;background:var(--rust);color:var(--white);border:none;border-radius:4px;font-family:var(--font-body);font-size:15px;font-weight:600;cursor:pointer;transition:background 0.2s;letter-spacing:0.3px}
+.form-submit:hover{background:var(--rust-dark)}
 
-/* RPE LOGGER */
-.rpe-logger{background:var(--chalk);border-radius:8px;padding:14px 16px;margin-top:4px}
-.rpe-logger-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px}
-.rpe-log-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.05)}
-.rpe-log-row:last-of-type{border-bottom:none}
-.rpe-log-name{font-size:13px;font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rpe-log-actual{width:70px;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-family:var(--font-body);font-size:13px;text-align:center;background:var(--white);outline:none}
-.rpe-log-actual:focus{border-color:var(--rust)}
-.rpe-pills-sm{display:flex;gap:3px}
-.rpe-pill-sm{cursor:pointer}
-.rpe-pill-sm input{display:none}
-.rpe-pill-sm span{display:flex;align-items:center;justify-content:center;width:28px;height:26px;border:1px solid var(--border);border-radius:4px;font-size:12px;font-weight:600;color:var(--muted);background:var(--white);transition:all 0.12s}
-.rpe-pill-sm input:checked+span{background:var(--iron);color:var(--white);border-color:var(--iron)}
-.session-submit-btn{width:100%;padding:12px;background:var(--rust);color:var(--white);border:none;border-radius:6px;font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;margin-top:12px;transition:background 0.2s}
-.session-submit-btn:hover{background:var(--rust-dark)}
-.session-complete-badge{background:var(--green-bg);color:var(--green);border:1px solid rgba(44,122,75,0.2);border-radius:6px;padding:10px 14px;font-size:13px;font-weight:600;text-align:center;margin-top:8px}
+/* CTA */
+.cta{background:var(--rust);padding:96px 64px;text-align:center;position:relative;overflow:hidden}
+.cta-bg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:300px;line-height:1;color:rgba(0,0,0,0.08);white-space:nowrap;pointer-events:none;letter-spacing:4px}
+.cta h2{font-family:var(--font-display);font-size:80px;color:var(--white);letter-spacing:2px;line-height:0.95;margin-bottom:20px;position:relative;z-index:1}
+.cta p{font-size:16px;color:rgba(255,255,255,0.7);margin-bottom:40px;position:relative;z-index:1}
+.cta-btn{background:var(--white);color:var(--rust);border:none;padding:18px 48px;border-radius:4px;font-family:var(--font-body);font-size:16px;font-weight:700;cursor:pointer;position:relative;z-index:1;transition:all 0.2s;letter-spacing:0.3px}
+.cta-btn:hover{background:var(--iron);color:var(--white)}
 
-/* VIDEO UPLOAD */
-.upload-section{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
-.upload-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px}
-.upload-zone{border:1.5px dashed var(--border);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--white)}
-.upload-zone:hover{border-color:var(--rust);background:var(--rust-light)}
-.upload-zone-icon{font-size:28px;margin-bottom:6px}
-.upload-zone-text{font-size:13px;color:var(--muted);line-height:1.5}
-.upload-zone-text strong{color:var(--iron);display:block;margin-bottom:2px}
-.upload-zone input{display:none}
-.uploaded-files{display:flex;flex-direction:column;gap:6px;margin-top:10px}
-.uploaded-file{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--chalk);border-radius:5px;font-size:13px}
-.uf-icon{font-size:16px}
-.uf-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
-.uf-remove{color:var(--muted);cursor:pointer;font-size:16px;flex-shrink:0}
-.uf-remove:hover{color:#c03020}
+/* FOOTER */
+footer{background:var(--iron);padding:40px 64px}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+.footer-logo{font-family:var(--font-display);font-size:22px;letter-spacing:2px;color:var(--white)}
+.footer-logo span{color:var(--rust)}
+.footer-links{display:flex;gap:28px}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:rgba(255,255,255,0.7)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.06);padding-top:24px;display:flex;justify-content:space-between}
+.footer-note{font-size:12px;color:rgba(255,255,255,0.25)}
 
-/* PROGRESS SECTION */
-.progress-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
-.progress-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px}
-.pc-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
-.pc-value{font-family:var(--font-display);font-size:28px;letter-spacing:1px;margin-bottom:2px}
-.pc-sub{font-size:12px;color:var(--muted)}
-.pc-change{font-size:12px;font-weight:600;margin-top:4px}
-.pc-change.up{color:var(--green)}
-.pc-change.down{color:#c03020}
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.hero-left>*{animation:fadeUp 0.6s ease both}
+.hero-left>*:nth-child(1){animation-delay:0.1s}
+.hero-left>*:nth-child(2){animation-delay:0.2s}
+.hero-left>*:nth-child(3){animation-delay:0.3s}
+.hero-left>*:nth-child(4){animation-delay:0.4s}
 
-/* SIMPLE CHART */
-.mini-chart{height:56px;display:flex;align-items:flex-end;gap:3px;margin-top:8px}
-.mini-bar{flex:1;border-radius:2px 2px 0 0;background:var(--chalk);border:1px solid var(--border);border-bottom:none;transition:background 0.2s;min-height:4px}
-.mini-bar.active{background:var(--rust)}
-.mini-bar.projected{background:var(--rust-light);border-color:rgba(184,90,48,0.3)}
-
-/* NUMBERS LOG */
-.numbers-form{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:20px}
-.numbers-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.num-field label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:5px}
-.num-row{display:flex;align-items:center;gap:6px}
-.num-row input{flex:1;padding:9px 10px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:15px;font-weight:600;text-align:center;background:var(--chalk);outline:none;color:var(--iron)}
-.num-row input:focus{border-color:var(--rust);background:var(--white)}
-.num-unit{font-size:12px;color:var(--muted);white-space:nowrap}
-.num-submit{width:100%;padding:12px;background:var(--iron);color:var(--white);border:none;border-radius:6px;font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s}
-.num-submit:hover{background:var(--rust)}
-
-/* TOAST */
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--iron);color:var(--white);padding:10px 20px;border-radius:6px;font-size:13px;font-weight:500;z-index:200;transition:transform 0.3s;white-space:nowrap}
-.toast.show{transform:translateX(-50%) translateY(0)}
-
-/* PANELS */
-.panel{display:none}
-.panel.active{display:block}
-
-@media(max-width:600px){
-  .bottom-nav{display:block}
-  .page-wrap{padding:16px 16px 96px}
-  .progress-cards,.numbers-grid{grid-template-columns:1fr}
-  .hero-stats{grid-template-columns:1fr 1fr 1fr}
-  .hs-val{font-size:18px}
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .payment-grid{grid-template-columns:1fr}
+  .quote-card{grid-template-columns:1fr}
+  .phil-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .hero-right{display:none}
+  .hero-left h1{font-size:72px}
+  .about-grid,.programs-grid,.testi-grid{grid-template-columns:1fr}
+  nav{padding:16px 24px}
+  .nav-links{display:none}
+  .section{padding:64px 24px}
+  .hero-left{padding:60px 24px}
+  .section-title{font-size:44px}
+  footer{padding:40px 24px}
+  .footer-inner{flex-direction:column;gap:20px;text-align:center}
+  .footer-bottom{flex-direction:column;gap:8px;text-align:center}
+  .cta h2{font-size:52px}
+  .form-row-split{grid-template-columns:1fr}
+}
+@media(max-width:500px){
+  .phil-grid{grid-template-columns:1fr}
 }
 
-.rpe-result-val{font-weight:600;color:var(--iron)}
-.injury-item{padding:12px;border-radius:6px;background:var(--chalk);margin-bottom:8px;border-left:3px solid var(--border)}
-.injury-item.active{border-left-color:#c03020}
-.injury-item.monitoring{border-left-color:#e08020}
-.injury-item.resolved{border-left-color:#2c7a4b}
-.injury-status-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:100px}
-.status-active{background:#fce8e8;color:#c03020}
-.status-monitoring{background:#fef3e0;color:#e08020}
-.status-resolved{background:var(--green-bg,#e6f4ed);color:#2c7a4b}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 </style>
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-config.js"></script>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="loginScreen">
-  <div class="login-logo">WADE<span>.</span>STRONG</div>
-  <div class="login-card">
-    <h2>WELCOME BACK.</h2>
-    <p>Enter your email to receive a login link, or use the magic link Wade sent you.</p>
-    <input class="login-input" type="email" placeholder="your@email.com" id="loginEmail">
-    <button class="login-btn" onclick="doLogin()">Send my login link</button>
-    <div class="login-note">No password needed. Click the link in your email and you're in.</div>
-  </div>
-</div>
-
-<!-- NAV -->
-<nav id="mainNav" style="display:none">
+<nav>
   <div class="nav-logo">WADE<span>.</span>STRONG</div>
-  <div class="nav-user">
-    <div class="nav-avatar" id="navAvatar">DM</div>
-    <div class="nav-name" id="navName">Dave M.</div>
-    <div class="nav-logout" onclick="doLogout()">Log out</div>
+  <div class="nav-links">
+    <a href="#about">about</a>
+    <a href="#programs">programs</a>
+    <a href="#payment">pricing</a>
+    <a href="#contact">contact</a>
+    <a href="#book">book a call</a>
   </div>
+  <button class="nav-cta" onclick="document.getElementById('programs').scrollIntoView({behavior:'smooth'})">start training</button>
 </nav>
 
-<!-- MAIN CONTENT -->
-<div class="page-wrap" id="mainContent" style="display:none">
-
-  <!-- PROGRAM PANEL -->
-  <div class="panel active" id="panel-program">
-
-    <div class="portal-hero">
-      <div class="portal-hero-bg">STRONG</div>
-      <div class="hero-greeting">Good to see you,</div>
-      <div class="hero-name">DAVE <span>MITCHELL.</span></div>
-      <div class="hero-stats">
-        <div class="hs"><div class="hs-val">W3</div><div class="hs-lbl">Current week</div></div>
-        <div class="hs"><div class="hs-val">4/6</div><div class="hs-lbl">Sessions done</div></div>
-        <div class="hs"><div class="hs-val">12</div><div class="hs-lbl">Days to go</div></div>
-      </div>
-    </div>
-
-    <div class="message-banner" id="wadeMsgBanner">
-      <div class="msg-icon">💬</div>
-      <div class="msg-content">
-        <div class="msg-from">Message from Wade</div>
-        <div class="msg-text" id="wadeMsg">Solid week last week Dave. Your deadlift is looking strong — pushing to 190kg this week. Backed off the squat weight slightly, work on keeping the knees tracking over your toes. Let me know how it feels.</div>
-        <div class="msg-time">2 hours ago</div>
-      </div>
-    </div>
-
-    <div class="section-hdr">
-      <div class="section-title">YOUR PROGRAM</div>
-    </div>
-
-    <div class="week-selector" id="weekSelector"></div>
-
-    <div id="sessionList"></div>
-
-  </div>
-
-  <!-- PROGRESS PANEL -->
-  <div class="panel" id="panel-progress">
-    <div class="section-hdr" style="margin-bottom:20px">
-      <div class="section-title">YOUR PROGRESS</div>
-    </div>
-
-    <div class="progress-cards">
-      <div class="progress-card">
-        <div class="pc-label">Deadlift</div>
-        <div class="pc-value">220<span style="font-size:16px;font-weight:400">kg</span></div>
-        <div class="pc-sub">RPE 10 max</div>
-        <div class="pc-change up">↑ +10kg since week 1</div>
-        <div class="mini-chart">
-          <div class="mini-bar" style="height:40%"></div>
-          <div class="mini-bar" style="height:55%"></div>
-          <div class="mini-bar active" style="height:70%"></div>
-          <div class="mini-bar projected" style="height:80%"></div>
-          <div class="mini-bar projected" style="height:90%"></div>
-          <div class="mini-bar projected" style="height:100%"></div>
-        </div>
-      </div>
-      <div class="progress-card">
-        <div class="pc-label">Squat</div>
-        <div class="pc-value">180<span style="font-size:16px;font-weight:400">kg</span></div>
-        <div class="pc-sub">RPE 10 max</div>
-        <div class="pc-change up">↑ +5kg since week 1</div>
-        <div class="mini-chart">
-          <div class="mini-bar" style="height:45%"></div>
-          <div class="mini-bar" style="height:55%"></div>
-          <div class="mini-bar active" style="height:62%"></div>
-          <div class="mini-bar projected" style="height:72%"></div>
-          <div class="mini-bar projected" style="height:85%"></div>
-          <div class="mini-bar projected" style="height:100%"></div>
-        </div>
-      </div>
-      <div class="progress-card">
-        <div class="pc-label">Bench press</div>
-        <div class="pc-value">130<span style="font-size:16px;font-weight:400">kg</span></div>
-        <div class="pc-sub">RPE 10 max</div>
-        <div class="pc-change up">↑ +5kg since week 1</div>
-        <div class="mini-chart">
-          <div class="mini-bar" style="height:50%"></div>
-          <div class="mini-bar" style="height:60%"></div>
-          <div class="mini-bar active" style="height:68%"></div>
-          <div class="mini-bar projected" style="height:78%"></div>
-          <div class="mini-bar projected" style="height:88%"></div>
-          <div class="mini-bar projected" style="height:100%"></div>
-        </div>
-      </div>
-      <div class="progress-card">
-        <div class="pc-label">Overhead press</div>
-        <div class="pc-value">90<span style="font-size:16px;font-weight:400">kg</span></div>
-        <div class="pc-sub">RPE 10 max</div>
-        <div class="pc-change down">— Holding this week</div>
-        <div class="mini-chart">
-          <div class="mini-bar" style="height:55%"></div>
-          <div class="mini-bar" style="height:55%"></div>
-          <div class="mini-bar active" style="height:55%"></div>
-          <div class="mini-bar projected" style="height:65%"></div>
-          <div class="mini-bar projected" style="height:80%"></div>
-          <div class="mini-bar projected" style="height:100%"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-hdr"><div class="section-title">LOG YOUR NUMBERS</div></div>
-    <div class="numbers-form">
-      <div style="font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.6">Update your numbers after a testing session or when you hit a new PR. Wade can see these immediately.</div>
-      <div class="numbers-grid">
-        <div class="num-field"><label>Deadlift</label><div class="num-row"><input type="number" placeholder="0"><span class="num-unit">kg</span></div></div>
-        <div class="num-field"><label>Squat</label><div class="num-row"><input type="number" placeholder="0"><span class="num-unit">kg</span></div></div>
-        <div class="num-field"><label>Bench press</label><div class="num-row"><input type="number" placeholder="0"><span class="num-unit">kg</span></div></div>
-        <div class="num-field"><label>Overhead press</label><div class="num-row"><input type="number" placeholder="0"><span class="num-unit">kg</span></div></div>
-        <div class="num-field"><label>Bodyweight</label><div class="num-row"><input type="number" placeholder="0"><span class="num-unit">kg</span></div></div>
-        <div class="num-field"><label>Other / notes</label><div class="num-row"><input type="text" placeholder="e.g. log press 110kg"></div></div>
-      </div>
-      <button class="num-submit" onclick="showToast('Numbers saved — Wade can see these now ✓')">Save my numbers</button>
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow"><span class="eyebrow-line"></span>Professional strongman &nbsp;·&nbsp; NZ &nbsp;·&nbsp; AUS &nbsp;·&nbsp; USA</div>
+    <h1>BUILT<br>FOR THE<br><span class="accent">STRONG.</span></h1>
+    <p class="hero-sub">Custom training from a pro strongman who has competed at the highest level across three countries. Built for everyday blokes who want to get seriously strong.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.getElementById('programs').scrollIntoView({behavior:'smooth'})">get my program</button>
+      <button class="btn-ghost" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">how it works</button>
     </div>
   </div>
-
-  <!-- UPLOADS PANEL -->
-  <div class="panel" id="panel-uploads">
-    <div class="section-hdr" style="margin-bottom:20px">
-      <div class="section-title">SEND WADE A CLIP</div>
+  <div class="hero-right">
+    <div class="hero-bg-text">WADE</div>
+    <div class="hero-photo-placeholder" style="overflow:hidden">
+      <img src="wade-photo.jpg" alt="Wade — Professional Strongman" style="width:100%;height:100%;object-fit:cover;object-position:center top;filter:grayscale(15%)">
     </div>
-    <div style="font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:24px;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px 18px">
-      Upload short clips of your lifts so Wade can review your technique. Under 2 minutes is ideal — just a working set or a top single. He'll get back to you with feedback in your program notes.
-    </div>
-    <div class="upload-zone" onclick="document.getElementById('videoInput').click()">
-      <input type="file" id="videoInput" accept="video/*,image/*" multiple onchange="handleFileUpload(this)">
-      <div class="upload-zone-icon">🎥</div>
-      <div class="upload-zone-text"><strong>Tap to upload a clip or photo</strong>Video under 2 min · MP4, MOV, HEVC · Photos welcome too</div>
-    </div>
-    <div class="uploaded-files" id="uploadedFiles"></div>
-
-    <div style="margin-top:20px">
-      <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">Note for Wade (optional)</div>
-      <textarea style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font-body);font-size:14px;color:var(--iron);background:var(--white);outline:none;resize:vertical;min-height:80px" placeholder="e.g. This is my deadlift from Thursday — something feels off in the setup, hips rising too early..."></textarea>
-      <button style="width:100%;margin-top:10px;padding:12px;background:var(--rust);color:var(--white);border:none;border-radius:6px;font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer" onclick="showToast('Clip sent to Wade ✓')">Send to Wade</button>
+    <div class="hero-stats-bar">
+      <div class="stat"><div class="stat-val">7TH</div><div class="stat-label">Strongman Corporation Arnold's Pro/Am, Ohio</div></div>
+      <div class="stat"><div class="stat-val">PRO</div><div class="stat-label">level athlete</div></div>
+      <div class="stat"><div class="stat-val">3</div><div class="stat-label">countries competed</div></div>
     </div>
   </div>
+</section>
 
-  <!-- MESSAGE PANEL -->
-  <!-- PROFILE PANEL -->
-  <div class="panel" id="panel-profile" style="display:none">
-    <div class="panel-title">My Profile</div>
-
-    <!-- Basic Info -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Personal Info</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="profileInfoGrid">
-        <div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Full name</div>
-          <div style="font-size:15px;font-weight:600" id="prof-name">—</div>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Age</div>
-          <div style="font-size:15px;font-weight:600" id="prof-age">—</div>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Height</div>
-          <div style="font-size:15px;font-weight:600" id="prof-height">—</div>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Weight</div>
-          <div style="font-size:15px;font-weight:600" id="prof-weight">—</div>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Location</div>
-          <div style="font-size:15px;font-weight:600" id="prof-location">—</div>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Program</div>
-          <div style="font-size:15px;font-weight:600" id="prof-program">—</div>
-        </div>
+<section class="about section" id="about">
+  <div class="section-tag">about wade</div>
+  <div class="about-grid">
+    <div class="about-text">
+      <div class="section-title">A KIWI WHO LIFTS THE WORLD.</div>
+      <p>Wade is a professional strongman who has competed across New Zealand, Australia, and the United States — most recently placing 7th at the Strongman Corporation Arnold's Pro/Am in Ohio, one of the most prestigious events on the planet.</p>
+      <p>He's accumulated more medals than he knows what to do with. But what drives him now is helping everyday people — blokes with jobs, families, and busy lives — discover exactly what their bodies are capable of.</p>
+      <p>If you've ever wanted to get genuinely strong, Wade will show you how.</p>
+      <div class="flag-row">
+        <span class="flag-pill">New Zealand</span>
+        <span class="flag-pill">Australia</span>
+        <span class="flag-pill">USA</span>
       </div>
     </div>
-
-    <!-- RPE Results -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">RPE Testing Results</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="rpeResultsGrid">
-
-        <!-- Squat Raw -->
-        <div style="background:var(--chalk);border-radius:6px;padding:12px">
-          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Squat (Raw)</div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="color:var(--muted)">1RM</span><span class="rpe-result-val" id="rpe-squat-raw-1rm">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="color:var(--muted)">3RM</span><span class="rpe-result-val" id="rpe-squat-raw-3rm">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:13px">
-            <span style="color:var(--muted)">5RM</span><span class="rpe-result-val" id="rpe-squat-raw-5rm">—</span>
-          </div>
-        </div>
-
-        <!-- Squat Wraps -->
-        <div style="background:var(--chalk);border-radius:6px;padding:12px">
-          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Squat (Wraps)</div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="color:var(--muted)">1RM</span><span class="rpe-result-val" id="rpe-squat-wraps-1rm">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="color:var(--muted)">3RM</span><span class="rpe-result-val" id="rpe-squat-wraps-3rm">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:13px">
-            <span style="color:var(--muted)">5RM</span><span class="rpe-result-val" id="rpe-squat-wraps-5rm">—</span>
-          </div>
-        </div>
-
-        <!-- Bench -->
-        <div style="background:var(--chalk);border-radius:6px;padding:12px">
-          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Bench Press</div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="color:var(--muted)">1RM</span><span class="rpe-result-val" id="rpe-bench-1rm">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="color:var(--muted)">3RM</span><span class="rpe-result-val" id="rpe-bench-3rm">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:13px">
-            <span style="color:var(--muted)">5RM</span><span class="rpe-result-val" id="rpe-bench-5rm">—</span>
-          </div>
-        </div>
-
-        <!-- Deadlift -->
-        <div style="background:var(--chalk);border-radius:6px;padding:12px">
-          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Deadlift</div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="color:var(--muted)">1RM</span><span class="rpe-result-val" id="rpe-deadlift-1rm">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="color:var(--muted)">3RM</span><span class="rpe-result-val" id="rpe-deadlift-3rm">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:13px">
-            <span style="color:var(--muted)">5RM</span><span class="rpe-result-val" id="rpe-deadlift-5rm">—</span>
-          </div>
-        </div>
-
-        <!-- Push Press -->
-        <div style="background:var(--chalk);border-radius:6px;padding:12px;grid-column:1/-1">
-          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Axel / Barbell Push Press</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-            <div style="text-align:center">
-              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">1RM</div>
-              <div class="rpe-result-val" id="rpe-press-1rm" style="font-size:16px;font-weight:600">—</div>
-            </div>
-            <div style="text-align:center">
-              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">3RM</div>
-              <div class="rpe-result-val" id="rpe-press-3rm" style="font-size:16px;font-weight:600">—</div>
-            </div>
-            <div style="text-align:center">
-              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">5RM</div>
-              <div class="rpe-result-val" id="rpe-press-5rm" style="font-size:16px;font-weight:600">—</div>
-            </div>
-          </div>
-        </div>
-
+    <div>
+      <div class="about-pull">
+        <div class="about-pull-bg">STRONG</div>
+        <blockquote>"The everyday man is <span>stronger</span> than he thinks. My job is to prove it."</blockquote>
+        <p class="pull-note">— Wade</p>
       </div>
-      <div style="margin-top:12px;font-size:12px;color:var(--muted);text-align:center" id="rpeTestDate"></div>
     </div>
+  </div>
+</section>
 
-    <!-- Injury Log -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Injury Log</div>
-        <button onclick="showAddInjury()" style="padding:5px 12px;background:var(--iron);color:var(--white);border:none;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer">+ Add</button>
+<section class="programs section" id="programs">
+  <div class="section-tag">training programs</div>
+  <div class="section-title">THREE WAYS TO WORK WITH WADE.</div>
+  <div class="programs-grid">
+    <div class="program-card">
+      <span class="prog-tag tag-start">Start here</span>
+      <div class="prog-name">GET STRONG</div>
+      <p class="prog-desc">A 6-week custom program to build real, functional strength from the ground up.</p>
+      <div class="prog-price"><sup>$</sup>600</div>
+      <div class="prog-price-note">one-time &nbsp;·&nbsp; 6 weeks</div>
+      <hr class="prog-divider">
+      <ul class="prog-features">
+        <li><span class="feat-check">+</span> Fully custom 6-week program</li>
+        <li><span class="feat-check">+</span> Weekly 1-on-1 video call with Wade</li>
+        <li><span class="feat-check">+</span> Ongoing progress feedback throughout</li>
+        <li><span class="feat-check">+</span> Program adjusted week to week</li>
+        <li><span class="feat-check">+</span> Works with any gym setup</li>
+      </ul>
+      <button class="prog-btn btn-outline" onclick="openPayment()">get started</button>
+    </div>
+    <div class="program-card featured">
+      <span class="prog-tag tag-comp">Strongman specific</span>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:16px;margin-top:-10px">
+        <div style="width:8px;height:8px;border-radius:50%;background:#c03020;animation:pulse 1.5s infinite"></div>
+        <span style="font-size:12px;font-weight:600;color:#c03020" id="spacesLeft">Only 3 spots left this block</span>
       </div>
+      <div class="prog-name">PRE-COMP BUILD UP</div>
+      <p class="prog-desc">Targeted strongman programming to peak you exactly for competition day.</p>
+      <div class="prog-price"><sup>$</sup>1,200</div>
+      <div class="prog-price-note">one-time &nbsp;·&nbsp; pre-competition block</div>
+      <hr class="prog-divider">
+      <ul class="prog-features">
+        <li><span class="feat-check">+</span> Competition-specific event training</li>
+        <li><span class="feat-check">+</span> Peaking strategy built to your comp date</li>
+        <li><span class="feat-check">+</span> Weekly 1-on-1 video call with Wade</li>
+        <li><span class="feat-check">+</span> Form video review for all key events</li>
+        <li><span class="feat-check">+</span> Recovery &amp; taper protocol included</li>
+        <li><span class="feat-check">+</span> Feedback right up to comp day</li>
+      </ul>
+      <button class="prog-btn btn-rust" onclick="openPayment()">apply now</button>
+    </div>
+    <div class="program-card">
+      <span class="prog-tag tag-start">Fully custom</span>
+      <div class="prog-name">I'LL COME TO YOU</div>
+      <p class="prog-desc">Wherever you are in the world — Wade will travel to coach you in person.</p>
+      <div class="prog-price" style="font-size:36px;padding-top:6px">Custom quote</div>
+      <div class="prog-price-note">in-person &nbsp;·&nbsp; worldwide</div>
+      <hr class="prog-divider">
+      <ul class="prog-features">
+        <li><span class="feat-check">+</span> Wade travels to your location, anywhere</li>
+        <li><span class="feat-check">+</span> Hands-on coaching &amp; technique work</li>
+        <li><span class="feat-check">+</span> Tailored entirely to your goals</li>
+        <li><span class="feat-check">+</span> Training camp or one-off session options</li>
+        <li><span class="feat-check">+</span> Fill in a quick form — we'll be in touch fast</li>
+      </ul>
+      <button class="prog-btn btn-outline" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">get a quote</button>
+    </div>
+  </div>
+</section>
 
-      <!-- Add injury form (hidden by default) -->
-      <div id="addInjuryForm" style="display:none;background:var(--chalk);border-radius:6px;padding:14px;margin-bottom:14px">
-        <div style="margin-bottom:10px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Body part / area</label>
-          <input type="text" id="injuryArea" placeholder="e.g. Lower back, Left knee" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
+<section class="payment section" id="payment">
+  <div class="section-tag">secure checkout</div>
+  <div class="section-title">READY TO GET STARTED?</div>
+  <p class="payment-intro">Pay securely online and Wade will be in touch within 24 hours to kick things off. Both programs are available via card or Afterpay — split into four fortnightly payments, completely interest free.</p>
+  <div class="payment-grid">
+    <div class="pay-card">
+      <div class="pay-card-header">
+        <div class="pay-card-name">GET STRONG</div>
+        <div class="pay-card-sub">6-week custom program &nbsp;·&nbsp; weekly video calls &nbsp;·&nbsp; ongoing feedback</div>
+      </div>
+      <div class="pay-card-body">
+        <div class="pay-amount"><sup>$</sup>600</div>
+        <div class="pay-options">
+          <button class="pay-btn pay-btn-stripe">&#x1F4B3; Pay with card — $600</button>
+          <button class="pay-btn pay-btn-afterpay">Afterpay &nbsp;·&nbsp; 4 &times; $150</button>
+          <div class="afterpay-split">4 fortnightly payments of $150 &nbsp;·&nbsp; interest free</div>
         </div>
-        <div style="margin-bottom:10px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Description</label>
-          <textarea id="injuryDesc" placeholder="Describe the injury, when it happened, severity..." style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none;resize:vertical;min-height:70px"></textarea>
+        <div class="stripe-badge">&#x1F512; Secured by Stripe</div>
+      </div>
+    </div>
+    <div class="pay-card">
+      <div class="pay-card-header dark">
+        <div class="pay-card-name">PRE-COMP BUILD UP</div>
+        <div class="pay-card-sub">Strongman-specific &nbsp;·&nbsp; competition peaking &nbsp;·&nbsp; full support to comp day</div>
+      </div>
+      <div class="pay-card-body">
+        <div class="pay-amount"><sup>$</sup>1,200</div>
+        <div class="pay-options">
+          <button class="pay-btn pay-btn-stripe">&#x1F4B3; Pay with card — $1,200</button>
+          <button class="pay-btn pay-btn-afterpay">Afterpay &nbsp;·&nbsp; 4 &times; $300</button>
+          <div class="afterpay-split">4 fortnightly payments of $300 &nbsp;·&nbsp; interest free</div>
         </div>
-        <div style="margin-bottom:12px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Status</label>
-          <select id="injuryStatus" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
-            <option value="active">Active — currently affecting training</option>
-            <option value="monitoring">Monitoring — manageable</option>
-            <option value="resolved">Resolved</option>
+        <div class="stripe-badge">&#x1F512; Secured by Stripe</div>
+      </div>
+    </div>
+  </div>
+  <div class="afterpay-strip">
+    <div class="afterpay-logo">Afterpay</div>
+    <div class="afterpay-text"><strong>Buy now, pay later — interest free.</strong> Split your coaching into 4 equal fortnightly instalments with no interest and no fees if you pay on time. Available to Australian and New Zealand customers.</div>
+  </div>
+</section>
+
+<section class="philosophy section">
+  <div class="section-tag">the method</div>
+  <div class="section-title">WHY STRONGMAN WORKS FOR EVERYONE.</div>
+  <div class="phil-grid">
+    <div class="phil-card"><div class="phil-num">01</div><h4>Functional strength</h4><p>Strongman movements build the kind of strength you actually use — carrying, pressing, pulling, lifting from the ground.</p></div>
+    <div class="phil-card"><div class="phil-num">02</div><h4>Any gym, any setup</h4><p>Wade has trained in basic gyms across three countries. He knows how to make whatever you have access to actually work.</p></div>
+    <div class="phil-card"><div class="phil-num">03</div><h4>Built around your life</h4><p>Got kids, shift work, a bad back? The program fits around you — not the other way around.</p></div>
+    <div class="phil-card"><div class="phil-num">04</div><h4>Proven on the world stage</h4><p>Every method Wade coaches is something he's tested himself at an elite international level.</p></div>
+  </div>
+</section>
+
+<section class="testimonials section">
+  <div class="section-tag">client results</div>
+  <div class="section-title">EVERYDAY PEOPLE. UNCOMMON STRENGTH.</div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p class="testi-text">"I'm a 42-year-old tradie who thought his best lifting days were behind him. Wade had me deadlifting 200kg within 6 months. Genuinely changed how I approach training."</p>
+      <div class="testi-author">Dave M.</div><div class="testi-role">Brisbane, QLD</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p class="testi-text">"No BS, no fancy equipment — just a smart program that works for a regular bloke. Wade is the real deal and genuinely cares about your progress."</p>
+      <div class="testi-author">Sam K.</div><div class="testi-role">Auckland, NZ</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <p class="testi-text">"Competed in my first strongman event at 38. Wade guided me through every step. Placed 3rd in my class and I'm already signed up for the next one."</p>
+      <div class="testi-author">Chris T.</div><div class="testi-role">Melbourne, VIC</div>
+    </div>
+  </div>
+</section>
+
+<section class="contact section" id="contact">
+  <div class="section-tag">get in touch</div>
+  <div class="section-title">I'LL COME TO YOU — ANYWHERE.</div>
+  <div class="quote-card">
+    <div class="quote-left">
+      <h3>IN-PERSON COACHING</h3>
+      <p>Tell Wade where you are and what you're after. He'll get back to you personally with a custom quote — usually within 24 hours.</p>
+      <ul class="quote-includes">
+        <li><span class="q-check">+</span> Wade travels to your location, worldwide</li>
+        <li><span class="q-check">+</span> Hands-on technique &amp; coaching sessions</li>
+        <li><span class="q-check">+</span> Training camps or one-off intensives</li>
+        <li><span class="q-check">+</span> Fully tailored to your setup &amp; goals</li>
+        <li><span class="q-check">+</span> Custom quote — no cookie-cutter pricing</li>
+      </ul>
+    </div>
+    <div class="quote-right">
+      <h4>Send Wade a quick message</h4>
+      <form id="quoteForm" onsubmit="handleSubmit(event)">
+        <div class="form-row-split">
+          <div class="form-row"><label>First name</label><input type="text" placeholder="John" required></div>
+          <div class="form-row"><label>Last name</label><input type="text" placeholder="Smith" required></div>
+        </div>
+        <div class="form-row"><label>Email</label><input type="email" placeholder="john@email.com" required></div>
+        <div class="form-row"><label>Your location</label><input type="text" placeholder="e.g. Sydney, Australia or Dallas, USA" required></div>
+        <div class="form-row">
+          <label>What are you after?</label>
+          <select>
+            <option value="">Select an option</option>
+            <option>One-off coaching session</option>
+            <option>Training camp (multi-day)</option>
+            <option>Competition prep in-person</option>
+            <option>Something else</option>
           </select>
         </div>
-        <div style="display:flex;gap:8px">
-          <button onclick="saveInjury()" style="flex:1;padding:9px;background:var(--rust);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer">Save injury</button>
-          <button onclick="cancelAddInjury()" style="padding:9px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:13px;cursor:pointer">Cancel</button>
+        <div class="form-row"><label>Tell Wade a bit more</label><textarea placeholder="Your goals, current training, any relevant details..."></textarea></div>
+        <button type="submit" class="form-submit">Send my enquiry &rarr;</button>
+        <div id="formSuccess" style="display:none;margin-top:14px;padding:14px;background:#e6f4ed;border:1px solid #a8d5bc;border-radius:4px;font-size:14px;color:#2c7a4b;font-weight:500;text-align:center">
+          Enquiry sent! Wade will be in touch within 24 hours.
         </div>
-      </div>
-
-      <!-- Injury list -->
-      <div id="injuryList">
-        <div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No injuries logged — great work! 💪</div>
-      </div>
-    </div>
-
-    <!-- Practitioner Notes -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">📋 Practitioner Notes</div>
-        <button onclick="showAddPractNote()" style="padding:5px 12px;background:var(--iron);color:var(--white);border:none;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer">+ Add</button>
-      </div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Notes from your physio, doctor or other healthcare provider that Wade needs to know about.</div>
-
-      <!-- Add note form -->
-      <div id="addPractNoteForm" style="display:none;background:var(--chalk);border-radius:6px;padding:14px;margin-bottom:14px">
-        <div style="margin-bottom:10px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Practitioner name & type</label>
-          <input type="text" id="practName" placeholder="e.g. Sarah Jones — Physiotherapist" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
-        </div>
-        <div style="margin-bottom:10px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Note / instructions</label>
-          <textarea id="practNote" placeholder="e.g. No heavy squats for 4 weeks. Cleared for upper body work. Review in 2 weeks..." style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none;resize:vertical;min-height:80px"></textarea>
-        </div>
-        <div style="margin-bottom:12px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Upload document (optional)</label>
-          <input type="file" id="practFile" accept=".pdf,.jpg,.png,.jpeg" style="font-size:13px;color:var(--muted)">
-        </div>
-        <div style="display:flex;gap:8px">
-          <button onclick="savePractNote()" style="flex:1;padding:9px;background:var(--rust);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer">Send to Wade</button>
-          <button onclick="cancelPractNote()" style="padding:9px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:13px;cursor:pointer">Cancel</button>
-        </div>
-      </div>
-
-      <!-- Notes list -->
-      <div id="practNotesList">
-        <div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No practitioner notes added yet.</div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="panel" id="panel-messages">
-    <div class="section-hdr" style="margin-bottom:20px">
-      <div class="section-title">MESSAGES</div>
-    </div>
-    <div id="messageThread" style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px"></div>
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px">
-      <textarea id="msgInput" style="width:100%;padding:8px 0;border:none;font-family:var(--font-body);font-size:14px;color:var(--iron);outline:none;resize:none;min-height:60px;background:transparent" placeholder="Message Wade..."></textarea>
-      <div id="voicePreview" style="display:none;background:var(--chalk);border-radius:5px;padding:8px 12px;margin-bottom:10px;display:none;align-items:center;gap:10px;font-size:13px">
-        <span>🎤</span>
-        <span id="voiceLabel" style="flex:1;color:var(--muted)">Voice note ready</span>
-        <span id="voiceTimer" style="font-weight:600;color:var(--rust)">0:00</span>
-        <span style="cursor:pointer;color:var(--muted)" onclick="cancelVoice()">×</span>
-      </div>
-      <div style="border-top:1px solid var(--border);padding-top:10px;display:flex;align-items:center;justify-content:space-between;gap:8px">
-        <div style="display:flex;gap:6px">
-          <button id="voiceBtn" title="Record voice note" onclick="toggleVoice()" style="width:34px;height:34px;border-radius:5px;border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s">🎤</button>
-        </div>
-        <button style="padding:8px 20px;background:var(--iron);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer" onclick="sendMessage()">Send</button>
-      </div>
+      </form>
     </div>
   </div>
+</section>
 
-</div>
 
-<!-- BOTTOM NAV -->
-<div class="bottom-nav" id="bottomNav" style="display:none">
-  <div class="bottom-nav-inner">
-    <div class="bnav-item active" onclick="switchPanel('program',this)"><div class="bnav-icon">📋</div>Program</div>
-    <div class="bnav-item" onclick="switchPanel('progress',this)"><div class="bnav-icon">📈</div>Progress</div>
-    <div class="bnav-item" onclick="switchPanel('profile',this)"><div class="bnav-icon">👤</div>Profile</div>
-    <div class="bnav-item" onclick="switchPanel('uploads',this)"><div class="bnav-icon">🎥</div>Clips</div>
-    <div class="bnav-item" onclick="switchPanel('messages',this)"><div class="bnav-icon">💬</div>Messages</div>
+<!-- BOOK A CALL -->
+<section style="background:var(--white);padding:96px 64px;border-top:1px solid var(--border)" id="book">
+  <div style="max-width:760px;margin:0 auto;text-align:center">
+    <div style="font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--rust);margin-bottom:12px;display:flex;align-items:center;gap:10px;justify-content:center">
+      <span style="display:block;width:24px;height:1px;background:var(--rust)"></span>
+      Quick call
+      <span style="display:block;width:24px;height:1px;background:var(--rust)"></span>
+    </div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:1px;margin-bottom:16px;line-height:1">NOT SURE WHERE TO START?</div>
+    <p style="font-size:16px;color:var(--muted);line-height:1.75;margin-bottom:12px;max-width:520px;margin-left:auto;margin-right:auto">Book a 15 minute call with Wade directly. Ask anything — which program is right for you, what to expect, or just whether this is a good fit. No pressure, no sales pitch.</p>
+    <div style="display:inline-flex;align-items:center;gap:8px;background:var(--rust-light);border:1px solid rgba(184,90,48,0.2);border-radius:100px;padding:8px 20px;font-size:13px;color:var(--rust-dark);font-weight:600;margin-bottom:36px">
+      <span>$50 AUD</span>
+      <span style="opacity:0.4">·</span>
+      <span>15 minutes</span>
+      <span style="opacity:0.4">·</span>
+      <span>Video call</span>
+    </div>
+    <!-- Calendly inline widget -->
+    <div id="calendly-placeholder" style="background:var(--chalk);border:1px solid var(--border);border-radius:8px;padding:48px;text-align:center">
+      <div style="font-size:15px;color:var(--muted);margin-bottom:20px;line-height:1.6">Calendly booking widget will appear here once Wade sets up his account at <strong style="color:var(--iron)">calendly.com</strong></div>
+      <div style="font-size:13px;color:var(--muted);background:var(--white);border:1px solid var(--border);border-radius:6px;padding:12px 16px;display:inline-block">
+        To activate: replace this block with the Calendly embed code<br>from <strong>calendly.com → Share → Embed</strong>
+      </div>
+    </div>
+    <!-- PASTE CALENDLY EMBED HERE — replace the div above with:
+    <div class="calendly-inline-widget" data-url="https://calendly.com/YOUR-WADE-USERNAME/15min" style="min-width:320px;height:630px"></div>
+    <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+    -->
   </div>
-</div>
+</section>
 
-<div class="toast" id="toast"></div>
+<section class="cta">
+  <div class="cta-bg">STRONG</div>
+  <h2>READY TO FIND OUT WHAT YOU'RE MADE OF?</h2>
+  <p>Spots are limited. Wade personally reviews every application.</p>
+  <button class="cta-btn" onclick="openPayment()">apply for coaching</button>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">WADE<span>.</span>STRONG</div>
+    <div class="footer-links">
+      <a href="#about">About</a>
+      <a href="#programs">Programs</a>
+      <a href="#payment">Pricing</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="footer-note" style="color:rgba(255,255,255,0.3)">Based in Australia. Training the world.</div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-note">&copy; 2025 Wade Strong Coaching. All rights reserved.</div>
+    <div class="footer-note">Payments secured by Stripe &nbsp;·&nbsp; Afterpay available at checkout</div>
+  </div>
+</footer>
 
 <script>
-// ── DEMO DATA ──
-const clientData = {
-  name:'Dave Mitchell', initials:'DM', shortName:'Dave M.',
-  program:'Get Strong', week:3, totalWeeks:6
-};
-
-const programWeeks = [
-  {n:1,label:'Week 1',type:'build',complete:true},
-  {n:2,label:'Week 2',type:'build',complete:true},
-  {n:3,label:'Week 3',type:'build',complete:false,current:true},
-  {n:4,label:'Week 4',type:'peak',complete:false},
-  {n:5,label:'Week 5',type:'peak',complete:false},
-  {n:6,label:'Week 6',type:'deload',complete:false},
-];
-
-const sessions = {
-  3:[
-    {day:'Monday',name:'LOWER — PULL',status:'complete',rest:false,note:'Focus on keeping the back flat through the whole pull. Film your deadlift set 3.',
-      blocks:[
-        {name:'Main pull',rest:240,exercises:[
-          {name:'Deadlift',sets:4,reps:'4',weight:190,rpe:8,notes:'Conventional. Film set 3.'},
-          {name:'Romanian deadlift',sets:3,reps:'8',weight:140,rpe:7,notes:''},
-        ]},
-        {name:'Lower accessories',rest:90,exercises:[
-          {name:'Bulgarian split squat',sets:3,reps:'10',weight:30,rpe:8,notes:'Per leg, dumbbell'},
-          {name:'Leg curl',sets:3,reps:'12',weight:45,rpe:7,notes:''},
-        ]},
-      ]
-    },
-    {day:'Tuesday',name:'UPPER — PUSH',status:'complete',rest:false,note:'OHP dropped to 60kg this week — same sets/reps. Focus on owning the weight before we go up again.',
-      blocks:[
-        {name:'Main press',rest:180,exercises:[
-          {name:'Bench press',sets:4,reps:'6',weight:105,rpe:8,notes:''},
-          {name:'Overhead press',sets:3,reps:'8',weight:60,rpe:8,notes:'Dropped 5kg — own this weight'},
-        ]},
-        {name:'Upper accessories',rest:75,exercises:[
-          {name:'Incline dumbbell press',sets:3,reps:'10',weight:35,rpe:7,notes:'Per hand'},
-          {name:'Face pulls',sets:3,reps:'15',weight:20,rpe:7,notes:'Cable'},
-        ]},
-      ]
-    },
-    {day:'Wednesday',name:'REST',status:'rest',rest:true,note:'',blocks:[]},
-    {day:'Thursday',name:'LOWER — SQUAT',status:'today',rest:false,note:'Tempo squats today — 3 second down, 1 second pause, drive up. Lighter weight, more focus.',
-      blocks:[
-        {name:'Main squat',rest:240,exercises:[
-          {name:'Tempo squat',sets:4,reps:'5',weight:130,rpe:7,notes:'3-1-1 tempo'},
-          {name:'Paused deadlift',sets:3,reps:'4',weight:160,rpe:8,notes:'Pause just below knee'},
-        ]},
-        {name:'Lower accessories',rest:90,exercises:[
-          {name:'Good mornings',sets:3,reps:'10',weight:60,rpe:7,notes:''},
-          {name:'Cable crunch',sets:3,reps:'15',weight:35,rpe:7,notes:''},
-        ]},
-      ]
-    },
-    {day:'Friday',name:'UPPER — PULL',status:'upcoming',rest:false,note:'',blocks:[
-      {name:'Main pull',rest:180,exercises:[
-        {name:'Barbell row',sets:4,reps:'6',weight:100,rpe:8,notes:'Overhand, chest to bar'},
-        {name:'Pull-ups',sets:3,reps:'8',weight:0,rpe:8,notes:'Bodyweight'},
-      ]},
-      {name:'Upper accessories',rest:75,exercises:[
-        {name:'Dumbbell row',sets:3,reps:'10',weight:40,rpe:7,notes:'Single arm'},
-        {name:'Bicep curl',sets:3,reps:'12',weight:20,rpe:7,notes:'Dumbbell'},
-      ]},
-    ]},
-    {day:'Saturday',name:'REST',status:'rest',rest:true,note:'',blocks:[]},
-    {day:'Sunday',name:'REST',status:'rest',rest:true,note:'',blocks:[]},
-  ]
-};
-
-const messages = [
-  {from:'wade',text:"Hey Dave — just reviewed your week 2 clips. Your deadlift is looking really solid, hips are staying down much better. The squat needs some work on knee tracking, hence the tempo squats Thursday. Trust the process.",time:'2 days ago'},
-  {from:'client',text:"Cheers Wade. Yeah I felt the squat was a bit off. Will film Thursday session.",time:'2 days ago'},
-  {from:'wade',text:"Perfect. And your OHP — I've dropped the weight 5kg this week. Don't fight it, just own 60kg before we go back up. You'll thank me in week 5.",time:'2 hours ago'},
-];
-
-let currentWeekNum = 3;
-let openSessions = new Set(['3-2']); // Thursday open by default (index 3)
-let completedSessions = new Set(['3-0','3-1']);
-
-// ── LOGIN ──
-function doLogin() {
-  const email = document.getElementById('loginEmail').value;
-  if(!email || !email.includes('@')) { showToast('Please enter a valid email'); return; }
-  document.getElementById('loginScreen').classList.add('hidden');
-  setTimeout(initApp, 400);
+function openPayment() {
+  const modal = document.getElementById('paymentModal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
 }
 
-function doLogout() {
-  document.getElementById('loginScreen').classList.remove('hidden');
-  document.getElementById('mainNav').style.display='none';
-  document.getElementById('mainContent').style.display='none';
-  document.getElementById('bottomNav').style.display='none';
+function closePayment() {
+  const modal = document.getElementById('paymentModal');
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
 }
 
-function initApp() {
-  document.getElementById('mainNav').style.display='flex';
-  document.getElementById('mainContent').style.display='block';
-  document.getElementById('bottomNav').style.display='block';
-  document.getElementById('navAvatar').textContent = clientData.initials;
-  document.getElementById('navName').textContent = clientData.shortName;
-  renderWeekSelector();
-  renderSessions(currentWeekNum);
-  renderMessages();
-}
+// Close modal on backdrop click
+document.getElementById('paymentModal').addEventListener('click', function(e) {
+  if (e.target === this) closePayment();
+});
 
-// auto-login for demo
-setTimeout(()=>{ initApp(); document.getElementById('loginScreen').classList.add('hidden'); }, 300);
-
-// ── WEEK SELECTOR ──
-function renderWeekSelector() {
-  const ws = document.getElementById('weekSelector');
-  ws.innerHTML = programWeeks.map(w=>{
-    let cls = 'week-pill';
-    if(w.complete) cls+=' complete';
-    if(w.current) cls+=' current';
-    if(w.n===currentWeekNum) cls+=' active';
-    const icon = w.complete?'✓ ':'';
-    return `<div class="${cls}" onclick="switchWeek(${w.n})">${icon}${w.label}</div>`;
-  }).join('');
-}
-
-function switchWeek(n) {
-  currentWeekNum = n;
-  renderWeekSelector();
-  renderSessions(n);
-}
-
-// ── SESSIONS ──
-function renderSessions(weekNum) {
-  const list = document.getElementById('sessionList');
-  const weekSessions = sessions[weekNum] || [];
-  if(!weekSessions.length){ list.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);font-size:14px">Program for this week isn\'t published yet — Wade\'s working on it.</div>'; return; }
-  list.innerHTML = weekSessions.map((s,i)=>renderSessionCard(s,weekNum,i)).join('');
-}
-
-function renderSessionCard(s,weekNum,idx) {
-  const key = `${weekNum}-${idx}`;
-  const isOpen = openSessions.has(key);
-  const isDone = completedSessions.has(key);
-
-  if(s.rest) return `<div class="session-card rest">
-    <div class="sc-header">
-      <div class="sc-left">
-        <div class="sc-day">${s.day}</div>
-        <div class="sc-name">REST DAY</div>
-      </div>
-      <span class="sc-badge badge-rest">Rest</span>
-    </div>
-  </div>`;
-
-  const statusBadge = isDone ? '<span class="sc-badge badge-complete">✓ Complete</span>'
-    : s.status==='today' ? '<span class="sc-badge badge-today">Today</span>'
-    : '<span class="sc-badge badge-upcoming">Upcoming</span>';
-
-  const bodyHtml = isOpen ? `<div class="sc-body open">
-    ${s.note?`<div class="sc-note">${s.note}</div>`:''}
-    ${s.blocks.map(b=>renderBlockTable(b)).join('')}
-    ${!isDone?renderRpeLogger(s,key):'<div class="session-complete-badge">✓ Session logged — Wade has your feedback</div>'}
-
-  </div>` : '';
-
-  return `<div class="session-card" id="sc_${key}">
-    <div class="sc-header" onclick="toggleSession('${key}')">
-      <div class="sc-left">
-        <div class="sc-day">${s.day}</div>
-        <div class="sc-name">${s.name}</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        ${statusBadge}
-        <span class="sc-toggle${isOpen?' open':''}">▼</span>
-      </div>
-    </div>
-    ${bodyHtml}
-  </div>`;
-}
-
-function renderBlockTable(b) {
-  const rows = b.exercises.map((e,i)=>{
-    const uid = `${b.title}_${i}_${Date.now()}`.replace(/\s/g,'_');
-    return `
-    <tr>
-      <td class="ex-name-cell">${e.name}${e.notes?`<div class="ex-detail">${e.notes}</div>`:''}</td>
-      <td class="ex-metric">${e.sets}</td>
-      <td class="ex-metric">${e.reps}</td>
-      <td class="ex-metric">${e.weight>0?e.weight+'kg':'BW'}</td>
-      <td class="ex-metric"><span class="rpe-chip r${e.rpe}">${e.rpe}</span></td>
-      <td style="text-align:center">
-        <label style="cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:5px;border:1px solid var(--border);background:var(--white);transition:all 0.15s" title="Upload clip for ${e.name}" onmouseover="this.style.borderColor='var(--rust)'" onmouseout="this.style.borderColor='var(--border)'">
-          <input type="file" accept="video/*,image/*" style="display:none" onchange="handleExerciseUpload(this,'${e.name}','${uid}')">
-          <span style="font-size:14px">🎥</span>
-        </label>
-        <div id="upload_${uid}" style="font-size:10px;color:var(--green);margin-top:2px;display:none">✓ Sent</div>
-      </td>
-      <td><input type="checkbox" class="ex-check"></td>
-    </tr>`;
-  }).join('');
-
-  return `<div style="margin-bottom:14px">
-    <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:8px">
-      ${b.name} <span style="font-weight:400;color:rgba(107,101,96,0.6)">· Rest ${b.rest}s</span>
-    </div>
-    <table class="ex-table">
-      <thead><tr>
-        <th>Exercise</th><th style="text-align:center">Sets</th>
-        <th style="text-align:center">Reps</th><th style="text-align:center">Weight</th>
-        <th style="text-align:center">Target RPE</th><th style="text-align:center">Clip</th>
-        <th style="text-align:center">Done</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-  </div>`;
-}
-
-function handleExerciseUpload(input, exerciseName, uid) {
-  const file = input.files[0];
-  if (!file) return;
-  const maxMB = 200;
-  if (file.size > maxMB * 1024 * 1024) {
-    showToast('File too large — keep clips under 2 minutes');
-    return;
-  }
-  // Show sent confirmation
-  const indicator = document.getElementById('upload_' + uid);
-  if (indicator) indicator.style.display = 'block';
-  showToast(`Clip for "${exerciseName}" sent to Wade ✓`);
-  // In production: upload to Cloudflare R2 via Supabase storage
-  // logUpload(clientId, sessionId, { file_name: file.name, file_type: file.type.startsWith('video') ? 'video' : 'image', file_size_bytes: file.size, storage_path: '', client_note: exerciseName });
-}
-
-function renderRpeLogger(s,key) {
-  const allEx = s.blocks.flatMap(b=>b.exercises);
-  const rows = allEx.map((e,i)=>`
-    <div class="rpe-log-row">
-      <div class="rpe-log-name">${e.name}</div>
-      <div class="rpe-pills-sm">
-        ${[6,7,8,9,10].map(n=>`<label class="rpe-pill-sm"><input type="radio" name="rpe_${key}_${i}" value="${n}"><span>${n}</span></label>`).join('')}
-      </div>
-    </div>`).join('');
-
-  return `<div class="rpe-logger">
-    <div class="rpe-logger-title">Log your RPE — how hard was each set?</div>
-    ${rows}
-    <textarea style="width:100%;margin-top:8px;padding:8px 10px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:13px;background:var(--white);outline:none;resize:none;min-height:60px;color:var(--iron)" placeholder="Any notes for Wade about this session..."></textarea>
-    <button class="session-submit-btn" onclick="submitSession('${key}')">Submit to Wade</button>
-  </div>`;
-}
-
-function toggleSession(key) {
-  if(openSessions.has(key)) openSessions.delete(key);
-  else openSessions.add(key);
-  renderSessions(currentWeekNum);
-}
-
-function submitSession(key) {
-  completedSessions.add(key);
-  showToast('Session logged — Wade can see your feedback ✓');
-  renderSessions(currentWeekNum);
-}
-
-// ── MESSAGES ──
-function renderMessages() {
-  const thread = document.getElementById('messageThread');
-  thread.innerHTML = messages.map((m,idx)=>{
-    const isWade = m.from==='wade';
-    const bubbleBg = isWade ? 'var(--white)' : 'var(--iron)';
-    const bubbleColor = isWade ? 'var(--iron)' : 'var(--white)';
-    const bubbleBorder = isWade ? 'var(--border)' : 'var(--iron)';
-    const bubbleRadius = isWade ? '4px 12px 12px 12px' : '12px 4px 12px 12px';
-    let bubbleContent = '';
-    if (m.isVoice && m.blob) {
-      const url = URL.createObjectURL(m.blob);
-      bubbleContent = `<audio controls src="${url}" style="width:180px;height:32px;outline:none"></audio>`;
-    } else {
-      bubbleContent = m.text;
-    }
-    return `<div style="display:flex;flex-direction:column;align-items:${isWade?'flex-start':'flex-end'}">
-      <div style="max-width:82%;background:${bubbleBg};color:${bubbleColor};border:1px solid ${bubbleBorder};border-radius:${bubbleRadius};padding:12px 14px;font-size:14px;line-height:1.6">
-        ${isWade?'<div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--rust);margin-bottom:4px">Wade</div>':''}
-        ${bubbleContent}
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px;padding:0 4px">${m.time}</div>
-    </div>`;
-  }).join('');
-}
-
-function sendMessage() {
-  const input = document.getElementById('msgInput');
-  const text = input.value.trim();
-  if(!text) return;
-  messages.push({from:'client',text,time:'Just now'});
-  input.value='';
-  renderMessages();
-  showToast('Message sent to Wade');
-}
-
-// ── FILE UPLOAD ──
-function handleFileUpload(input) {
-  const container = document.getElementById('uploadedFiles');
-  [...input.files].forEach(f=>{
-    const div = document.createElement('div');
-    div.className = 'uploaded-file';
-    div.innerHTML = `<span class="uf-icon">${f.type.startsWith('video')?'🎥':'📸'}</span><span class="uf-name">${f.name}</span><span style="font-size:11px;color:var(--muted)">${(f.size/1024/1024).toFixed(1)}MB</span><span class="uf-remove" onclick="this.parentElement.remove()">×</span>`;
-    container.appendChild(div);
-  });
-}
-
-// ── PANELS ──
-function switchPanel(id, el) {
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('panel-'+id).classList.add('active');
-  document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
-  if(el) el.classList.add('active');
-  else {
-    const map = {program:0,progress:1,profile:2,uploads:3,messages:4};
-  if(id==='profile') loadProfile();
-    document.querySelectorAll('.bnav-item')[map[id]]?.classList.add('active');
-  }
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-// ── TOAST ──
-// ── VOICE NOTES ──────────────────────────────────────────────
-let mediaRecorder = null;
-let audioChunks = [];
-let voiceBlob = null;
-let recordingInterval = null;
-let recordingSeconds = 0;
-let isRecording = false;
-
-async function toggleVoice() {
-  if (isRecording) {
-    stopVoice();
-  } else {
-    startVoice();
-  }
-}
-
-async function startVoice() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder = new MediaRecorder(stream);
-    audioChunks = [];
-    recordingSeconds = 0;
-
-    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-    mediaRecorder.onstop = () => {
-      voiceBlob = new Blob(audioChunks, { type: 'audio/webm' });
-      stream.getTracks().forEach(t => t.stop());
-      showVoicePreview();
-    };
-
-    mediaRecorder.start();
-    isRecording = true;
-
-    // Update button to recording state
-    const btn = document.getElementById('voiceBtn');
-    btn.style.background = '#fce8e8';
-    btn.style.borderColor = '#c03020';
-    btn.innerHTML = '⏹';
-    btn.title = 'Stop recording';
-
-    // Start timer
-    recordingInterval = setInterval(() => {
-      recordingSeconds++;
-      document.getElementById('voiceTimer').textContent = formatTime(recordingSeconds);
-      // Auto stop at 2 minutes
-      if (recordingSeconds >= 120) stopVoice();
-    }, 1000);
-
-    document.getElementById('voiceTimer').textContent = '0:00';
-    const preview = document.getElementById('voicePreview');
-    preview.style.display = 'flex';
-    document.getElementById('voiceLabel').textContent = 'Recording...';
-
-  } catch(err) {
-    showToast('Microphone access denied — check your browser settings');
-  }
-}
-
-function stopVoice() {
-  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-    mediaRecorder.stop();
-  }
-  isRecording = false;
-  clearInterval(recordingInterval);
-
-  const btn = document.getElementById('voiceBtn');
-  btn.style.background = 'var(--white)';
-  btn.style.borderColor = 'var(--border)';
-  btn.innerHTML = '🎤';
-  btn.title = 'Record voice note';
-}
-
-function showVoicePreview() {
-  const duration = formatTime(recordingSeconds);
-  document.getElementById('voiceLabel').textContent = `Voice note · ${duration}`;
-  document.getElementById('voiceTimer').textContent = '';
-}
-
-function cancelVoice() {
-  voiceBlob = null;
-  audioChunks = [];
-  recordingSeconds = 0;
-  const preview = document.getElementById('voicePreview');
-  preview.style.display = 'none';
-  if (isRecording) stopVoice();
-}
-
-function formatTime(secs) {
-  const m = Math.floor(secs / 60);
-  const s = secs % 60;
-  return `${m}:${s.toString().padStart(2,'0')}`;
-}
-
-// Override sendMessage to handle voice notes
-const _origSendMessage = sendMessage;
-function sendMessage() {
-  const input = document.getElementById('msgInput');
-  const text = input.value.trim();
-
-  if (voiceBlob) {
-    // Send voice note
-    const duration = formatTime(recordingSeconds);
-    messages.push({
-      from: 'client',
-      text: `🎤 Voice note (${duration})`,
-      time: 'Just now',
-      isVoice: true,
-      blob: voiceBlob
-    });
-    input.value = '';
-    voiceBlob = null;
-    cancelVoice();
-    renderMessages();
-    showToast('Voice note sent to Wade ✓');
-    return;
-  }
-
-  if (!text) return;
-  messages.push({ from: 'client', text, time: 'Just now' });
-  input.value = '';
-  renderMessages();
-  showToast('Message sent to Wade');
-}
-
-// ── PROFILE ───────────────────────────────────────────────────
-let injuries = JSON.parse(sessionStorage.getItem('ws_injuries') || '[]');
-
-function loadProfile() {
-  // In production pull from Supabase — for now use session/mock data
-  document.getElementById('prof-name').textContent = 'Dave Mitchell';
-  document.getElementById('prof-age').textContent = '38';
-  document.getElementById('prof-height').textContent = '182cm';
-  document.getElementById('prof-weight').textContent = '89kg';
-  document.getElementById('prof-location').textContent = 'Brisbane, QLD';
-  document.getElementById('prof-program').textContent = 'Get Strong — Week 3 of 6';
-
-  // Mock RPE results — in production pull from rpe10_results table
-  const rpe = {
-    'squat-raw-1rm':'145kg','squat-raw-3rm':'130kg','squat-raw-5rm':'120kg',
-    'squat-wraps-1rm':'165kg','squat-wraps-3rm':'150kg','squat-wraps-5rm':'140kg',
-    'bench-1rm':'110kg','bench-3rm':'100kg','bench-5rm':'92.5kg',
-    'deadlift-1rm':'200kg','deadlift-3rm':'182.5kg','deadlift-5rm':'170kg',
-    'press-1rm':'80kg','press-3rm':'72.5kg','press-5rm':'65kg',
-  };
-  Object.entries(rpe).forEach(([k,v])=>{
-    const el = document.getElementById('rpe-'+k);
-    if(el) el.textContent = v;
-  });
-  document.getElementById('rpeTestDate').textContent = 'Tested: 15 April 2025';
-
-  // Load practitioner notes from session
-  renderPractNotes();
-
-  renderInjuries();
-}
-
-function renderInjuries() {
-  const list = document.getElementById('injuryList');
-  if (!injuries.length) {
-    list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No injuries logged — great work! 💪</div>';
-    return;
-  }
-  list.innerHTML = injuries.map((inj,i) => `
-    <div class="injury-item ${inj.status}">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
-        <div style="font-size:14px;font-weight:600">${inj.area}</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="injury-status-badge status-${inj.status}">${inj.status}</span>
-          <span style="cursor:pointer;color:var(--muted);font-size:16px" onclick="removeInjury(${i})">×</span>
-        </div>
-      </div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:6px">${inj.desc}</div>
-      <div style="font-size:11px;color:var(--muted)">${inj.date}</div>
-    </div>`).join('');
-}
-
-// ── PRACTITIONER NOTES ────────────────────────────────────────
-let practNotes = JSON.parse(sessionStorage.getItem('ws_pract_notes') || '[]');
-
-function showAddPractNote() {
-  document.getElementById('addPractNoteForm').style.display = 'block';
-}
-
-function cancelPractNote() {
-  document.getElementById('addPractNoteForm').style.display = 'none';
-  document.getElementById('practName').value = '';
-  document.getElementById('practNote').value = '';
-  document.getElementById('practFile').value = '';
-}
-
-function savePractNote() {
-  const name = document.getElementById('practName').value.trim();
-  const note = document.getElementById('practNote').value.trim();
-  const file = document.getElementById('practFile').files[0];
-  if (!note) { showToast('Please enter the practitioner note'); return; }
-  practNotes.unshift({
-    practitioner: name || 'Unknown practitioner',
-    note,
-    fileName: file ? file.name : null,
-    date: new Date().toLocaleDateString('en-AU', {day:'numeric',month:'long',year:'numeric'})
-  });
-  sessionStorage.setItem('ws_pract_notes', JSON.stringify(practNotes));
-  cancelPractNote();
-  renderPractNotes();
-  showToast('Note sent to Wade ✓');
-}
-
-function renderPractNotes() {
-  const list = document.getElementById('practNotesList');
-  if (!list) return;
-  if (!practNotes.length) {
-    list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No practitioner notes added yet.</div>';
-    return;
-  }
-  list.innerHTML = practNotes.map((n,i) => `
-    <div style="padding:14px;background:var(--chalk);border-radius:6px;margin-bottom:8px;border-left:3px solid #4488cc">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--iron)">${n.practitioner}</div>
-          <div style="font-size:11px;color:var(--muted)">${n.date}</div>
-        </div>
-        <span style="cursor:pointer;color:var(--muted);font-size:16px" onclick="removePractNote(${i})">×</span>
-      </div>
-      <div style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:${n.fileName?'8px':'0'}">${n.note}</div>
-      ${n.fileName ? `<div style="font-size:12px;color:#4488cc;font-weight:500">📎 ${n.fileName}</div>` : ''}
-    </div>`).join('');
-}
-
-function removePractNote(i) {
-  practNotes.splice(i,1);
-  sessionStorage.setItem('ws_pract_notes', JSON.stringify(practNotes));
-  renderPractNotes();
-}
-
-function showAddInjury() {
-  document.getElementById('addInjuryForm').style.display = 'block';
-}
-
-function cancelAddInjury() {
-  document.getElementById('addInjuryForm').style.display = 'none';
-  document.getElementById('injuryArea').value = '';
-  document.getElementById('injuryDesc').value = '';
-}
-
-function saveInjury() {
-  const area = document.getElementById('injuryArea').value.trim();
-  const desc = document.getElementById('injuryDesc').value.trim();
-  const status = document.getElementById('injuryStatus').value;
-  if (!area) { showToast('Please enter the injured area'); return; }
-  injuries.unshift({
-    area, desc, status,
-    date: new Date().toLocaleDateString('en-AU', {day:'numeric',month:'long',year:'numeric'})
-  });
-  sessionStorage.setItem('ws_injuries', JSON.stringify(injuries));
-  cancelAddInjury();
-  renderInjuries();
-  showToast('Injury logged ✓');
-}
-
-function removeInjury(i) {
-  injuries.splice(i,1);
-  sessionStorage.setItem('ws_injuries', JSON.stringify(injuries));
-  renderInjuries();
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2800);
+function handleSubmit(e){
+  e.preventDefault();
+  document.getElementById('formSuccess').style.display='block';
+  e.target.querySelector('.form-submit').style.display='none';
 }
 </script>
 </body>

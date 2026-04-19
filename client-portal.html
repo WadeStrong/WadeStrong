@@ -198,6 +198,16 @@ nav{background:var(--iron);padding:0 24px;display:flex;align-items:center;justif
   .hero-stats{grid-template-columns:1fr 1fr 1fr}
   .hs-val{font-size:18px}
 }
+
+.rpe-result-val{font-weight:600;color:var(--iron)}
+.injury-item{padding:12px;border-radius:6px;background:var(--chalk);margin-bottom:8px;border-left:3px solid var(--border)}
+.injury-item.active{border-left-color:#c03020}
+.injury-item.monitoring{border-left-color:#e08020}
+.injury-item.resolved{border-left-color:#2c7a4b}
+.injury-status-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:100px}
+.status-active{background:#fce8e8;color:#c03020}
+.status-monitoring{background:#fef3e0;color:#e08020}
+.status-resolved{background:var(--green-bg,#e6f4ed);color:#2c7a4b}
 </style>
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -366,6 +376,198 @@ nav{background:var(--iron);padding:0 24px;display:flex;align-items:center;justif
   </div>
 
   <!-- MESSAGE PANEL -->
+  <!-- PROFILE PANEL -->
+  <div class="panel" id="panel-profile" style="display:none">
+    <div class="panel-title">My Profile</div>
+
+    <!-- Basic Info -->
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Personal Info</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="profileInfoGrid">
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Full name</div>
+          <div style="font-size:15px;font-weight:600" id="prof-name">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Age</div>
+          <div style="font-size:15px;font-weight:600" id="prof-age">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Height</div>
+          <div style="font-size:15px;font-weight:600" id="prof-height">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Weight</div>
+          <div style="font-size:15px;font-weight:600" id="prof-weight">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Location</div>
+          <div style="font-size:15px;font-weight:600" id="prof-location">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Program</div>
+          <div style="font-size:15px;font-weight:600" id="prof-program">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RPE Results -->
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">RPE Testing Results</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="rpeResultsGrid">
+
+        <!-- Squat Raw -->
+        <div style="background:var(--chalk);border-radius:6px;padding:12px">
+          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Squat (Raw)</div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+            <span style="color:var(--muted)">1RM</span><span class="rpe-result-val" id="rpe-squat-raw-1rm">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+            <span style="color:var(--muted)">3RM</span><span class="rpe-result-val" id="rpe-squat-raw-3rm">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px">
+            <span style="color:var(--muted)">5RM</span><span class="rpe-result-val" id="rpe-squat-raw-5rm">—</span>
+          </div>
+        </div>
+
+        <!-- Squat Wraps -->
+        <div style="background:var(--chalk);border-radius:6px;padding:12px">
+          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Squat (Wraps)</div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+            <span style="color:var(--muted)">1RM</span><span class="rpe-result-val" id="rpe-squat-wraps-1rm">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+            <span style="color:var(--muted)">3RM</span><span class="rpe-result-val" id="rpe-squat-wraps-3rm">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px">
+            <span style="color:var(--muted)">5RM</span><span class="rpe-result-val" id="rpe-squat-wraps-5rm">—</span>
+          </div>
+        </div>
+
+        <!-- Bench -->
+        <div style="background:var(--chalk);border-radius:6px;padding:12px">
+          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Bench Press</div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+            <span style="color:var(--muted)">1RM</span><span class="rpe-result-val" id="rpe-bench-1rm">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+            <span style="color:var(--muted)">3RM</span><span class="rpe-result-val" id="rpe-bench-3rm">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px">
+            <span style="color:var(--muted)">5RM</span><span class="rpe-result-val" id="rpe-bench-5rm">—</span>
+          </div>
+        </div>
+
+        <!-- Deadlift -->
+        <div style="background:var(--chalk);border-radius:6px;padding:12px">
+          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Deadlift</div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+            <span style="color:var(--muted)">1RM</span><span class="rpe-result-val" id="rpe-deadlift-1rm">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+            <span style="color:var(--muted)">3RM</span><span class="rpe-result-val" id="rpe-deadlift-3rm">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px">
+            <span style="color:var(--muted)">5RM</span><span class="rpe-result-val" id="rpe-deadlift-5rm">—</span>
+          </div>
+        </div>
+
+        <!-- Push Press -->
+        <div style="background:var(--chalk);border-radius:6px;padding:12px;grid-column:1/-1">
+          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Axel / Barbell Push Press</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+            <div style="text-align:center">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">1RM</div>
+              <div class="rpe-result-val" id="rpe-press-1rm" style="font-size:16px;font-weight:600">—</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">3RM</div>
+              <div class="rpe-result-val" id="rpe-press-3rm" style="font-size:16px;font-weight:600">—</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">5RM</div>
+              <div class="rpe-result-val" id="rpe-press-5rm" style="font-size:16px;font-weight:600">—</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--muted);text-align:center" id="rpeTestDate"></div>
+    </div>
+
+    <!-- Injury Log -->
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Injury Log</div>
+        <button onclick="showAddInjury()" style="padding:5px 12px;background:var(--iron);color:var(--white);border:none;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer">+ Add</button>
+      </div>
+
+      <!-- Add injury form (hidden by default) -->
+      <div id="addInjuryForm" style="display:none;background:var(--chalk);border-radius:6px;padding:14px;margin-bottom:14px">
+        <div style="margin-bottom:10px">
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Body part / area</label>
+          <input type="text" id="injuryArea" placeholder="e.g. Lower back, Left knee" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
+        </div>
+        <div style="margin-bottom:10px">
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Description</label>
+          <textarea id="injuryDesc" placeholder="Describe the injury, when it happened, severity..." style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none;resize:vertical;min-height:70px"></textarea>
+        </div>
+        <div style="margin-bottom:12px">
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Status</label>
+          <select id="injuryStatus" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
+            <option value="active">Active — currently affecting training</option>
+            <option value="monitoring">Monitoring — manageable</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button onclick="saveInjury()" style="flex:1;padding:9px;background:var(--rust);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer">Save injury</button>
+          <button onclick="cancelAddInjury()" style="padding:9px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:13px;cursor:pointer">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Injury list -->
+      <div id="injuryList">
+        <div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No injuries logged — great work! 💪</div>
+      </div>
+    </div>
+
+    <!-- Practitioner Notes -->
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">📋 Practitioner Notes</div>
+        <button onclick="showAddPractNote()" style="padding:5px 12px;background:var(--iron);color:var(--white);border:none;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer">+ Add</button>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Notes from your physio, doctor or other healthcare provider that Wade needs to know about.</div>
+
+      <!-- Add note form -->
+      <div id="addPractNoteForm" style="display:none;background:var(--chalk);border-radius:6px;padding:14px;margin-bottom:14px">
+        <div style="margin-bottom:10px">
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Practitioner name & type</label>
+          <input type="text" id="practName" placeholder="e.g. Sarah Jones — Physiotherapist" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
+        </div>
+        <div style="margin-bottom:10px">
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Note / instructions</label>
+          <textarea id="practNote" placeholder="e.g. No heavy squats for 4 weeks. Cleared for upper body work. Review in 2 weeks..." style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none;resize:vertical;min-height:80px"></textarea>
+        </div>
+        <div style="margin-bottom:12px">
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Upload document (optional)</label>
+          <input type="file" id="practFile" accept=".pdf,.jpg,.png,.jpeg" style="font-size:13px;color:var(--muted)">
+        </div>
+        <div style="display:flex;gap:8px">
+          <button onclick="savePractNote()" style="flex:1;padding:9px;background:var(--rust);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer">Send to Wade</button>
+          <button onclick="cancelPractNote()" style="padding:9px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:13px;cursor:pointer">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Notes list -->
+      <div id="practNotesList">
+        <div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No practitioner notes added yet.</div>
+      </div>
+    </div>
+
+  </div>
+
   <div class="panel" id="panel-messages">
     <div class="section-hdr" style="margin-bottom:20px">
       <div class="section-title">MESSAGES</div>
@@ -395,6 +597,7 @@ nav{background:var(--iron);padding:0 24px;display:flex;align-items:center;justif
   <div class="bottom-nav-inner">
     <div class="bnav-item active" onclick="switchPanel('program',this)"><div class="bnav-icon">📋</div>Program</div>
     <div class="bnav-item" onclick="switchPanel('progress',this)"><div class="bnav-icon">📈</div>Progress</div>
+    <div class="bnav-item" onclick="switchPanel('profile',this)"><div class="bnav-icon">👤</div>Profile</div>
     <div class="bnav-item" onclick="switchPanel('uploads',this)"><div class="bnav-icon">🎥</div>Clips</div>
     <div class="bnav-item" onclick="switchPanel('messages',this)"><div class="bnav-icon">💬</div>Messages</div>
   </div>
@@ -716,7 +919,8 @@ function switchPanel(id, el) {
   document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
   if(el) el.classList.add('active');
   else {
-    const map = {program:0,progress:1,uploads:2,messages:3};
+    const map = {program:0,progress:1,profile:2,uploads:3,messages:4};
+  if(id==='profile') loadProfile();
     document.querySelectorAll('.bnav-item')[map[id]]?.classList.add('active');
   }
   window.scrollTo({top:0,behavior:'smooth'});
@@ -845,6 +1049,147 @@ function sendMessage() {
   input.value = '';
   renderMessages();
   showToast('Message sent to Wade');
+}
+
+// ── PROFILE ───────────────────────────────────────────────────
+let injuries = JSON.parse(sessionStorage.getItem('ws_injuries') || '[]');
+
+function loadProfile() {
+  // In production pull from Supabase — for now use session/mock data
+  document.getElementById('prof-name').textContent = 'Dave Mitchell';
+  document.getElementById('prof-age').textContent = '38';
+  document.getElementById('prof-height').textContent = '182cm';
+  document.getElementById('prof-weight').textContent = '89kg';
+  document.getElementById('prof-location').textContent = 'Brisbane, QLD';
+  document.getElementById('prof-program').textContent = 'Get Strong — Week 3 of 6';
+
+  // Mock RPE results — in production pull from rpe10_results table
+  const rpe = {
+    'squat-raw-1rm':'145kg','squat-raw-3rm':'130kg','squat-raw-5rm':'120kg',
+    'squat-wraps-1rm':'165kg','squat-wraps-3rm':'150kg','squat-wraps-5rm':'140kg',
+    'bench-1rm':'110kg','bench-3rm':'100kg','bench-5rm':'92.5kg',
+    'deadlift-1rm':'200kg','deadlift-3rm':'182.5kg','deadlift-5rm':'170kg',
+    'press-1rm':'80kg','press-3rm':'72.5kg','press-5rm':'65kg',
+  };
+  Object.entries(rpe).forEach(([k,v])=>{
+    const el = document.getElementById('rpe-'+k);
+    if(el) el.textContent = v;
+  });
+  document.getElementById('rpeTestDate').textContent = 'Tested: 15 April 2025';
+
+  // Load practitioner notes from session
+  renderPractNotes();
+
+  renderInjuries();
+}
+
+function renderInjuries() {
+  const list = document.getElementById('injuryList');
+  if (!injuries.length) {
+    list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No injuries logged — great work! 💪</div>';
+    return;
+  }
+  list.innerHTML = injuries.map((inj,i) => `
+    <div class="injury-item ${inj.status}">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
+        <div style="font-size:14px;font-weight:600">${inj.area}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="injury-status-badge status-${inj.status}">${inj.status}</span>
+          <span style="cursor:pointer;color:var(--muted);font-size:16px" onclick="removeInjury(${i})">×</span>
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:6px">${inj.desc}</div>
+      <div style="font-size:11px;color:var(--muted)">${inj.date}</div>
+    </div>`).join('');
+}
+
+// ── PRACTITIONER NOTES ────────────────────────────────────────
+let practNotes = JSON.parse(sessionStorage.getItem('ws_pract_notes') || '[]');
+
+function showAddPractNote() {
+  document.getElementById('addPractNoteForm').style.display = 'block';
+}
+
+function cancelPractNote() {
+  document.getElementById('addPractNoteForm').style.display = 'none';
+  document.getElementById('practName').value = '';
+  document.getElementById('practNote').value = '';
+  document.getElementById('practFile').value = '';
+}
+
+function savePractNote() {
+  const name = document.getElementById('practName').value.trim();
+  const note = document.getElementById('practNote').value.trim();
+  const file = document.getElementById('practFile').files[0];
+  if (!note) { showToast('Please enter the practitioner note'); return; }
+  practNotes.unshift({
+    practitioner: name || 'Unknown practitioner',
+    note,
+    fileName: file ? file.name : null,
+    date: new Date().toLocaleDateString('en-AU', {day:'numeric',month:'long',year:'numeric'})
+  });
+  sessionStorage.setItem('ws_pract_notes', JSON.stringify(practNotes));
+  cancelPractNote();
+  renderPractNotes();
+  showToast('Note sent to Wade ✓');
+}
+
+function renderPractNotes() {
+  const list = document.getElementById('practNotesList');
+  if (!list) return;
+  if (!practNotes.length) {
+    list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No practitioner notes added yet.</div>';
+    return;
+  }
+  list.innerHTML = practNotes.map((n,i) => `
+    <div style="padding:14px;background:var(--chalk);border-radius:6px;margin-bottom:8px;border-left:3px solid #4488cc">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--iron)">${n.practitioner}</div>
+          <div style="font-size:11px;color:var(--muted)">${n.date}</div>
+        </div>
+        <span style="cursor:pointer;color:var(--muted);font-size:16px" onclick="removePractNote(${i})">×</span>
+      </div>
+      <div style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:${n.fileName?'8px':'0'}">${n.note}</div>
+      ${n.fileName ? `<div style="font-size:12px;color:#4488cc;font-weight:500">📎 ${n.fileName}</div>` : ''}
+    </div>`).join('');
+}
+
+function removePractNote(i) {
+  practNotes.splice(i,1);
+  sessionStorage.setItem('ws_pract_notes', JSON.stringify(practNotes));
+  renderPractNotes();
+}
+
+function showAddInjury() {
+  document.getElementById('addInjuryForm').style.display = 'block';
+}
+
+function cancelAddInjury() {
+  document.getElementById('addInjuryForm').style.display = 'none';
+  document.getElementById('injuryArea').value = '';
+  document.getElementById('injuryDesc').value = '';
+}
+
+function saveInjury() {
+  const area = document.getElementById('injuryArea').value.trim();
+  const desc = document.getElementById('injuryDesc').value.trim();
+  const status = document.getElementById('injuryStatus').value;
+  if (!area) { showToast('Please enter the injured area'); return; }
+  injuries.unshift({
+    area, desc, status,
+    date: new Date().toLocaleDateString('en-AU', {day:'numeric',month:'long',year:'numeric'})
+  });
+  sessionStorage.setItem('ws_injuries', JSON.stringify(injuries));
+  cancelAddInjury();
+  renderInjuries();
+  showToast('Injury logged ✓');
+}
+
+function removeInjury(i) {
+  injuries.splice(i,1);
+  sessionStorage.setItem('ws_injuries', JSON.stringify(injuries));
+  renderInjuries();
 }
 
 function showToast(msg) {

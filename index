@@ -327,22 +327,6 @@ footer{background:var(--iron);padding:40px 64px}
       </ul>
       <button class="prog-btn btn-rust" onclick="document.getElementById('payment').scrollIntoView({behavior:'smooth'})">apply now</button>
     </div>
-    <div class="program-card" style="border-style:dashed;opacity:0.7">
-      <span class="prog-tag tag-start">Coming soon</span>
-      <div class="prog-name">NUTRITION PLANS</div>
-      <p class="prog-desc">Custom meal and macro plans built around your training. Designed for strength athletes — not generic diet advice.</p>
-      <div class="prog-price" style="font-size:28px;padding-top:6px">Available soon</div>
-      <div class="prog-price-note">add-on to any program</div>
-      <hr class="prog-divider">
-      <ul class="prog-features">
-        <li><span class="feat-check">+</span> Tailored to your training load</li>
-        <li><span class="feat-check">+</span> Comp prep &amp; off-season plans</li>
-        <li><span class="feat-check">+</span> Macro targets &amp; meal timing</li>
-        <li><span class="feat-check">+</span> Adjusted week to week</li>
-      </ul>
-      <button class="prog-btn btn-outline" style="opacity:0.5;cursor:default">Notify me</button>
-    </div>
-
     <div class="program-card">
       <span class="prog-tag tag-start">Fully custom</span>
       <div class="prog-name">I'LL COME TO YOU</div>

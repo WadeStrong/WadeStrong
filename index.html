@@ -257,7 +257,7 @@ footer{background:var(--iron);padding:40px 64px}
       <img src="wade-photo.jpg" alt="Wade — Professional Strongman" style="width:100%;height:100%;object-fit:cover;object-position:center top;filter:grayscale(15%)">
     </div>
     <div class="hero-stats-bar">
-      <div class="stat"><div class="stat-val">7TH</div><div class="stat-label">Arnold Classic, Ohio</div></div>
+      <div class="stat"><div class="stat-val">7TH</div><div class="stat-label">Strongman Corporation Arnold's Pro/Am, Ohio</div></div>
       <div class="stat"><div class="stat-val">PRO</div><div class="stat-label">level athlete</div></div>
       <div class="stat"><div class="stat-val">3</div><div class="stat-label">countries competed</div></div>
     </div>
@@ -269,7 +269,7 @@ footer{background:var(--iron);padding:40px 64px}
   <div class="about-grid">
     <div class="about-text">
       <div class="section-title">A KIWI WHO LIFTS THE WORLD.</div>
-      <p>Wade is a professional strongman who has competed across New Zealand, Australia, and the United States — most recently placing 7th at the Arnold Classic in Ohio, one of the most prestigious events on the planet.</p>
+      <p>Wade is a professional strongman who has competed across New Zealand, Australia, and the United States — most recently placing 7th at the Strongman Corporation Arnold's Pro/Am in Ohio, one of the most prestigious events on the planet.</p>
       <p>He's accumulated more medals than he knows what to do with. But what drives him now is helping everyday people — blokes with jobs, families, and busy lives — discover exactly what their bodies are capable of.</p>
       <p>If you've ever wanted to get genuinely strong, Wade will show you how.</p>
       <div class="flag-row">
@@ -306,7 +306,7 @@ footer{background:var(--iron);padding:40px 64px}
         <li><span class="feat-check">+</span> Program adjusted week to week</li>
         <li><span class="feat-check">+</span> Works with any gym setup</li>
       </ul>
-      <button class="prog-btn btn-outline" onclick="document.getElementById('payment').scrollIntoView({behavior:'smooth'})">get started</button>
+      <button class="prog-btn btn-outline" onclick="openPayment()">get started</button>
     </div>
     <div class="program-card featured">
       <span class="prog-tag tag-comp">Strongman specific</span>
@@ -327,7 +327,7 @@ footer{background:var(--iron);padding:40px 64px}
         <li><span class="feat-check">+</span> Recovery &amp; taper protocol included</li>
         <li><span class="feat-check">+</span> Feedback right up to comp day</li>
       </ul>
-      <button class="prog-btn btn-rust" onclick="document.getElementById('payment').scrollIntoView({behavior:'smooth'})">apply now</button>
+      <button class="prog-btn btn-rust" onclick="openPayment()">apply now</button>
     </div>
     <div class="program-card">
       <span class="prog-tag tag-start">Fully custom</span>
@@ -503,7 +503,7 @@ footer{background:var(--iron);padding:40px 64px}
   <div class="cta-bg">STRONG</div>
   <h2>READY TO FIND OUT WHAT YOU'RE MADE OF?</h2>
   <p>Spots are limited. Wade personally reviews every application.</p>
-  <button class="cta-btn" onclick="document.getElementById('payment').scrollIntoView({behavior:'smooth'})">apply for coaching</button>
+  <button class="cta-btn" onclick="openPayment()">apply for coaching</button>
 </section>
 
 <footer>
@@ -524,6 +524,23 @@ footer{background:var(--iron);padding:40px 64px}
 </footer>
 
 <script>
+function openPayment() {
+  const modal = document.getElementById('paymentModal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closePayment() {
+  const modal = document.getElementById('paymentModal');
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// Close modal on backdrop click
+document.getElementById('paymentModal').addEventListener('click', function(e) {
+  if (e.target === this) closePayment();
+});
+
 function handleSubmit(e){
   e.preventDefault();
   document.getElementById('formSuccess').style.display='block';

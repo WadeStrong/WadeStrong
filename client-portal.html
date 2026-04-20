@@ -532,6 +532,57 @@ nav{background:var(--iron);padding:0 24px;display:flex;align-items:center;justif
       </div>
     </div>
 
+    <!-- Supplements -->
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Current Supplements</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:3px">Required — Wade needs to know what you're taking to factor it into your program</div>
+        </div>
+        <button onclick="showAddSupp()" style="padding:5px 12px;background:var(--iron);color:var(--white);border:none;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0;margin-left:10px">+ Add</button>
+      </div>
+
+      <!-- Add supplement form -->
+      <div id="addSuppForm" style="display:none;background:var(--chalk);border-radius:6px;padding:14px;margin-top:12px;margin-bottom:14px">
+        <div style="margin-bottom:10px">
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Supplement</label>
+          <input type="text" id="suppName" placeholder="e.g. Creatine, Protein, Pre-workout, Magnesium..." style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Dose</label>
+            <input type="text" id="suppDose" placeholder="e.g. 5g, 2 caps" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">When</label>
+            <select id="suppTiming" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
+              <option value="">Select timing</option>
+              <option>Morning</option>
+              <option>Pre-workout</option>
+              <option>Intra-workout</option>
+              <option>Post-workout</option>
+              <option>With meals</option>
+              <option>Before bed</option>
+              <option>Daily</option>
+              <option>As needed</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:12px">
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Notes (optional)</label>
+          <input type="text" id="suppNotes" placeholder="Brand, reason for taking, how long etc" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
+        </div>
+        <div style="display:flex;gap:8px">
+          <button onclick="saveSupp()" style="flex:1;padding:9px;background:var(--rust);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer">Save supplement</button>
+          <button onclick="cancelSupp()" style="padding:9px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:13px;cursor:pointer">Cancel</button>
+        </div>
+      </div>
+
+      <div id="suppList" style="margin-top:12px">
+        <div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No supplements added yet — tap + Add to get started</div>
+      </div>
+    </div>
+
     <!-- Practitioner Notes -->
     <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
@@ -568,6 +619,331 @@ nav{background:var(--iron);padding:0 24px;display:flex;align-items:center;justif
 
   </div>
 
+  <!-- RECOVERY PANEL -->
+  <div class="panel" id="panel-recovery" style="display:none">
+    <div class="panel-title">Recovery</div>
+
+    <!-- Apple Health Coming Soon -->
+    <div style="background:var(--chalk);border:1px dashed var(--border);border-radius:8px;padding:16px;margin-bottom:16px;display:flex;align-items:center;gap:14px">
+      <div style="font-size:28px">🍎</div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--iron);margin-bottom:2px">Apple Health sync — coming soon</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.5">Auto-import sleep, HRV and activity data. Available in the Wade Strong app.</div>
+      </div>
+    </div>
+
+    <!-- Daily Check-in -->
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Daily Check-in</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:3px">Optional — helps Wade understand how your body is responding</div>
+        </div>
+        <div style="font-size:12px;color:var(--muted)" id="checkInDate"></div>
+      </div>
+
+      <!-- Soreness -->
+      <div style="margin-bottom:18px">
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Overall soreness</label>
+        <div style="display:flex;gap:8px">
+          ${[1,2,3,4,5,6,7,8,9,10].map(n => `
+          <button onclick="setSoreness(${n})" id="sor-${n}" style="width:32px;height:32px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s;color:var(--muted)">${n}</button>`).join('')}
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:4px;padding:0 2px">
+          <span>None</span><span>Max</span>
+        </div>
+      </div>
+
+      <!-- Sleep -->
+      <div style="margin-bottom:18px">
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Sleep last night <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+        <div style="display:flex;align-items:center;gap:12px">
+          <input type="range" id="sleepHours" min="3" max="12" step="0.5" value="7.5" oninput="updateSleep(this.value)" style="flex:1;accent-color:var(--rust)">
+          <div style="text-align:center;min-width:60px">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--iron)" id="sleepVal">7.5</div>
+            <div style="font-size:10px;color:var(--muted)">hours</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button onclick="setSleepQuality('poor')" id="sq-poor" class="sq-btn" style="flex:1;padding:7px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-size:12px;font-weight:600;cursor:pointer;color:var(--muted)">😴 Poor</button>
+          <button onclick="setSleepQuality('ok')" id="sq-ok" class="sq-btn" style="flex:1;padding:7px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-size:12px;font-weight:600;cursor:pointer;color:var(--muted)">😐 OK</button>
+          <button onclick="setSleepQuality('good')" id="sq-good" class="sq-btn" style="flex:1;padding:7px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-size:12px;font-weight:600;cursor:pointer;color:var(--muted)">😊 Good</button>
+          <button onclick="setSleepQuality('great')" id="sq-great" class="sq-btn" style="flex:1;padding:7px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-size:12px;font-weight:600;cursor:pointer;color:var(--muted)">🔥 Great</button>
+        </div>
+      </div>
+
+      <!-- HRV -->
+      <div style="margin-bottom:18px">
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">HRV <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional — from Whoop, Garmin etc)</span></label>
+        <div style="display:flex;align-items:center;gap:10px">
+          <input type="number" id="hrvInput" placeholder="e.g. 62" min="0" max="200" style="width:100px;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:16px;font-weight:600;text-align:center;background:var(--chalk);outline:none;-moz-appearance:textfield">
+          <span style="font-size:13px;color:var(--muted)">ms — higher is better</span>
+        </div>
+      </div>
+
+      <button onclick="saveCheckIn()" style="width:100%;padding:12px;background:var(--iron);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s">Log today's check-in</button>
+      <div id="checkInSuccess" style="display:none;margin-top:10px;padding:10px;background:var(--green-bg,#e6f4ed);border:1px solid rgba(44,122,75,0.2);border-radius:5px;font-size:13px;color:#2c7a4b;font-weight:600;text-align:center">✓ Check-in logged!</div>
+    </div>
+
+    <!-- Recovery Log -->
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Recovery Log</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:3px">Optional — log any body work, therapy or recovery sessions</div>
+        </div>
+        <button onclick="showAddRecovery()" style="padding:5px 12px;background:var(--iron);color:var(--white);border:none;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer">+ Add</button>
+      </div>
+
+      <!-- Add recovery form -->
+      <div id="addRecoveryForm" style="display:none;background:var(--chalk);border-radius:6px;padding:14px;margin-bottom:14px">
+        <div style="margin-bottom:10px">
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Treatment type</label>
+          <select id="recoveryType" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
+            <option value="">Select type</option>
+            <option>Massage</option>
+            <option>Cupping</option>
+            <option>Dry Needling</option>
+            <option>Ice Bath</option>
+            <option>Hot/Cold Contrast</option>
+            <option>Sauna</option>
+            <option>Foam Rolling</option>
+            <option>Stretching / Mobility</option>
+            <option>Physio</option>
+            <option>Chiro</option>
+            <option>Compression Therapy</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div style="margin-bottom:10px">
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Body area</label>
+          <input type="text" id="recoveryArea" placeholder="e.g. Lower back, Hamstrings, Full body" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
+        </div>
+        <div style="margin-bottom:10px">
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">How did it feel?</label>
+          <div style="display:flex;gap:8px">
+            <button onclick="setRecoveryFeel('😖 Rough')" class="feel-btn" style="flex:1;padding:7px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-size:12px;cursor:pointer;color:var(--muted)">😖 Rough</button>
+            <button onclick="setRecoveryFeel('👍 Good')" class="feel-btn" style="flex:1;padding:7px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-size:12px;cursor:pointer;color:var(--muted)">👍 Good</button>
+            <button onclick="setRecoveryFeel('🔥 Great')" class="feel-btn" style="flex:1;padding:7px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-size:12px;cursor:pointer;color:var(--muted)">🔥 Great</button>
+          </div>
+        </div>
+        <div style="margin-bottom:12px">
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Notes (optional)</label>
+          <textarea id="recoveryNotes" placeholder="Anything else worth noting..." style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none;resize:vertical;min-height:60px"></textarea>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button onclick="saveRecovery()" style="flex:1;padding:9px;background:var(--rust);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer">Save</button>
+          <button onclick="cancelRecovery()" style="padding:9px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:13px;cursor:pointer">Cancel</button>
+        </div>
+      </div>
+
+      <div id="recoveryList">
+        <div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No recovery sessions logged yet.</div>
+      </div>
+    </div>
+
+    <!-- Nutrition Log -->
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Nutrition — Today</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:3px">Optional — log what you can, skip what you can't</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted)" id="nutritionDate"></div>
+      </div>
+
+      <!-- Calories & Water -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div>
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Calories</label>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input type="number" id="nutCalories" placeholder="0" min="0" max="9999" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:16px;font-weight:600;background:var(--chalk);outline:none;-moz-appearance:textfield">
+            <span style="font-size:12px;color:var(--muted);white-space:nowrap">kcal</span>
+          </div>
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Water</label>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input type="number" id="nutWater" placeholder="0" min="0" max="10" step="0.1" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:16px;font-weight:600;background:var(--chalk);outline:none;-moz-appearance:textfield">
+            <span style="font-size:12px;color:var(--muted);white-space:nowrap">litres</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Macros -->
+      <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Macros <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
+        <div>
+          <label style="display:block;font-size:11px;color:var(--muted);margin-bottom:4px">Protein</label>
+          <div style="display:flex;align-items:center;gap:4px">
+            <input type="number" id="nutProtein" placeholder="0" min="0" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:15px;font-weight:600;background:var(--chalk);outline:none;-moz-appearance:textfield;color:#2c7a4b">
+            <span style="font-size:11px;color:var(--muted)">g</span>
+          </div>
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;color:var(--muted);margin-bottom:4px">Carbs</label>
+          <div style="display:flex;align-items:center;gap:4px">
+            <input type="number" id="nutCarbs" placeholder="0" min="0" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:15px;font-weight:600;background:var(--chalk);outline:none;-moz-appearance:textfield;color:#7a5010">
+            <span style="font-size:11px;color:var(--muted)">g</span>
+          </div>
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;color:var(--muted);margin-bottom:4px">Fats</label>
+          <div style="display:flex;align-items:center;gap:4px">
+            <input type="number" id="nutFats" placeholder="0" min="0" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:15px;font-weight:600;background:var(--chalk);outline:none;-moz-appearance:textfield;color:#8c3020">
+            <span style="font-size:11px;color:var(--muted)">g</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Macro visual bar -->
+      <div id="macroBar" style="display:none;margin-bottom:14px">
+        <div style="height:8px;border-radius:4px;overflow:hidden;display:flex;gap:2px">
+          <div id="macroProteinBar" style="background:#2c7a4b;height:100%;transition:width 0.3s"></div>
+          <div id="macroCarbBar" style="background:#7a5010;height:100%;transition:width 0.3s"></div>
+          <div id="macroFatBar" style="background:#8c3020;height:100%;transition:width 0.3s"></div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:6px;font-size:11px">
+          <span style="color:#2c7a4b">● Protein</span>
+          <span style="color:#7a5010">● Carbs</span>
+          <span style="color:#8c3020">● Fats</span>
+        </div>
+      </div>
+
+      <button onclick="saveNutrition()" style="width:100%;padding:11px;background:var(--rust);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:700;cursor:pointer">Log nutrition</button>
+      <div id="nutritionSuccess" style="display:none;margin-top:10px;padding:10px;background:#e6f4ed;border:1px solid rgba(44,122,75,0.2);border-radius:5px;font-size:13px;color:#2c7a4b;font-weight:600;text-align:center">✓ Nutrition logged!</div>
+
+      <!-- Nutrition history -->
+      <div id="nutritionHistory" style="margin-top:16px"></div>
+    </div>
+
+    <!-- Check-in history -->
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Check-in History</div>
+      <div id="checkInHistory">
+        <div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No check-ins yet — log your first one above!</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- COMP DAY PANEL -->
+  <div class="panel" id="panel-comp" style="display:none">
+    <div class="panel-title">Comp Day Strategy</div>
+
+    <!-- No plan yet state -->
+    <div id="compNoPlan" style="text-align:center;padding:48px 24px;background:var(--white);border:1px solid var(--border);border-radius:8px;margin-bottom:16px;display:none">
+      <div style="font-size:40px;margin-bottom:12px">🏆</div>
+      <div style="font-size:16px;font-weight:600;color:var(--iron);margin-bottom:8px">No comp plan yet</div>
+      <div style="font-size:14px;color:var(--muted);line-height:1.6">Wade will build your competition day strategy once your program is underway. Check back closer to comp day.</div>
+    </div>
+
+    <!-- Comp plan (populated by Wade) -->
+    <div id="compPlan">
+
+      <!-- Competition Details -->
+      <div style="background:var(--iron);border-radius:8px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden">
+        <div style="position:absolute;right:-10px;bottom:-20px;font-family:'Bebas Neue',sans-serif;font-size:100px;color:rgba(255,255,255,0.04);line-height:1;pointer-events:none">COMP</div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--rust);margin-bottom:12px;position:relative;z-index:1">Competition</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--white);letter-spacing:1px;margin-bottom:4px;position:relative;z-index:1" id="compName">Strongman Corporation Arnold's Pro/Am</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;position:relative;z-index:1">
+          <div><div style="font-size:11px;color:rgba(255,255,255,0.4)">Date</div><div style="font-size:14px;font-weight:600;color:var(--white)" id="compDate">15 June 2025</div></div>
+          <div><div style="font-size:11px;color:rgba(255,255,255,0.4)">Location</div><div style="font-size:14px;font-weight:600;color:var(--white)" id="compLocation">Ohio, USA</div></div>
+          <div><div style="font-size:11px;color:rgba(255,255,255,0.4)">Weight class</div><div style="font-size:14px;font-weight:600;color:var(--white)" id="compWeightClass">Under 90kg</div></div>
+          <div><div style="font-size:11px;color:rgba(255,255,255,0.4)">Federation</div><div style="font-size:14px;font-weight:600;color:var(--white)" id="compFederation">Strongman Corporation</div></div>
+        </div>
+      </div>
+
+      <!-- Weight Cut -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px" id="weightCutSection">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Weight Cut Plan</div>
+        <div id="weightCutContent" style="font-size:14px;color:var(--muted);line-height:1.8">
+          Current weight: <strong style="color:var(--iron)">91.5kg</strong> · Target: <strong style="color:var(--iron)">89.9kg</strong><br>
+          Cut water only in the final 24hrs. No food restriction. Rehydrate immediately after weigh-in with electrolytes + carbs.
+        </div>
+      </div>
+
+      <!-- Warm Up Plan -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Warm Up Plan</div>
+        <div id="warmUpContent" style="font-size:14px;color:var(--muted);line-height:1.8">
+          Arrive 90 min before first event. General movement 10 min → event-specific warm ups 20 min → final heavy single 15 min before start. Keep it minimal — save energy for the platform.
+        </div>
+      </div>
+
+      <!-- Events & Attempts -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:16px">Events & Attempt Selection</div>
+        <div id="eventsList"></div>
+      </div>
+
+      <!-- Day Of Notes from Wade -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Wade's Notes</div>
+        <div id="wadeCompNotes" style="font-size:14px;color:var(--muted);line-height:1.8;background:var(--chalk);border-radius:6px;padding:14px;border-left:3px solid var(--rust)">
+          You've put in the work. Trust the training. Stay in your own lane on the day — don't watch what anyone else is lifting. Your openers are conservative on purpose, we want three whites on every lift. Attack your thirds. — Wade
+        </div>
+      </div>
+
+      <!-- Competition Rules & Strategy -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Competition Rules & Tactical Strategy</div>
+
+        <!-- Order of play -->
+        <div style="background:var(--chalk);border-radius:6px;padding:14px;margin-bottom:10px;border-left:3px solid var(--rust)">
+          <div style="font-size:13px;font-weight:700;color:var(--iron);margin-bottom:6px">🎯 Order of competition</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.8">
+            Athletes compete in <strong style="color:var(--iron)">reverse placing order</strong> — the athlete in last place goes first, the leader goes last. This means:
+            <ul style="margin-top:8px;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+              <li><strong style="color:var(--iron)">Leading after an event = you compete last</strong> in the next event. You can watch everyone else lift and know exactly what you need.</li>
+              <li><strong style="color:var(--iron)">Trailing = you compete earlier.</strong> Use this to set a target score that puts pressure on the leaders.</li>
+              <li>If you're leading — <strong style="color:var(--iron)">don't show your hand early.</strong> You can adjust your attempt based on what others lift.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Attempt strategy -->
+        <div style="background:var(--chalk);border-radius:6px;padding:14px;margin-bottom:10px;border-left:3px solid #4488cc">
+          <div style="font-size:13px;font-weight:700;color:var(--iron);margin-bottom:6px">📊 Attempt selection rules</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.8">
+            <ul style="padding-left:18px;display:flex;flex-direction:column;gap:6px">
+              <li>You must <strong style="color:var(--iron)">declare your next attempt immediately</strong> after each lift — know your numbers before you compete.</li>
+              <li><strong style="color:var(--iron)">Openers should be 95%+ certainty.</strong> A missed opener costs you points and confidence.</li>
+              <li>If you're battling for position, your third attempt may need to change based on what others lift — Wade will advise on the day.</li>
+              <li>In events judged on reps or distance — <strong style="color:var(--iron)">pace yourself.</strong> Going too hard early can cost you more than a slower steady effort.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Points system -->
+        <div style="background:var(--chalk);border-radius:6px;padding:14px;margin-bottom:10px;border-left:3px solid #2c7a4b">
+          <div style="font-size:13px;font-weight:700;color:var(--iron);margin-bottom:6px">🏅 Points & placing</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.8">
+            Points are awarded per event based on placing. <strong style="color:var(--iron)">Consistency across all events beats winning one and bombing another.</strong> A 2nd, 2nd, 2nd beats a 1st, 1st, last place. Wade programs all events — not just your strongest.
+          </div>
+        </div>
+
+        <!-- Wade's tactical notes -->
+        <div style="background:var(--chalk);border-radius:6px;padding:14px;border-left:3px solid var(--rust)">
+          <div style="font-size:13px;font-weight:700;color:var(--iron);margin-bottom:6px">💬 Wade's tactical notes for this comp</div>
+          <div id="wadeCompTactics" style="font-size:13px;color:var(--muted);line-height:1.8">
+            You're a contender in this field. If you podium event 1, you'll go last in event 2 — use that. Watch the top 3 lifters and know your number before you touch the bar. Your strongest events are later in the day — stay patient early.
+          </div>
+        </div>
+      </div>
+
+      <!-- Athlete Notes & Questions -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Your Notes & Questions</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Add questions or notes — these will be sent to Wade in messages and he'll update your plan if needed.</div>
+        <div id="athleteCompNotes" style="margin-bottom:12px"></div>
+        <textarea id="compNoteInput" placeholder="e.g. Should I go heavier on my log opener? What if conditions are bad? Feeling nervous about the atlas stones..." style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;color:var(--iron);background:var(--chalk);outline:none;resize:vertical;min-height:80px"></textarea>
+        <button onclick="sendCompNote()" style="width:100%;margin-top:10px;padding:11px;background:var(--iron);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:700;cursor:pointer">Send to Wade →</button>
+      </div>
+
+    </div>
+  </div>
+
   <div class="panel" id="panel-messages">
     <div class="section-hdr" style="margin-bottom:20px">
       <div class="section-title">MESSAGES</div>
@@ -599,6 +975,8 @@ nav{background:var(--iron);padding:0 24px;display:flex;align-items:center;justif
     <div class="bnav-item" onclick="switchPanel('progress',this)"><div class="bnav-icon">📈</div>Progress</div>
     <div class="bnav-item" onclick="switchPanel('profile',this)"><div class="bnav-icon">👤</div>Profile</div>
     <div class="bnav-item" onclick="switchPanel('uploads',this)"><div class="bnav-icon">🎥</div>Clips</div>
+    <div class="bnav-item" onclick="switchPanel('recovery',this)"><div class="bnav-icon">🔄</div>Recovery</div>
+    <div class="bnav-item" id="compTab" onclick="switchPanel('comp',this)" style="display:none"><div class="bnav-icon">🏆</div>Comp Day</div>
     <div class="bnav-item" onclick="switchPanel('messages',this)"><div class="bnav-icon">💬</div>Messages</div>
   </div>
 </div>
@@ -919,9 +1297,11 @@ function switchPanel(id, el) {
   document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
   if(el) el.classList.add('active');
   else {
-    const map = {program:0,progress:1,profile:2,uploads:3,messages:4};
+    const map = {program:0,progress:1,profile:2,uploads:3,recovery:4,comp:5,messages:6};
   if(id==='profile') loadProfile();
   if(id==='progress') loadProgress();
+  if(id==='recovery') loadRecovery();
+  if(id==='comp') loadComp();
     document.querySelectorAll('.bnav-item')[map[id]]?.classList.add('active');
   }
   window.scrollTo({top:0,behavior:'smooth'});
@@ -1130,6 +1510,291 @@ function sendMessage() {
   showToast('Message sent to Wade');
 }
 
+// ── COMP DAY ──────────────────────────────────────────────────
+const compEvents = [
+  { name: 'Log Press', order: 1, strategy: 'Stay tight, big breath before the dip. Drive through the heels.', opener: '100kg', second: '110kg', third: '117.5kg' },
+  { name: 'Deadlift for Reps', order: 2, strategy: 'Hook grip all the way. Aim for 8+ reps. Drop after 6 if grip goes.', opener: '200kg', second: null, third: null, repsTarget: '8+' },
+  { name: 'Farmers Carry', order: 3, strategy: '60m in two runs. Fast first 30m, don't stop. Lock wrists.', opener: '110kg/hand', second: null, third: null },
+  { name: 'Atlas Stones', order: 4, strategy: 'Lap the stone properly every time. Don't rush — position beats speed.', opener: '100kg', second: '120kg', third: '140kg' },
+  { name: 'Yoke Walk', order: 5, strategy: 'Short steps, fast feet. Eyes forward. Don't stop.', opener: '300kg', second: null, third: null },
+];
+
+let compNotes = JSON.parse(sessionStorage.getItem('ws_comp_notes') || '[]');
+
+function loadComp() {
+  // Show/hide comp tab based on program type
+  // For now show for all — in production check client.program_type === 'pre_comp'
+  document.getElementById('compTab').style.display = 'flex';
+  document.getElementById('compNoPlan').style.display = 'none';
+  document.getElementById('compPlan').style.display = 'block';
+
+  renderEvents();
+  renderCompNotes();
+}
+
+function renderEvents() {
+  const el = document.getElementById('eventsList');
+  if (!el) return;
+  el.innerHTML = compEvents.map((ev, i) => `
+    <div style="border:1px solid var(--border);border-radius:6px;margin-bottom:12px;overflow:hidden">
+      <div style="background:var(--chalk);padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)">
+        <div style="background:var(--iron);color:var(--white);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">${ev.order}</div>
+        <div style="font-size:15px;font-weight:700;color:var(--iron)">${ev.name}</div>
+      </div>
+      <div style="padding:14px 16px">
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px;font-style:italic">"${ev.strategy}"</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${ev.opener ? `<div style="background:var(--chalk);border-radius:5px;padding:8px 12px;text-align:center"><div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)">Opener</div><div style="font-size:16px;font-weight:700;color:var(--iron);margin-top:2px">${ev.opener}</div></div>` : ''}
+          ${ev.second ? `<div style="background:var(--chalk);border-radius:5px;padding:8px 12px;text-align:center"><div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)">Second</div><div style="font-size:16px;font-weight:700;color:var(--iron);margin-top:2px">${ev.second}</div></div>` : ''}
+          ${ev.third ? `<div style="background:var(--rust);border-radius:5px;padding:8px 12px;text-align:center"><div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.7)">Third</div><div style="font-size:16px;font-weight:700;color:var(--white);margin-top:2px">${ev.third}</div></div>` : ''}
+          ${ev.repsTarget ? `<div style="background:var(--chalk);border-radius:5px;padding:8px 12px;text-align:center"><div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)">Target</div><div style="font-size:16px;font-weight:700;color:var(--iron);margin-top:2px">${ev.repsTarget} reps</div></div>` : ''}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function sendCompNote() {
+  const text = document.getElementById('compNoteInput').value.trim();
+  if (!text) return;
+
+  const note = {
+    text,
+    date: new Date().toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'})
+  };
+  compNotes.unshift(note);
+  sessionStorage.setItem('ws_comp_notes', JSON.stringify(compNotes));
+
+  // Push to messages
+  messages.push({
+    from: 'client',
+    text: '🏆 Comp plan question: ' + text,
+    time: 'Just now'
+  });
+
+  document.getElementById('compNoteInput').value = '';
+  renderCompNotes();
+  showToast('Question sent to Wade ✓ — check messages for his reply');
+}
+
+function renderCompNotes() {
+  const el = document.getElementById('athleteCompNotes');
+  if (!el || !compNotes.length) return;
+  el.innerHTML = compNotes.map(n => `
+    <div style="padding:10px 12px;background:var(--chalk);border-radius:5px;margin-bottom:8px;border-left:3px solid var(--border)">
+      <div style="font-size:13px;color:var(--iron);margin-bottom:3px">${n.text}</div>
+      <div style="font-size:11px;color:var(--muted)">${n.date}</div>
+    </div>`).join('');
+}
+
+// ── RECOVERY ──────────────────────────────────────────────────
+let recoveryLog = JSON.parse(sessionStorage.getItem('ws_recovery') || '[]');
+let checkIns = JSON.parse(sessionStorage.getItem('ws_checkins') || '[]');
+let selectedSoreness = null;
+let selectedSleepQuality = null;
+let selectedRecoveryFeel = null;
+
+function loadRecovery() {
+  document.getElementById('nutritionDate').textContent = new Date().toLocaleDateString('en-AU', {weekday:'long',day:'numeric',month:'long'});
+  renderNutritionHistory();
+  document.getElementById('checkInDate').textContent = new Date().toLocaleDateString('en-AU', {weekday:'long',day:'numeric',month:'long'});
+  renderRecoveryList();
+  renderCheckInHistory();
+}
+
+function setSoreness(n) {
+  selectedSoreness = n;
+  for(let i=1;i<=10;i++) {
+    const btn = document.getElementById('sor-'+i);
+    if(btn) {
+      btn.style.background = i <= n ? 'var(--rust)' : 'var(--chalk)';
+      btn.style.color = i <= n ? 'var(--white)' : 'var(--muted)';
+      btn.style.borderColor = i <= n ? 'var(--rust)' : 'var(--border)';
+    }
+  }
+}
+
+function updateSleep(val) {
+  document.getElementById('sleepVal').textContent = val;
+}
+
+function setSleepQuality(q) {
+  selectedSleepQuality = q;
+  document.querySelectorAll('.sq-btn').forEach(b => {
+    b.style.background = 'var(--chalk)';
+    b.style.color = 'var(--muted)';
+    b.style.borderColor = 'var(--border)';
+  });
+  const btn = document.getElementById('sq-'+q);
+  if(btn) {
+    btn.style.background = 'var(--iron)';
+    btn.style.color = 'var(--white)';
+    btn.style.borderColor = 'var(--iron)';
+  }
+}
+
+function setRecoveryFeel(feel) {
+  selectedRecoveryFeel = feel;
+  document.querySelectorAll('.feel-btn').forEach(b => {
+    b.style.background = b.textContent.trim() === feel ? 'var(--iron)' : 'var(--chalk)';
+    b.style.color = b.textContent.trim() === feel ? 'var(--white)' : 'var(--muted)';
+  });
+}
+
+function saveCheckIn() {
+  const sleep = document.getElementById('sleepHours').value;
+  const hrv = document.getElementById('hrvInput').value;
+  const entry = {
+    date: new Date().toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'}),
+    soreness: selectedSoreness,
+    sleep: sleep,
+    sleepQuality: selectedSleepQuality,
+    hrv: hrv || null,
+  };
+  checkIns.unshift(entry);
+  sessionStorage.setItem('ws_checkins', JSON.stringify(checkIns));
+  document.getElementById('checkInSuccess').style.display = 'block';
+  setTimeout(() => document.getElementById('checkInSuccess').style.display = 'none', 3000);
+  renderCheckInHistory();
+  showToast('Check-in logged ✓');
+}
+
+function renderCheckInHistory() {
+  const el = document.getElementById('checkInHistory');
+  if(!checkIns.length) {
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No check-ins yet — log your first one above!</div>';
+    return;
+  }
+  el.innerHTML = checkIns.slice(0,7).map(c => `
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div style="font-size:11px;color:var(--muted);min-width:80px">${c.date}</div>
+      <div style="display:flex;gap:10px;flex:1;flex-wrap:wrap">
+        ${c.soreness ? `<span style="font-size:12px;background:var(--chalk);padding:3px 8px;border-radius:4px">😣 Soreness: ${c.soreness}/10</span>` : ''}
+        ${c.sleep ? `<span style="font-size:12px;background:var(--chalk);padding:3px 8px;border-radius:4px">😴 ${c.sleep}h ${c.sleepQuality ? '· '+c.sleepQuality : ''}</span>` : ''}
+        ${c.hrv ? `<span style="font-size:12px;background:var(--chalk);padding:3px 8px;border-radius:4px">❤️ HRV: ${c.hrv}ms</span>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+function showAddRecovery() {
+  document.getElementById('addRecoveryForm').style.display = 'block';
+}
+
+function cancelRecovery() {
+  document.getElementById('addRecoveryForm').style.display = 'none';
+  document.getElementById('recoveryType').value = '';
+  document.getElementById('recoveryArea').value = '';
+  document.getElementById('recoveryNotes').value = '';
+  selectedRecoveryFeel = null;
+}
+
+function saveRecovery() {
+  const type = document.getElementById('recoveryType').value;
+  const area = document.getElementById('recoveryArea').value.trim();
+  if(!type) { showToast('Please select a treatment type'); return; }
+  recoveryLog.unshift({
+    type, area, feel: selectedRecoveryFeel,
+    notes: document.getElementById('recoveryNotes').value.trim(),
+    date: new Date().toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'})
+  });
+  sessionStorage.setItem('ws_recovery', JSON.stringify(recoveryLog));
+  cancelRecovery();
+  renderRecoveryList();
+  showToast('Recovery session logged ✓');
+}
+
+function renderRecoveryList() {
+  const el = document.getElementById('recoveryList');
+  if(!recoveryLog.length) {
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No recovery sessions logged yet.</div>';
+    return;
+  }
+  el.innerHTML = recoveryLog.map((r,i) => `
+    <div style="padding:12px;background:var(--chalk);border-radius:6px;margin-bottom:8px;border-left:3px solid var(--rust)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px">
+        <div>
+          <span style="font-size:14px;font-weight:600;color:var(--iron)">${r.type}</span>
+          ${r.feel ? `<span style="font-size:12px;color:var(--muted);margin-left:8px">${r.feel}</span>` : ''}
+        </div>
+        <span style="cursor:pointer;color:var(--muted);font-size:16px" onclick="removeRecovery(${i})">×</span>
+      </div>
+      ${r.area ? `<div style="font-size:13px;color:var(--muted);margin-bottom:4px">📍 ${r.area}</div>` : ''}
+      ${r.notes ? `<div style="font-size:13px;color:var(--muted)">${r.notes}</div>` : ''}
+      <div style="font-size:11px;color:var(--muted);margin-top:6px">${r.date}</div>
+    </div>`).join('');
+}
+
+// ── NUTRITION ─────────────────────────────────────────────────
+let nutritionLog = JSON.parse(sessionStorage.getItem('ws_nutrition') || '[]');
+
+function saveNutrition() {
+  const calories = document.getElementById('nutCalories').value;
+  const water = document.getElementById('nutWater').value;
+  const protein = document.getElementById('nutProtein').value;
+  const carbs = document.getElementById('nutCarbs').value;
+  const fats = document.getElementById('nutFats').value;
+
+  if (!calories && !water) { showToast('Enter at least calories or water'); return; }
+
+  const entry = {
+    date: new Date().toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'}),
+    calories: calories || null,
+    water: water || null,
+    protein: protein || null,
+    carbs: carbs || null,
+    fats: fats || null,
+  };
+
+  nutritionLog.unshift(entry);
+  sessionStorage.setItem('ws_nutrition', JSON.stringify(nutritionLog));
+  document.getElementById('nutritionSuccess').style.display = 'block';
+  setTimeout(() => document.getElementById('nutritionSuccess').style.display = 'none', 3000);
+  renderNutritionHistory();
+  updateMacroBar();
+  showToast('Nutrition logged ✓');
+}
+
+function updateMacroBar() {
+  const p = parseFloat(document.getElementById('nutProtein').value) || 0;
+  const c = parseFloat(document.getElementById('nutCarbs').value) || 0;
+  const f = parseFloat(document.getElementById('nutFats').value) || 0;
+  const total = p + c + f;
+  if (total > 0) {
+    document.getElementById('macroBar').style.display = 'block';
+    document.getElementById('macroProteinBar').style.width = (p/total*100) + '%';
+    document.getElementById('macroCarbBar').style.width = (c/total*100) + '%';
+    document.getElementById('macroFatBar').style.width = (f/total*100) + '%';
+  }
+}
+
+// Update macro bar in real time
+['nutProtein','nutCarbs','nutFats'].forEach(id => {
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('input', updateMacroBar);
+  }, 500);
+});
+
+function renderNutritionHistory() {
+  const el = document.getElementById('nutritionHistory');
+  if (!el || !nutritionLog.length) return;
+  el.innerHTML = '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Recent</div>' +
+    nutritionLog.slice(0,5).map(n => `
+    <div style="padding:10px 0;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <span style="font-size:11px;color:var(--muted);min-width:70px">${n.date}</span>
+      ${n.calories ? `<span style="font-size:12px;background:var(--chalk);padding:3px 8px;border-radius:4px;font-weight:600">${n.calories} kcal</span>` : ''}
+      ${n.water ? `<span style="font-size:12px;background:var(--chalk);padding:3px 8px;border-radius:4px">💧 ${n.water}L</span>` : ''}
+      ${n.protein ? `<span style="font-size:12px;background:#e6f4ed;padding:3px 8px;border-radius:4px;color:#2c7a4b">P: ${n.protein}g</span>` : ''}
+      ${n.carbs ? `<span style="font-size:12px;background:#fef3e0;padding:3px 8px;border-radius:4px;color:#7a5010">C: ${n.carbs}g</span>` : ''}
+      ${n.fats ? `<span style="font-size:12px;background:#fce8e8;padding:3px 8px;border-radius:4px;color:#8c3020">F: ${n.fats}g</span>` : ''}
+    </div>`).join('');
+}
+
+function removeRecovery(i) {
+  recoveryLog.splice(i,1);
+  sessionStorage.setItem('ws_recovery', JSON.stringify(recoveryLog));
+  renderRecoveryList();
+}
+
 // ── PROFILE ───────────────────────────────────────────────────
 let injuries = JSON.parse(sessionStorage.getItem('ws_injuries') || '[]');
 
@@ -1160,6 +1825,7 @@ function loadProfile() {
   renderPractNotes();
 
   renderInjuries();
+  renderSupplements();
 }
 
 function renderInjuries() {
@@ -1180,6 +1846,62 @@ function renderInjuries() {
       <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:6px">${inj.desc}</div>
       <div style="font-size:11px;color:var(--muted)">${inj.date}</div>
     </div>`).join('');
+}
+
+// ── SUPPLEMENTS ───────────────────────────────────────────────
+let supplements = JSON.parse(sessionStorage.getItem('ws_supplements') || '[]');
+
+function showAddSupp() {
+  document.getElementById('addSuppForm').style.display = 'block';
+}
+
+function cancelSupp() {
+  document.getElementById('addSuppForm').style.display = 'none';
+  document.getElementById('suppName').value = '';
+  document.getElementById('suppDose').value = '';
+  document.getElementById('suppTiming').value = '';
+  document.getElementById('suppNotes').value = '';
+}
+
+function saveSupp() {
+  const name = document.getElementById('suppName').value.trim();
+  if (!name) { showToast('Please enter a supplement name'); return; }
+  supplements.push({
+    name,
+    dose: document.getElementById('suppDose').value.trim(),
+    timing: document.getElementById('suppTiming').value,
+    notes: document.getElementById('suppNotes').value.trim(),
+  });
+  sessionStorage.setItem('ws_supplements', JSON.stringify(supplements));
+  cancelSupp();
+  renderSupplements();
+  showToast('Supplement saved ✓');
+}
+
+function renderSupplements() {
+  const el = document.getElementById('suppList');
+  if (!supplements.length) {
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No supplements added yet — tap + Add to get started</div>';
+    return;
+  }
+  el.innerHTML = supplements.map((s,i) => `
+    <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--chalk);border-radius:6px;margin-bottom:8px">
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span style="font-size:14px;font-weight:600;color:var(--iron)">${s.name}</span>
+          ${s.timing ? `<span style="font-size:11px;background:var(--rust-light);color:var(--rust-dark);padding:2px 8px;border-radius:100px;font-weight:600">${s.timing}</span>` : ''}
+        </div>
+        ${s.dose ? `<div style="font-size:13px;color:var(--muted)">Dose: ${s.dose}</div>` : ''}
+        ${s.notes ? `<div style="font-size:13px;color:var(--muted)">${s.notes}</div>` : ''}
+      </div>
+      <span style="cursor:pointer;color:var(--muted);font-size:16px;flex-shrink:0" onclick="removeSupp(${i})">×</span>
+    </div>`).join('');
+}
+
+function removeSupp(i) {
+  supplements.splice(i,1);
+  sessionStorage.setItem('ws_supplements', JSON.stringify(supplements));
+  renderSupplements();
 }
 
 // ── PRACTITIONER NOTES ────────────────────────────────────────
@@ -1262,6 +1984,7 @@ function saveInjury() {
   sessionStorage.setItem('ws_injuries', JSON.stringify(injuries));
   cancelAddInjury();
   renderInjuries();
+  renderSupplements();
   showToast('Injury logged ✓');
 }
 
@@ -1269,6 +1992,7 @@ function removeInjury(i) {
   injuries.splice(i,1);
   sessionStorage.setItem('ws_injuries', JSON.stringify(injuries));
   renderInjuries();
+  renderSupplements();
 }
 
 function showToast(msg) {

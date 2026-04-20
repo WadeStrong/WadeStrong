@@ -2,2211 +2,1144 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wade Strong — My Training Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Wade Strong — Client Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --rust:#B85A30;--rust-dark:#8C4122;--rust-light:#FAECE7;--rust-mid:#D85A30;
+  --rust:#B85A30;--rust-d:#8C4122;--rust-l:#FAECE7;
   --iron:#1a1a1a;--chalk:#f5f2ee;--white:#fff;--muted:#6b6560;
   --border:rgba(0,0,0,0.09);--green:#2c7a4b;--green-bg:#e6f4ed;
-  --amber:#7a5010;--amber-bg:#fef3d8;
-  --font-display:'Bebas Neue',sans-serif;--font-body:'Instrument Sans',sans-serif;
+  --font-d:'Bebas Neue',sans-serif;--font-b:'Instrument Sans',sans-serif;
+  --nav-h:56px;--bnav-h:64px;
 }
-html{scroll-behavior:smooth}
-body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);min-height:100vh}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font-b);background:var(--chalk);color:var(--iron);display:flex;flex-direction:column}
 
-/* LOGIN SCREEN */
-#loginScreen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:var(--iron);position:fixed;inset:0;z-index:100;transition:opacity 0.4s}
-#loginScreen.hidden{opacity:0;pointer-events:none}
-.login-logo{font-family:var(--font-display);font-size:32px;letter-spacing:3px;color:var(--white);margin-bottom:40px}
-.login-logo span{color:var(--rust)}
-.login-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:36px;width:100%;max-width:380px;text-align:center}
-.login-card h2{font-family:var(--font-display);font-size:28px;color:var(--white);letter-spacing:1px;margin-bottom:8px}
-.login-card p{font-size:14px;color:rgba(255,255,255,0.45);margin-bottom:28px;line-height:1.6}
-.login-input{width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;background:rgba(255,255,255,0.06);color:var(--white);font-family:var(--font-body);font-size:15px;outline:none;margin-bottom:12px}
-.login-input:focus{border-color:var(--rust)}
-.login-input::placeholder{color:rgba(255,255,255,0.25)}
-.login-btn{width:100%;padding:13px;background:var(--rust);color:var(--white);border:none;border-radius:6px;font-family:var(--font-body);font-size:15px;font-weight:600;cursor:pointer;transition:background 0.2s}
-.login-btn:hover{background:var(--rust-dark)}
-.login-note{font-size:12px;color:rgba(255,255,255,0.3);margin-top:14px;line-height:1.6}
-
-/* TOP NAV */
-nav{background:var(--iron);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:50}
-.nav-logo{font-family:var(--font-display);font-size:22px;letter-spacing:2px;color:var(--white)}
+/* NAV */
+.nav{height:var(--nav-h);background:var(--iron);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0;border-bottom:2px solid var(--rust)}
+.nav-logo{font-family:var(--font-d);font-size:20px;letter-spacing:2px;color:var(--white)}
 .nav-logo span{color:var(--rust)}
-.nav-user{display:flex;align-items:center;gap:10px}
-.nav-avatar{width:30px;height:30px;border-radius:50%;background:var(--rust);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--white)}
-.nav-name{font-size:13px;color:rgba(255,255,255,0.7)}
-.nav-logout{font-size:12px;color:rgba(255,255,255,0.3);cursor:pointer;padding:4px 8px;border:1px solid rgba(255,255,255,0.1);border-radius:4px;transition:all 0.2s}
-.nav-logout:hover{color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.3)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-avatar{width:32px;height:32px;border-radius:50%;background:var(--rust);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--white);letter-spacing:0.5px}
+.nav-name{font-size:13px;font-weight:600;color:rgba(255,255,255,0.7)}
+.nav-week{font-size:11px;color:var(--rust);font-weight:600;letter-spacing:0.5px}
 
-/* BOTTOM TAB NAV (mobile) */
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);z-index:50;padding:8px 0 max(8px,env(safe-area-inset-bottom))}
-.bottom-nav-inner{display:flex}
-.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px;cursor:pointer;color:var(--muted);font-size:10px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;transition:color 0.15s}
+/* SCROLL AREA */
+.scroll-area{flex:1;overflow-y:auto;padding-bottom:calc(var(--bnav-h) + 16px)}
+
+/* BOTTOM NAV */
+.bnav{height:var(--bnav-h);background:var(--white);border-top:1px solid var(--border);display:flex;align-items:stretch;position:fixed;bottom:0;left:0;right:0;z-index:50}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;border:none;background:transparent;font-family:var(--font-b);font-size:10px;font-weight:600;color:var(--muted);letter-spacing:0.3px;transition:color 0.15s;-webkit-tap-highlight-color:transparent}
 .bnav-item.active{color:var(--rust)}
 .bnav-icon{font-size:20px;line-height:1}
 
-/* PAGE LAYOUT */
-.page-wrap{max-width:800px;margin:0 auto;padding:24px 20px 100px}
+/* PANELS */
+.panel{display:none;padding:16px 16px 0}
+.panel.active{display:block}
+.panel-title{font-family:var(--font-d);font-size:28px;letter-spacing:1px;color:var(--iron);margin-bottom:16px}
 
-/* HERO BANNER */
-.portal-hero{background:var(--iron);border-radius:10px;padding:28px 28px 24px;margin-bottom:20px;position:relative;overflow:hidden}
-.portal-hero-bg{position:absolute;right:-20px;top:-10px;font-family:var(--font-display);font-size:140px;color:rgba(255,255,255,0.03);line-height:1;pointer-events:none}
-.hero-greeting{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:4px}
-.hero-name{font-family:var(--font-display);font-size:36px;color:var(--white);letter-spacing:1px;line-height:1;margin-bottom:16px;position:relative;z-index:1}
-.hero-name span{color:var(--rust)}
-.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;position:relative;z-index:1}
-.hs{background:rgba(255,255,255,0.06);border-radius:6px;padding:10px 12px}
-.hs-val{font-family:var(--font-display);font-size:22px;color:var(--white);letter-spacing:1px}
-.hs-lbl{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px}
+/* CARDS */
+.card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:12px}
+.card-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.card-title-sub{font-size:11px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;margin-top:2px}
 
-/* MESSAGE BANNER */
-.message-banner{background:var(--white);border:1px solid var(--border);border-left:3px solid var(--rust);border-radius:8px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px}
-.msg-icon{font-size:18px;flex-shrink:0;margin-top:1px}
-.msg-content{flex:1;min-width:0}
-.msg-from{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--rust);margin-bottom:3px}
-.msg-text{font-size:14px;color:var(--iron);line-height:1.55}
-.msg-time{font-size:11px;color:var(--muted);margin-top:4px}
+/* PROGRAM PANEL */
+.week-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none}
+.week-tabs::-webkit-scrollbar{display:none}
+.week-tab{flex-shrink:0;padding:6px 14px;border-radius:100px;border:1px solid var(--border);background:var(--white);font-family:var(--font-b);font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.15s}
+.week-tab.active{background:var(--iron);color:var(--white);border-color:var(--iron)}
+.week-tab.done{background:var(--chalk);color:var(--muted)}
 
-/* SECTION HEADERS */
-.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.section-title{font-family:var(--font-display);font-size:24px;letter-spacing:1px}
-.section-action{font-size:13px;color:var(--rust);cursor:pointer;font-weight:500}
+.session-card{background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.session-head{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border-bottom:1px solid var(--border)}
+.session-name{font-family:var(--font-d);font-size:18px;letter-spacing:0.5px}
+.session-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.session-badge{font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:100px;text-transform:uppercase}
+.badge-todo{background:var(--chalk);color:var(--muted);border:1px solid var(--border)}
+.badge-done{background:var(--green-bg);color:var(--green)}
+.badge-today{background:var(--rust-l);color:var(--rust-d)}
 
-/* WEEK SELECTOR */
-.week-selector{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:20px}
-.week-pill{padding:7px 14px;border-radius:100px;border:1px solid var(--border);background:var(--white);font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all 0.15s;flex-shrink:0}
-.week-pill:hover{border-color:var(--iron);color:var(--iron)}
-.week-pill.active{background:var(--iron);color:var(--white);border-color:var(--iron)}
-.week-pill.current{border-color:var(--rust);color:var(--rust)}
-.week-pill.active.current{background:var(--rust);border-color:var(--rust);color:var(--white)}
-.week-pill.complete{color:var(--green);border-color:rgba(44,122,75,0.3);background:var(--green-bg)}
+.session-body{padding:14px 16px;display:none}
+.session-body.open{display:block}
 
-/* SESSION CARDS */
-.session-card{background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden;transition:box-shadow 0.2s}
-.session-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.07)}
-.session-card.rest{opacity:0.55}
-.sc-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:12px;border-bottom:1px solid var(--border)}
-.sc-left{display:flex;align-items:center;gap:12px}
-.sc-day{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);min-width:60px}
-.sc-name{font-family:var(--font-display);font-size:20px;letter-spacing:1px}
-.sc-badge{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:100px}
-.badge-complete{background:var(--green-bg);color:var(--green)}
-.badge-today{background:var(--rust-light);color:var(--rust-dark)}
-.badge-upcoming{background:var(--chalk);color:var(--muted);border:1px solid var(--border)}
-.badge-rest{background:var(--chalk);color:var(--muted)}
-.sc-toggle{color:var(--muted);font-size:14px;transition:transform 0.2s;flex-shrink:0}
-.sc-toggle.open{transform:rotate(180deg)}
-.sc-body{display:none;padding:16px 18px}
-.sc-body.open{display:block}
-.sc-note{font-size:13px;color:var(--muted);background:var(--chalk);border-radius:5px;padding:10px 12px;margin-bottom:14px;line-height:1.55;font-style:italic}
-
-/* EXERCISE TABLE */
-.ex-table{width:100%;border-collapse:collapse;margin-bottom:16px}
-.ex-table th{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:4px 8px;text-align:left;border-bottom:1px solid var(--border)}
-.ex-table td{padding:10px 8px;border-bottom:1px solid rgba(0,0,0,0.04);font-size:14px;vertical-align:middle}
+.ex-table{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:13px}
+.ex-table th{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 6px;text-align:left;border-bottom:1px solid var(--border)}
+.ex-table td{padding:9px 6px;border-bottom:1px solid rgba(0,0,0,0.04);vertical-align:middle}
 .ex-table tr:last-child td{border-bottom:none}
-.ex-table tr:hover td{background:rgba(245,242,238,0.5)}
-.ex-name-cell{font-weight:500}
-.ex-detail{font-size:11px;color:var(--muted);margin-top:1px}
-.ex-metric{font-weight:600;text-align:center}
-.rpe-chip{display:inline-flex;align-items:center;justify-content:center;width:28px;height:24px;border-radius:4px;font-size:11px;font-weight:700}
-.rpe-chip.r6{background:#e8f4e8;color:#2d6a2d}
-.rpe-chip.r7{background:#f0f4e0;color:#4a6020}
-.rpe-chip.r8{background:#f8f0d8;color:#7a5010}
-.rpe-chip.r9{background:#fce8d8;color:#8c3020}
-.rpe-chip.r10{background:var(--iron);color:var(--white)}
-.ex-check{width:20px;height:20px;accent-color:var(--rust);cursor:pointer}
+.ex-name{font-weight:500}
+.ex-detail{font-size:11px;color:var(--muted);margin-top:2px}
+.ex-metric{text-align:center;color:var(--muted)}
+.rpe-pill{display:inline-flex;align-items:center;justify-content:center;width:26px;height:20px;border-radius:3px;font-size:11px;font-weight:700}
+.r6{background:#e8f4e8;color:#2d6a2d}.r7{background:#f0f4e0;color:#4a6020}
+.r8{background:#f8f0d8;color:#7a5010}.r9{background:#fce8d8;color:#8c3020}
+.r10{background:var(--iron);color:var(--white)}
+.clip-btn{width:28px;height:28px;border-radius:5px;border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:13px;display:inline-flex;align-items:center;justify-content:center}
+.ex-check{width:18px;height:18px;accent-color:var(--rust);cursor:pointer}
 
-/* RPE LOGGER */
-.rpe-logger{background:var(--chalk);border-radius:8px;padding:14px 16px;margin-top:4px}
-.rpe-logger-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px}
-.rpe-log-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.05)}
-.rpe-log-row:last-of-type{border-bottom:none}
-.rpe-log-name{font-size:13px;font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rpe-log-actual{width:70px;padding:5px 8px;border:1px solid var(--border);border-radius:4px;font-family:var(--font-body);font-size:13px;text-align:center;background:var(--white);outline:none}
-.rpe-log-actual:focus{border-color:var(--rust)}
-.rpe-pills-sm{display:flex;gap:3px}
-.rpe-pill-sm{cursor:pointer}
-.rpe-pill-sm input{display:none}
-.rpe-pill-sm span{display:flex;align-items:center;justify-content:center;width:28px;height:26px;border:1px solid var(--border);border-radius:4px;font-size:12px;font-weight:600;color:var(--muted);background:var(--white);transition:all 0.12s}
-.rpe-pill-sm input:checked+span{background:var(--iron);color:var(--white);border-color:var(--iron)}
-.session-submit-btn{width:100%;padding:12px;background:var(--rust);color:var(--white);border:none;border-radius:6px;font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;margin-top:12px;transition:background 0.2s}
-.session-submit-btn:hover{background:var(--rust-dark)}
-.session-complete-badge{background:var(--green-bg);color:var(--green);border:1px solid rgba(44,122,75,0.2);border-radius:6px;padding:10px 14px;font-size:13px;font-weight:600;text-align:center;margin-top:8px}
+/* LOG SESSION */
+.log-section{background:var(--chalk);border-radius:8px;padding:14px;margin-top:12px}
+.log-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.rpe-log-row{margin-bottom:12px}
+.rpe-log-name{font-size:13px;font-weight:600;margin-bottom:6px}
+.rpe-pills{display:flex;gap:5px;flex-wrap:wrap}
+.rpe-pill-sm{width:32px;height:28px;border-radius:4px;border:1px solid var(--border);background:var(--white);font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);transition:all 0.15s}
+.rpe-pill-sm.sel{background:var(--iron);color:var(--white);border-color:var(--iron)}
+.log-btn{width:100%;padding:12px;background:var(--iron);color:var(--white);border:none;border-radius:6px;font-family:var(--font-b);font-size:14px;font-weight:600;cursor:pointer;margin-top:12px;transition:background 0.2s}
+.log-btn:hover{background:var(--rust)}
 
-/* VIDEO UPLOAD */
-.upload-section{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
-.upload-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px}
-.upload-zone{border:1.5px dashed var(--border);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--white)}
-.upload-zone:hover{border-color:var(--rust);background:var(--rust-light)}
-.upload-zone-icon{font-size:28px;margin-bottom:6px}
-.upload-zone-text{font-size:13px;color:var(--muted);line-height:1.5}
-.upload-zone-text strong{color:var(--iron);display:block;margin-bottom:2px}
-.upload-zone input{display:none}
-.uploaded-files{display:flex;flex-direction:column;gap:6px;margin-top:10px}
-.uploaded-file{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--chalk);border-radius:5px;font-size:13px}
-.uf-icon{font-size:16px}
-.uf-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
-.uf-remove{color:var(--muted);cursor:pointer;font-size:16px;flex-shrink:0}
-.uf-remove:hover{color:#c03020}
+/* PROGRESS PANEL */
+.progress-chart{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px}
+.progress-lift-name{font-size:14px;font-weight:700;margin-bottom:4px}
+.progress-latest{font-family:var(--font-d);font-size:30px;letter-spacing:1px;color:var(--iron)}
+.progress-gain{font-size:12px;font-weight:600;color:var(--green);margin-top:2px}
 
-/* PROGRESS SECTION */
-.progress-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
-.progress-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px}
-.pc-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
-.pc-value{font-family:var(--font-display);font-size:28px;letter-spacing:1px;margin-bottom:2px}
-.pc-sub{font-size:12px;color:var(--muted)}
-.pc-change{font-size:12px;font-weight:600;margin-top:4px}
-.pc-change.up{color:var(--green)}
-.pc-change.down{color:#c03020}
+/* PROFILE PANEL */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
+.profile-item{}
+.profile-label{font-size:11px;color:var(--muted);margin-bottom:2px}
+.profile-val{font-size:15px;font-weight:600}
 
-/* SIMPLE CHART */
-.mini-chart{height:56px;display:flex;align-items:flex-end;gap:3px;margin-top:8px}
-.mini-bar{flex:1;border-radius:2px 2px 0 0;background:var(--chalk);border:1px solid var(--border);border-bottom:none;transition:background 0.2s;min-height:4px}
-.mini-bar.active{background:var(--rust)}
-.mini-bar.projected{background:var(--rust-light);border-color:rgba(184,90,48,0.3)}
+.rpe-results{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rpe-lift-card{background:var(--chalk);border-radius:6px;padding:10px}
+.rpe-lift-name{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.rpe-lift-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0}
+.rpe-lift-label{color:var(--muted)}
+.rpe-lift-val{font-weight:600}
 
-/* NUMBERS LOG */
-.numbers-form{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:20px}
-.numbers-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.num-field label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:5px}
-.num-row{display:flex;align-items:center;gap:6px}
-.num-row input{flex:1;padding:9px 10px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:15px;font-weight:600;text-align:center;background:var(--chalk);outline:none;color:var(--iron)}
-.num-row input:focus{border-color:var(--rust);background:var(--white)}
-.num-unit{font-size:12px;color:var(--muted);white-space:nowrap}
-.num-submit{width:100%;padding:12px;background:var(--iron);color:var(--white);border:none;border-radius:6px;font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s}
-.num-submit:hover{background:var(--rust)}
+.tag-pill{display:inline-block;padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600;border:1px solid var(--border);color:var(--muted);margin:3px 3px 3px 0;background:var(--chalk)}
+.tag-active{background:#fce8e8;color:#c03020;border-color:#f0c0c0}
+.tag-monitoring{background:#fef3e0;color:#e08020;border-color:#fdd090}
+.tag-resolved{background:var(--green-bg);color:var(--green);border-color:#b0ddc0}
+
+/* RECOVERY */
+.mood-row{display:flex;gap:8px;margin-bottom:12px}
+.mood-btn{flex:1;padding:10px 4px;border-radius:8px;border:1px solid var(--border);background:var(--chalk);cursor:pointer;font-size:22px;text-align:center;transition:all 0.15s}
+.mood-btn.sel{background:var(--iron);border-color:var(--iron);transform:scale(1.08)}
+.stress-row,.motiv-row{display:flex;gap:6px;margin-bottom:12px}
+.stress-btn,.motiv-btn{flex:1;padding:8px 4px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-family:var(--font-b);font-size:11px;font-weight:600;cursor:pointer;color:var(--muted);transition:all 0.15s;text-align:center}
+.stress-btn.sel,.motiv-btn.sel{background:var(--iron);color:var(--white);border-color:var(--iron)}
+
+/* COMP */
+.comp-header{background:var(--iron);border-radius:10px;padding:20px;margin-bottom:12px;position:relative;overflow:hidden}
+.comp-bg{position:absolute;right:-10px;bottom:-15px;font-family:var(--font-d);font-size:90px;color:rgba(255,255,255,0.04);line-height:1;pointer-events:none}
+.comp-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--rust);margin-bottom:8px;position:relative;z-index:1}
+.comp-name{font-family:var(--font-d);font-size:22px;color:var(--white);letter-spacing:1px;margin-bottom:10px;position:relative;z-index:1;line-height:1.2}
+.comp-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;position:relative;z-index:1}
+.comp-meta-item{}
+.comp-meta-label{font-size:10px;color:rgba(255,255,255,0.4)}
+.comp-meta-val{font-size:13px;font-weight:600;color:var(--white)}
+
+.event-card{border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden}
+.event-head{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--chalk);border-bottom:1px solid var(--border)}
+.event-num{width:24px;height:24px;border-radius:50%;background:var(--iron);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.event-name{font-size:14px;font-weight:700}
+.event-body{padding:12px 14px}
+.event-strategy{font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;margin-bottom:10px}
+.attempt-row{display:flex;gap:8px}
+.attempt-card{flex:1;background:var(--chalk);border-radius:6px;padding:8px;text-align:center}
+.attempt-card.third{background:var(--rust);}.attempt-card.third .attempt-label{color:rgba(255,255,255,0.6)}.attempt-card.third .attempt-val{color:var(--white)}
+.attempt-label{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.attempt-val{font-size:15px;font-weight:700;margin-top:2px}
+
+.rule-card{border-radius:6px;padding:12px;margin-bottom:8px}
+.rule-card-blue{background:#f0f4ff;border-left:3px solid #4488cc}
+.rule-card-rust{background:var(--rust-l);border-left:3px solid var(--rust)}
+.rule-card-green{background:var(--green-bg);border-left:3px solid var(--green)}
+.rule-title{font-size:13px;font-weight:700;margin-bottom:6px}
+.rule-text{font-size:13px;color:var(--muted);line-height:1.7}
+.rule-text li{margin-left:16px;margin-bottom:4px}
+
+/* MESSAGES */
+.msg-thread{display:flex;flex-direction:column;gap:10px;padding-bottom:80px}
+.msg-bubble{max-width:82%;border-radius:12px;padding:10px 13px;font-size:14px;line-height:1.6}
+.msg-from-wade{align-self:flex-start;background:var(--white);border:1px solid var(--border);border-radius:4px 12px 12px 12px}
+.msg-from-client{align-self:flex-end;background:var(--iron);color:var(--white);border-radius:12px 4px 12px 12px}
+.msg-sender{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--rust);margin-bottom:4px}
+.msg-time{font-size:11px;color:var(--muted);margin-top:4px}
+.msg-from-client .msg-time{color:rgba(255,255,255,0.4)}
+
+.msg-input-area{position:fixed;bottom:var(--bnav-h);left:0;right:0;background:var(--white);border-top:1px solid var(--border);padding:10px 14px;display:none}
+.msg-input-area.visible{display:flex;align-items:flex-end;gap:8px}
+.msg-textarea{flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:20px;font-family:var(--font-b);font-size:14px;outline:none;resize:none;max-height:100px;background:var(--chalk);line-height:1.5}
+.msg-textarea:focus{border-color:var(--rust);background:var(--white)}
+.msg-send{width:36px;height:36px;border-radius:50%;background:var(--rust);border:none;color:var(--white);font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.voice-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--white);font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+
+/* FORMS */
+.form-group{margin-bottom:12px}
+.form-label{display:block;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.form-input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font-b);font-size:14px;color:var(--iron);background:var(--chalk);outline:none;transition:border-color 0.15s}
+.form-input:focus{border-color:var(--rust);background:var(--white)}
+.form-select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font-b);font-size:14px;color:var(--iron);background:var(--chalk);outline:none;-webkit-appearance:none}
+.form-textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font-b);font-size:14px;color:var(--iron);background:var(--chalk);outline:none;resize:vertical;min-height:70px}
+.btn-rust{width:100%;padding:12px;background:var(--rust);color:var(--white);border:none;border-radius:6px;font-family:var(--font-b);font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s}
+.btn-rust:hover{background:var(--rust-d)}
+.btn-iron{width:100%;padding:12px;background:var(--iron);color:var(--white);border:none;border-radius:6px;font-family:var(--font-b);font-size:14px;font-weight:600;cursor:pointer}
+.btn-ghost{width:100%;padding:10px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:6px;font-family:var(--font-b);font-size:13px;cursor:pointer}
+.btn-sm{padding:6px 14px;border-radius:4px;border:none;font-family:var(--font-b);font-size:12px;font-weight:600;cursor:pointer}
+.btn-sm-iron{background:var(--iron);color:var(--white)}
+.btn-sm-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+
+.success-msg{padding:10px 12px;background:var(--green-bg);border:1px solid rgba(44,122,75,0.2);border-radius:6px;font-size:13px;color:var(--green);font-weight:600;text-align:center;margin-top:10px;display:none}
+.warning-msg{padding:10px 12px;background:#fff3cd;border:1px solid #ffc107;border-radius:6px;font-size:12px;color:#856404;line-height:1.5;margin-bottom:10px}
+
+/* LOG ITEMS */
+.log-item{padding:12px;background:var(--chalk);border-radius:6px;margin-bottom:8px}
+.log-item-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
+.log-item-title{font-size:13px;font-weight:600}
+.log-item-date{font-size:11px;color:var(--muted)}
+.log-item-body{font-size:13px;color:var(--muted);line-height:1.5}
+.log-item-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.log-tag{font-size:11px;background:var(--white);padding:2px 8px;border-radius:4px;font-weight:500}
+.del-btn{cursor:pointer;color:var(--muted);font-size:16px;line-height:1;flex-shrink:0;margin-left:8px}
+
+/* SLEEP SLIDER */
+.slider-wrap{display:flex;align-items:center;gap:10px}
+.slider-wrap input[type=range]{flex:1;accent-color:var(--rust)}
+.slider-val{font-family:var(--font-d);font-size:24px;min-width:48px;text-align:center}
+
+/* NUTRITION */
+.macro-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.macro-item label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
+.macro-input{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-b);font-size:15px;font-weight:600;text-align:center;background:var(--chalk);outline:none;-moz-appearance:textfield}
+.macro-input::-webkit-inner-spin-button{-webkit-appearance:none}
+.macro-bar{height:8px;border-radius:4px;overflow:hidden;display:flex;gap:2px;margin:10px 0 6px}
+.macro-bar-p{background:#2c7a4b;height:100%;transition:width 0.3s}
+.macro-bar-c{background:#7a5010;height:100%;transition:width 0.3s}
+.macro-bar-f{background:#8c3020;height:100%;transition:width 0.3s}
+.macro-legend{display:flex;gap:12px;font-size:11px}
+.macro-legend span{display:flex;align-items:center;gap:4px}
 
 /* TOAST */
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--iron);color:var(--white);padding:10px 20px;border-radius:6px;font-size:13px;font-weight:500;z-index:200;transition:transform 0.3s;white-space:nowrap}
-.toast.show{transform:translateX(-50%) translateY(0)}
+.toast{position:fixed;bottom:calc(var(--bnav-h) + 10px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--iron);color:var(--white);padding:9px 18px;border-radius:6px;font-size:13px;font-weight:500;z-index:200;transition:all 0.25s;opacity:0;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* PANELS */
-.panel{display:none}
-.panel.active{display:block}
+/* COLLAPSIBLE */
+.collapsible-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:2px 0}
+.collapsible-arrow{font-size:12px;color:var(--muted);transition:transform 0.2s}
+.collapsible-arrow.open{transform:rotate(180deg)}
+.collapsible-body{display:none;margin-top:12px}
+.collapsible-body.open{display:block}
 
-@media(max-width:600px){
-  .bottom-nav{display:block}
-  .page-wrap{padding:16px 16px 96px}
-  .progress-cards,.numbers-grid{grid-template-columns:1fr}
-  .hero-stats{grid-template-columns:1fr 1fr 1fr}
-  .hs-val{font-size:18px}
+/* APPLE HEALTH */
+.ah-banner{display:flex;align-items:center;gap:12px;background:var(--chalk);border:1px dashed var(--border);border-radius:8px;padding:12px 14px;margin-bottom:12px}
+.ah-icon{font-size:24px;flex-shrink:0}
+.ah-text{}
+.ah-title{font-size:13px;font-weight:600;margin-bottom:2px}
+.ah-sub{font-size:12px;color:var(--muted);line-height:1.4}
+
+@media(min-width:600px){
+  .nav,.scroll-area,.bnav,.msg-input-area{max-width:480px;margin-left:auto;margin-right:auto;left:50%;transform:translateX(-50%)}
+  .bnav,.msg-input-area{width:480px}
 }
-
-.rpe-result-val{font-weight:600;color:var(--iron)}
-.injury-item{padding:12px;border-radius:6px;background:var(--chalk);margin-bottom:8px;border-left:3px solid var(--border)}
-.injury-item.active{border-left-color:#c03020}
-.injury-item.monitoring{border-left-color:#e08020}
-.injury-item.resolved{border-left-color:#2c7a4b}
-.injury-status-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:100px}
-.status-active{background:#fce8e8;color:#c03020}
-.status-monitoring{background:#fef3e0;color:#e08020}
-.status-resolved{background:var(--green-bg,#e6f4ed);color:#2c7a4b}
 </style>
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-config.js"></script>
 </head>
 <body>
 
-
-
-<!-- LOGIN -->
-<div id="loginScreen" style="display:none">
-  <div class="login-logo">WADE<span>.</span>STRONG</div>
-  <div class="login-card">
-    <h2>WELCOME BACK.</h2>
-    <p>Enter your email to receive a login link, or use the magic link Wade sent you.</p>
-    <input class="login-input" type="email" placeholder="your@email.com" id="loginEmail">
-    <button class="login-btn" onclick="doLogin()">Send my login link</button>
-    <div class="login-note">No password needed. Click the link in your email and you're in.</div>
-  </div>
-</div>
-
 <!-- NAV -->
-<nav id="mainNav">
+<nav class="nav">
   <div class="nav-logo">WADE<span>.</span>STRONG</div>
-  <div class="nav-user">
-    <div class="nav-avatar" id="navAvatar">DM</div>
-    <div class="nav-name" id="navName">Chris T.</div>
-    <div class="nav-logout" onclick="doLogout()">Log out</div>
+  <div class="nav-right">
+    <div>
+      <div class="nav-name" id="navName">Chris T.</div>
+      <div class="nav-week" id="navWeek">PRE-COMP · WEEK 5/8</div>
+    </div>
+    <div class="nav-avatar" id="navAvatar">CT</div>
   </div>
 </nav>
 
-<!-- MAIN CONTENT -->
-<div class="page-wrap" id="mainContent">
+<!-- SCROLL AREA -->
+<div class="scroll-area" id="scrollArea">
 
-  <!-- PROGRAM PANEL -->
+  <!-- ══ PROGRAM PANEL ══ -->
   <div class="panel active" id="panel-program">
+    <div class="panel-title">My Program</div>
 
-    <div class="portal-hero">
-      <div class="portal-hero-bg">STRONG</div>
-      <div class="hero-greeting">Good to see you,</div>
-      <div class="hero-name">DAVE <span>MITCHELL.</span></div>
-      <div class="hero-stats">
-        <div class="hs"><div class="hs-val">W3</div><div class="hs-lbl">Current week</div></div>
-        <div class="hs"><div class="hs-val">4/6</div><div class="hs-lbl">Sessions done</div></div>
-        <div class="hs"><div class="hs-val">12</div><div class="hs-lbl">Days to go</div></div>
-      </div>
-    </div>
+    <!-- Week tabs -->
+    <div class="week-tabs" id="weekTabs"></div>
 
-    <div class="message-banner" id="wadeMsgBanner">
-      <div class="msg-icon">💬</div>
-      <div class="msg-content">
-        <div class="msg-from">Message from Wade</div>
-        <div class="msg-text" id="wadeMsg">Solid week last week Dave. Your deadlift is looking strong — pushing to 190kg this week. Backed off the squat weight slightly, work on keeping the knees tracking over your toes. Let me know how it feels.</div>
-        <div class="msg-time">2 hours ago</div>
-      </div>
-    </div>
-
-    <div class="section-hdr">
-      <div class="section-title">YOUR PROGRAM</div>
-    </div>
-
-    <div class="week-selector" id="weekSelector"></div>
-
+    <!-- Sessions -->
     <div id="sessionList"></div>
-
   </div>
 
-  <!-- PROGRESS PANEL -->
+  <!-- ══ PROGRESS PANEL ══ -->
   <div class="panel" id="panel-progress">
-    <div class="section-hdr" style="margin-bottom:20px">
-      <div class="section-title">YOUR PROGRESS</div>
-    </div>
-
-    <div class="progress-cards">
-      <div class="progress-card">
-        <div class="pc-label">Deadlift</div>
-        <div class="pc-value">220<span style="font-size:16px;font-weight:400">kg</span></div>
-        <div class="pc-sub">RPE 10 max</div>
-        <div class="pc-change up">↑ +10kg since week 1</div>
-        <div class="mini-chart">
-          <div class="mini-bar" style="height:40%"></div>
-          <div class="mini-bar" style="height:55%"></div>
-          <div class="mini-bar active" style="height:70%"></div>
-          <div class="mini-bar projected" style="height:80%"></div>
-          <div class="mini-bar projected" style="height:90%"></div>
-          <div class="mini-bar projected" style="height:100%"></div>
-        </div>
-      </div>
-      <div class="progress-card">
-        <div class="pc-label">Squat</div>
-        <div class="pc-value">180<span style="font-size:16px;font-weight:400">kg</span></div>
-        <div class="pc-sub">RPE 10 max</div>
-        <div class="pc-change up">↑ +5kg since week 1</div>
-        <div class="mini-chart">
-          <div class="mini-bar" style="height:45%"></div>
-          <div class="mini-bar" style="height:55%"></div>
-          <div class="mini-bar active" style="height:62%"></div>
-          <div class="mini-bar projected" style="height:72%"></div>
-          <div class="mini-bar projected" style="height:85%"></div>
-          <div class="mini-bar projected" style="height:100%"></div>
-        </div>
-      </div>
-      <div class="progress-card">
-        <div class="pc-label">Bench press</div>
-        <div class="pc-value">130<span style="font-size:16px;font-weight:400">kg</span></div>
-        <div class="pc-sub">RPE 10 max</div>
-        <div class="pc-change up">↑ +5kg since week 1</div>
-        <div class="mini-chart">
-          <div class="mini-bar" style="height:50%"></div>
-          <div class="mini-bar" style="height:60%"></div>
-          <div class="mini-bar active" style="height:68%"></div>
-          <div class="mini-bar projected" style="height:78%"></div>
-          <div class="mini-bar projected" style="height:88%"></div>
-          <div class="mini-bar projected" style="height:100%"></div>
-        </div>
-      </div>
-      <div class="progress-card">
-        <div class="pc-label">Overhead press</div>
-        <div class="pc-value">90<span style="font-size:16px;font-weight:400">kg</span></div>
-        <div class="pc-sub">RPE 10 max</div>
-        <div class="pc-change down">— Holding this week</div>
-        <div class="mini-chart">
-          <div class="mini-bar" style="height:55%"></div>
-          <div class="mini-bar" style="height:55%"></div>
-          <div class="mini-bar active" style="height:55%"></div>
-          <div class="mini-bar projected" style="height:65%"></div>
-          <div class="mini-bar projected" style="height:80%"></div>
-          <div class="mini-bar projected" style="height:100%"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-hdr"><div class="section-title">LOG YOUR NUMBERS</div></div>
-    <div class="numbers-form">
-      <div style="font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.6">Update your numbers after a testing session or when you hit a new PR. Wade can see these immediately.</div>
-      <div class="numbers-grid">
-        <div class="num-field"><label>Deadlift</label><div class="num-row"><input type="number" placeholder="0"><span class="num-unit">kg</span></div></div>
-        <div class="num-field"><label>Squat</label><div class="num-row"><input type="number" placeholder="0"><span class="num-unit">kg</span></div></div>
-        <div class="num-field"><label>Bench press</label><div class="num-row"><input type="number" placeholder="0"><span class="num-unit">kg</span></div></div>
-        <div class="num-field"><label>Overhead press</label><div class="num-row"><input type="number" placeholder="0"><span class="num-unit">kg</span></div></div>
-        <div class="num-field"><label>Bodyweight</label><div class="num-row"><input type="number" placeholder="0"><span class="num-unit">kg</span></div></div>
-        <div class="num-field"><label>Other / notes</label><div class="num-row"><input type="text" placeholder="e.g. log press 110kg"></div></div>
-      </div>
-      <button class="num-submit" onclick="showToast('Numbers saved — Wade can see these now ✓')">Save my numbers</button>
-    </div>
+    <div class="panel-title">Progress</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Tracking the main lifts Wade has selected. Updates automatically when you log sessions.</p>
+    <div id="progressCharts"></div>
   </div>
 
-  <!-- UPLOADS PANEL -->
-  <div class="panel" id="panel-uploads">
-    <div class="section-hdr" style="margin-bottom:20px">
-      <div class="section-title">SEND WADE A CLIP</div>
-    </div>
-    <div style="font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:24px;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px 18px">
-      Upload short clips of your lifts so Wade can review your technique. Under 2 minutes is ideal — just a working set or a top single. He'll get back to you with feedback in your program notes.
-    </div>
-    <div class="upload-zone" onclick="document.getElementById('videoInput').click()">
-      <input type="file" id="videoInput" accept="video/*,image/*" multiple onchange="handleFileUpload(this)">
-      <div class="upload-zone-icon">🎥</div>
-      <div class="upload-zone-text"><strong>Tap to upload a clip or photo</strong>Video under 2 min · MP4, MOV, HEVC · Photos welcome too</div>
-    </div>
-    <div class="uploaded-files" id="uploadedFiles"></div>
-
-    <div style="margin-top:20px">
-      <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">Note for Wade (optional)</div>
-      <textarea style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font-body);font-size:14px;color:var(--iron);background:var(--white);outline:none;resize:vertical;min-height:80px" placeholder="e.g. This is my deadlift from Thursday — something feels off in the setup, hips rising too early..."></textarea>
-      <button style="width:100%;margin-top:10px;padding:12px;background:var(--rust);color:var(--white);border:none;border-radius:6px;font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer" onclick="showToast('Clip sent to Wade ✓')">Send to Wade</button>
-    </div>
-  </div>
-
-  <!-- MESSAGE PANEL -->
-  <!-- PROFILE PANEL -->
-  <div class="panel" id="panel-profile" style="display:none">
+  <!-- ══ PROFILE PANEL ══ -->
+  <div class="panel" id="panel-profile">
     <div class="panel-title">My Profile</div>
 
-    <!-- Basic Info -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Personal Info</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" id="profileInfoGrid">
-        <div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Full name</div>
-          <div style="font-size:15px;font-weight:600" id="prof-name">—</div>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Age</div>
-          <div style="font-size:15px;font-weight:600" id="prof-age">—</div>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Height</div>
-          <div style="font-size:15px;font-weight:600" id="prof-height">—</div>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Weight</div>
-          <div style="font-size:15px;font-weight:600" id="prof-weight">—</div>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Location</div>
-          <div style="font-size:15px;font-weight:600" id="prof-location">—</div>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Program</div>
-          <div style="font-size:15px;font-weight:600" id="prof-program">—</div>
-        </div>
+    <!-- Basic info -->
+    <div class="card">
+      <div class="card-title">Personal Info</div>
+      <div class="profile-grid">
+        <div class="profile-item"><div class="profile-label">Name</div><div class="profile-val" id="profName">Chris Thompson</div></div>
+        <div class="profile-item"><div class="profile-label">Age</div><div class="profile-val">31</div></div>
+        <div class="profile-item"><div class="profile-label">Height</div><div class="profile-val">178cm</div></div>
+        <div class="profile-item"><div class="profile-label">Weight</div><div class="profile-val">91.5kg</div></div>
+        <div class="profile-item"><div class="profile-label">Location</div><div class="profile-val">Auckland, NZ</div></div>
+        <div class="profile-item"><div class="profile-label">Program</div><div class="profile-val">Pre-Comp · Wk 5/8</div></div>
       </div>
     </div>
 
     <!-- RPE Results -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">RPE Testing Results</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="rpeResultsGrid">
-
-        <!-- Squat Raw -->
-        <div style="background:var(--chalk);border-radius:6px;padding:12px">
-          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Squat (Raw)</div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="color:var(--muted)">1RM</span><span class="rpe-result-val" id="rpe-squat-raw-1rm">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="color:var(--muted)">3RM</span><span class="rpe-result-val" id="rpe-squat-raw-3rm">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:13px">
-            <span style="color:var(--muted)">5RM</span><span class="rpe-result-val" id="rpe-squat-raw-5rm">—</span>
-          </div>
+    <div class="card">
+      <div class="card-title">RPE Testing Results</div>
+      <div class="rpe-results">
+        <div class="rpe-lift-card">
+          <div class="rpe-lift-name">Squat (Raw)</div>
+          <div class="rpe-lift-row"><span class="rpe-lift-label">1RM</span><span class="rpe-lift-val">175kg</span></div>
+          <div class="rpe-lift-row"><span class="rpe-lift-label">3RM</span><span class="rpe-lift-val">160kg</span></div>
+          <div class="rpe-lift-row"><span class="rpe-lift-label">5RM</span><span class="rpe-lift-val">150kg</span></div>
         </div>
-
-        <!-- Squat Wraps -->
-        <div style="background:var(--chalk);border-radius:6px;padding:12px">
-          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Squat (Wraps)</div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="color:var(--muted)">1RM</span><span class="rpe-result-val" id="rpe-squat-wraps-1rm">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="color:var(--muted)">3RM</span><span class="rpe-result-val" id="rpe-squat-wraps-3rm">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:13px">
-            <span style="color:var(--muted)">5RM</span><span class="rpe-result-val" id="rpe-squat-wraps-5rm">—</span>
-          </div>
+        <div class="rpe-lift-card">
+          <div class="rpe-lift-name">Deadlift</div>
+          <div class="rpe-lift-row"><span class="rpe-lift-label">1RM</span><span class="rpe-lift-val">220kg</span></div>
+          <div class="rpe-lift-row"><span class="rpe-lift-label">3RM</span><span class="rpe-lift-val">200kg</span></div>
+          <div class="rpe-lift-row"><span class="rpe-lift-label">5RM</span><span class="rpe-lift-val">185kg</span></div>
         </div>
-
-        <!-- Bench -->
-        <div style="background:var(--chalk);border-radius:6px;padding:12px">
-          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Bench Press</div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="color:var(--muted)">1RM</span><span class="rpe-result-val" id="rpe-bench-1rm">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="color:var(--muted)">3RM</span><span class="rpe-result-val" id="rpe-bench-3rm">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:13px">
-            <span style="color:var(--muted)">5RM</span><span class="rpe-result-val" id="rpe-bench-5rm">—</span>
-          </div>
+        <div class="rpe-lift-card">
+          <div class="rpe-lift-name">Bench Press</div>
+          <div class="rpe-lift-row"><span class="rpe-lift-label">1RM</span><span class="rpe-lift-val">130kg</span></div>
+          <div class="rpe-lift-row"><span class="rpe-lift-label">3RM</span><span class="rpe-lift-val">120kg</span></div>
+          <div class="rpe-lift-row"><span class="rpe-lift-label">5RM</span><span class="rpe-lift-val">112.5kg</span></div>
         </div>
-
-        <!-- Deadlift -->
-        <div style="background:var(--chalk);border-radius:6px;padding:12px">
-          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Deadlift</div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="color:var(--muted)">1RM</span><span class="rpe-result-val" id="rpe-deadlift-1rm">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-            <span style="color:var(--muted)">3RM</span><span class="rpe-result-val" id="rpe-deadlift-3rm">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:13px">
-            <span style="color:var(--muted)">5RM</span><span class="rpe-result-val" id="rpe-deadlift-5rm">—</span>
-          </div>
+        <div class="rpe-lift-card">
+          <div class="rpe-lift-name">Push Press</div>
+          <div class="rpe-lift-row"><span class="rpe-lift-label">1RM</span><span class="rpe-lift-val">95kg</span></div>
+          <div class="rpe-lift-row"><span class="rpe-lift-label">3RM</span><span class="rpe-lift-val">87.5kg</span></div>
+          <div class="rpe-lift-row"><span class="rpe-lift-label">5RM</span><span class="rpe-lift-val">80kg</span></div>
         </div>
-
-        <!-- Push Press -->
-        <div style="background:var(--chalk);border-radius:6px;padding:12px;grid-column:1/-1">
-          <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Axel / Barbell Push Press</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-            <div style="text-align:center">
-              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">1RM</div>
-              <div class="rpe-result-val" id="rpe-press-1rm" style="font-size:16px;font-weight:600">—</div>
-            </div>
-            <div style="text-align:center">
-              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">3RM</div>
-              <div class="rpe-result-val" id="rpe-press-3rm" style="font-size:16px;font-weight:600">—</div>
-            </div>
-            <div style="text-align:center">
-              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">5RM</div>
-              <div class="rpe-result-val" id="rpe-press-5rm" style="font-size:16px;font-weight:600">—</div>
-            </div>
-          </div>
-        </div>
-
       </div>
-      <div style="margin-top:12px;font-size:12px;color:var(--muted);text-align:center" id="rpeTestDate"></div>
+      <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px">Tested: 8 March 2025</div>
     </div>
 
-    <!-- Injury Log -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <!-- Health & Wellbeing -->
+    <div class="card">
+      <div class="collapsible-header" onclick="toggleCollapse('injuryCollapse',this)">
         <div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Health & Wellbeing</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:3px">Physical injuries, mental health and general wellbeing — Wade factors all of this into your program</div>
+          <div class="card-title" style="margin-bottom:2px">Health & Wellbeing</div>
+          <div style="font-size:12px;color:var(--muted)">Physical injuries & mental health — Wade factors all of this in</div>
         </div>
-        <button onclick="showAddInjury()" style="padding:5px 12px;background:var(--iron);color:var(--white);border:none;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer">+ Add</button>
+        <div class="collapsible-arrow">▼</div>
       </div>
+      <div class="collapsible-body" id="injuryCollapse">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;margin-top:4px">
+          <div style="font-size:12px;font-weight:600;color:var(--muted)">Physical injuries</div>
+          <button class="btn-sm btn-sm-iron" onclick="showForm('injuryForm')">+ Add</button>
+        </div>
+        <div id="injuryList">
+          <div class="log-item" style="border-left:3px solid #e08020">
+            <div class="log-item-head"><div class="log-item-title">Left shoulder</div><span class="tag-pill tag-monitoring">Monitoring</span></div>
+            <div class="log-item-body">Old AC joint issue. Flares on overhead work. Fine below 90 degrees.</div>
+            <div class="log-item-date" style="margin-top:4px">Added 1 Mar 2025</div>
+          </div>
+        </div>
+        <div id="injuryForm" style="display:none;margin-top:12px;background:var(--chalk);border-radius:6px;padding:12px">
+          <div class="form-group"><label class="form-label">Body area</label><input class="form-input" id="injArea" placeholder="e.g. Lower back, Left knee"></div>
+          <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="injDesc" placeholder="What happened, severity..."></textarea></div>
+          <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="injStatus"><option value="active">Active</option><option value="monitoring" selected>Monitoring</option><option value="resolved">Resolved</option></select></div>
+          <div style="display:flex;gap:8px"><button class="btn-rust" style="padding:9px" onclick="saveInjury()">Save</button><button class="btn-ghost" style="padding:9px" onclick="hideForm('injuryForm')">Cancel</button></div>
+        </div>
 
-      <!-- Add injury form (hidden by default) -->
-      <div id="addInjuryForm" style="display:none;background:var(--chalk);border-radius:6px;padding:14px;margin-bottom:14px">
-        <div style="margin-bottom:10px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Body part / area</label>
-          <input type="text" id="injuryArea" placeholder="e.g. Lower back, Left knee" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin:14px 0 10px">
+          <div style="font-size:12px;font-weight:600;color:var(--muted)">Mental health & stress</div>
+          <button class="btn-sm btn-sm-iron" onclick="showForm('mentalForm')">+ Add</button>
         </div>
-        <div style="margin-bottom:10px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Description</label>
-          <textarea id="injuryDesc" placeholder="Describe the injury, when it happened, severity..." style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none;resize:vertical;min-height:70px"></textarea>
+        <div id="mentalList">
+          <div class="log-item" style="border-left:3px solid #4488cc">
+            <div class="log-item-head"><div class="log-item-title">🙂 Mood: OK · Stress: Moderate</div><span style="font-size:11px;color:var(--muted)">18 Apr</span></div>
+            <div class="log-item-body">"Work has been full on but training is going well. Feeling good about comp."</div>
+          </div>
         </div>
-        <div style="margin-bottom:12px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Status</label>
-          <select id="injuryStatus" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
-            <option value="active">Active — currently affecting training</option>
-            <option value="monitoring">Monitoring — manageable</option>
-            <option value="resolved">Resolved</option>
-          </select>
+        <div id="mentalForm" style="display:none;margin-top:12px;background:var(--chalk);border-radius:6px;padding:12px">
+          <div class="form-group"><label class="form-label">Mood</label>
+            <div class="mood-row">
+              <button class="mood-btn" onclick="setMood('😔','low')" id="mood-low">😔</button>
+              <button class="mood-btn" onclick="setMood('😐','meh')" id="mood-meh">😐</button>
+              <button class="mood-btn" onclick="setMood('🙂','ok')" id="mood-ok">🙂</button>
+              <button class="mood-btn" onclick="setMood('😊','good')" id="mood-good">😊</button>
+              <button class="mood-btn" onclick="setMood('🔥','great')" id="mood-great">🔥</button>
+            </div>
+          </div>
+          <div class="form-group"><label class="form-label">Stress level</label>
+            <div class="stress-row">
+              <button class="stress-btn" onclick="setStress('Low')" id="stress-Low">Low</button>
+              <button class="stress-btn" onclick="setStress('Moderate')" id="stress-Moderate">Moderate</button>
+              <button class="stress-btn" onclick="setStress('High')" id="stress-High">High</button>
+              <button class="stress-btn" onclick="setStress('Very high')" id="stress-VH">Very high</button>
+            </div>
+          </div>
+          <div class="form-group"><label class="form-label">Training motivation</label>
+            <div class="motiv-row">
+              <button class="motiv-btn" onclick="setMotiv('None')" id="motiv-None">None</button>
+              <button class="motiv-btn" onclick="setMotiv('Low')" id="motiv-Low">Low</button>
+              <button class="motiv-btn" onclick="setMotiv('Good')" id="motiv-Good">Good</button>
+              <button class="motiv-btn" onclick="setMotiv('High')" id="motiv-High">High</button>
+            </div>
+          </div>
+          <div class="form-group"><label class="form-label">Note for Wade <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label><textarea class="form-textarea" id="mentalNote" placeholder="Anything you want Wade to know..."></textarea></div>
+          <div class="warning-msg">💛 If you're struggling beyond training, please reach out — Beyond Blue 1300 22 4636 or Lifeline 13 11 14</div>
+          <div style="display:flex;gap:8px"><button class="btn-rust" style="padding:9px" onclick="saveMental()">Save</button><button class="btn-ghost" style="padding:9px" onclick="hideForm('mentalForm')">Cancel</button></div>
         </div>
-        <div style="display:flex;gap:8px">
-          <button onclick="saveInjury()" style="flex:1;padding:9px;background:var(--rust);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer">Save injury</button>
-          <button onclick="cancelAddInjury()" style="padding:9px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:13px;cursor:pointer">Cancel</button>
-        </div>
-      </div>
-
-      <!-- Injury list -->
-      <div id="injuryList">
-        <div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No injuries logged — great work! 💪</div>
       </div>
     </div>
 
     <!-- Supplements -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
+    <div class="card">
+      <div class="collapsible-header" onclick="toggleCollapse('suppCollapse',this)">
         <div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Current Supplements</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:3px">Required — Wade needs to know what you're taking to factor it into your program</div>
+          <div class="card-title" style="margin-bottom:2px">Supplements</div>
+          <div style="font-size:12px;color:var(--muted)">Required — Wade needs to know what you're taking</div>
         </div>
-        <button onclick="showAddSupp()" style="padding:5px 12px;background:var(--iron);color:var(--white);border:none;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0;margin-left:10px">+ Add</button>
+        <div class="collapsible-arrow">▼</div>
       </div>
-
-      <!-- Add supplement form -->
-      <div id="addSuppForm" style="display:none;background:var(--chalk);border-radius:6px;padding:14px;margin-top:12px;margin-bottom:14px">
-        <div style="margin-bottom:10px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Supplement</label>
-          <input type="text" id="suppName" placeholder="e.g. Creatine, Protein, Pre-workout, Magnesium..." style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
+      <div class="collapsible-body" id="suppCollapse">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;margin-top:4px">
+          <div style="font-size:12px;font-weight:600;color:var(--muted)">Current supplements</div>
+          <button class="btn-sm btn-sm-iron" onclick="showForm('suppForm')">+ Add</button>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Dose</label>
-            <input type="text" id="suppDose" placeholder="e.g. 5g, 2 caps" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
+        <div id="suppList">
+          <div class="log-item"><div class="log-item-head"><div class="log-item-title">Creatine</div><span class="tag-pill">Post-workout · 5g</span></div></div>
+          <div class="log-item"><div class="log-item-head"><div class="log-item-title">Protein Powder</div><span class="tag-pill">Post-workout · 40g</span></div></div>
+          <div class="log-item"><div class="log-item-head"><div class="log-item-title">Magnesium</div><span class="tag-pill">Before bed · 400mg</span></div></div>
+        </div>
+        <div id="suppForm" style="display:none;margin-top:12px;background:var(--chalk);border-radius:6px;padding:12px">
+          <div class="form-group"><label class="form-label">Supplement</label><input class="form-input" id="suppName" placeholder="e.g. Creatine, Protein, Pre-workout"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="form-group"><label class="form-label">Dose</label><input class="form-input" id="suppDose" placeholder="e.g. 5g"></div>
+            <div class="form-group"><label class="form-label">Timing</label><select class="form-select" id="suppTiming"><option>Morning</option><option>Pre-workout</option><option selected>Post-workout</option><option>Before bed</option><option>With meals</option><option>Daily</option></select></div>
           </div>
-          <div>
-            <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">When</label>
-            <select id="suppTiming" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
-              <option value="">Select timing</option>
-              <option>Morning</option>
-              <option>Pre-workout</option>
-              <option>Intra-workout</option>
-              <option>Post-workout</option>
-              <option>With meals</option>
-              <option>Before bed</option>
-              <option>Daily</option>
-              <option>As needed</option>
-            </select>
-          </div>
+          <div style="display:flex;gap:8px"><button class="btn-rust" style="padding:9px" onclick="saveSupp()">Save</button><button class="btn-ghost" style="padding:9px" onclick="hideForm('suppForm')">Cancel</button></div>
         </div>
-        <div style="margin-bottom:12px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Notes (optional)</label>
-          <input type="text" id="suppNotes" placeholder="Brand, reason for taking, how long etc" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
-        </div>
-        <div style="display:flex;gap:8px">
-          <button onclick="saveSupp()" style="flex:1;padding:9px;background:var(--rust);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer">Save supplement</button>
-          <button onclick="cancelSupp()" style="padding:9px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:13px;cursor:pointer">Cancel</button>
-        </div>
-      </div>
-
-      <div id="suppList" style="margin-top:12px">
-        <div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No supplements added yet — tap + Add to get started</div>
       </div>
     </div>
 
     <!-- Practitioner Notes -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">📋 Practitioner Notes</div>
-        <button onclick="showAddPractNote()" style="padding:5px 12px;background:var(--iron);color:var(--white);border:none;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer">+ Add</button>
+    <div class="card">
+      <div class="collapsible-header" onclick="toggleCollapse('practCollapse',this)">
+        <div>
+          <div class="card-title" style="margin-bottom:2px">Practitioner Notes</div>
+          <div style="font-size:12px;color:var(--muted)">Notes from your physio, doctor or health provider</div>
+        </div>
+        <div class="collapsible-arrow">▼</div>
       </div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Notes from your physio, doctor or other healthcare provider that Wade needs to know about.</div>
-
-      <!-- Add note form -->
-      <div id="addPractNoteForm" style="display:none;background:var(--chalk);border-radius:6px;padding:14px;margin-bottom:14px">
-        <div style="margin-bottom:10px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Practitioner name & type</label>
-          <input type="text" id="practName" placeholder="e.g. Sarah Jones — Physiotherapist" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
+      <div class="collapsible-body" id="practCollapse">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;margin-top:4px">
+          <div style="font-size:12px;font-weight:600;color:var(--muted)">Shared with Wade</div>
+          <button class="btn-sm btn-sm-iron" onclick="showForm('practForm')">+ Add</button>
         </div>
-        <div style="margin-bottom:10px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Note / instructions</label>
-          <textarea id="practNote" placeholder="e.g. No heavy squats for 4 weeks. Cleared for upper body work. Review in 2 weeks..." style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none;resize:vertical;min-height:80px"></textarea>
+        <div id="practList">
+          <div class="log-item" style="border-left:3px solid #4488cc">
+            <div class="log-item-head"><div class="log-item-title">Sarah Jones — Physiotherapist</div><span style="font-size:11px;color:var(--muted)">10 Mar</span></div>
+            <div class="log-item-body">Avoid full overhead pressing until reviewed. Lat raises and front raises fine. Recheck in 3 weeks.</div>
+          </div>
         </div>
-        <div style="margin-bottom:12px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Upload document (optional)</label>
-          <input type="file" id="practFile" accept=".pdf,.jpg,.png,.jpeg" style="font-size:13px;color:var(--muted)">
+        <div id="practForm" style="display:none;margin-top:12px;background:var(--chalk);border-radius:6px;padding:12px">
+          <div class="form-group"><label class="form-label">Practitioner name & type</label><input class="form-input" id="practName" placeholder="e.g. Sarah Jones — Physiotherapist"></div>
+          <div class="form-group"><label class="form-label">Note / instructions</label><textarea class="form-textarea" id="practNote" placeholder="What they said, restrictions, clearances..."></textarea></div>
+          <div class="form-group"><label class="form-label">Upload document <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label><input type="file" accept=".pdf,.jpg,.png" style="font-size:13px;color:var(--muted)"></div>
+          <div style="display:flex;gap:8px"><button class="btn-rust" style="padding:9px" onclick="savePract()">Send to Wade</button><button class="btn-ghost" style="padding:9px" onclick="hideForm('practForm')">Cancel</button></div>
         </div>
-        <div style="display:flex;gap:8px">
-          <button onclick="savePractNote()" style="flex:1;padding:9px;background:var(--rust);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer">Send to Wade</button>
-          <button onclick="cancelPractNote()" style="padding:9px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:13px;cursor:pointer">Cancel</button>
-        </div>
-      </div>
-
-      <!-- Notes list -->
-      <div id="practNotesList">
-        <div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No practitioner notes added yet.</div>
       </div>
     </div>
-
   </div>
 
-  <!-- RECOVERY PANEL -->
-  <div class="panel" id="panel-recovery" style="display:none">
+  <!-- ══ RECOVERY PANEL ══ -->
+  <div class="panel" id="panel-recovery">
     <div class="panel-title">Recovery</div>
 
-    <!-- Apple Health Coming Soon -->
-    <div style="background:var(--chalk);border:1px dashed var(--border);border-radius:8px;padding:16px;margin-bottom:16px;display:flex;align-items:center;gap:14px">
-      <div style="font-size:28px">🍎</div>
-      <div>
-        <div style="font-size:13px;font-weight:600;color:var(--iron);margin-bottom:2px">Apple Health sync — coming soon</div>
-        <div style="font-size:12px;color:var(--muted);line-height:1.5">Auto-import sleep, HRV and activity data. Available in the Wade Strong app.</div>
+    <!-- Apple Health -->
+    <div class="ah-banner">
+      <div class="ah-icon">🍎</div>
+      <div class="ah-text">
+        <div class="ah-title">Apple Health sync — coming soon</div>
+        <div class="ah-sub">Auto-import sleep, HRV and activity data. Available in the Wade Strong app.</div>
       </div>
     </div>
 
-    <!-- Daily Check-in -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-        <div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Daily Check-in</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:3px">Optional — helps Wade understand how your body is responding</div>
-        </div>
-        <div style="font-size:12px;color:var(--muted)" id="checkInDate"></div>
-      </div>
-
-      <!-- Soreness -->
-      <div style="margin-bottom:18px">
-        <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Overall soreness</label>
-        <div style="display:flex;gap:8px">
-          ${[1,2,3,4,5,6,7,8,9,10].map(n => `
-          <button onclick="setSoreness(${n})" id="sor-${n}" style="width:32px;height:32px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s;color:var(--muted)">${n}</button>`).join('')}
-        </div>
-        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:4px;padding:0 2px">
-          <span>None</span><span>Max</span>
+    <!-- Daily check-in -->
+    <div class="card">
+      <div class="card-title">Daily Check-in <span class="card-title-sub">Optional — helps Wade understand your body</span></div>
+      <div style="margin-bottom:12px">
+        <div class="form-label">Overall soreness</div>
+        <div style="display:flex;gap:5px" id="sorenessRow">
+          ${Array.from({length:10},(_,i)=>`<button onclick="setSoreness(${i+1})" id="sor-${i+1}" style="flex:1;height:30px;border-radius:4px;border:1px solid var(--border);background:var(--chalk);font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);transition:all 0.15s">${i+1}</button>`).join('')}
         </div>
       </div>
-
-      <!-- Sleep -->
-      <div style="margin-bottom:18px">
-        <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Sleep last night <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
-        <div style="display:flex;align-items:center;gap:12px">
-          <input type="range" id="sleepHours" min="3" max="12" step="0.5" value="7.5" oninput="updateSleep(this.value)" style="flex:1;accent-color:var(--rust)">
-          <div style="text-align:center;min-width:60px">
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--iron)" id="sleepVal">7.5</div>
-            <div style="font-size:10px;color:var(--muted)">hours</div>
-          </div>
+      <div style="margin-bottom:12px">
+        <div class="form-label">Sleep last night <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></div>
+        <div class="slider-wrap">
+          <input type="range" min="3" max="12" step="0.5" value="7.5" oninput="document.getElementById('sleepVal').textContent=this.value" style="flex:1;accent-color:var(--rust)">
+          <div class="slider-val"><span id="sleepVal">7.5</span><div style="font-size:10px;color:var(--muted)">hrs</div></div>
         </div>
-        <div style="display:flex;gap:8px;margin-top:10px">
-          <button onclick="setSleepQuality('poor')" id="sq-poor" class="sq-btn" style="flex:1;padding:7px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-size:12px;font-weight:600;cursor:pointer;color:var(--muted)">😴 Poor</button>
-          <button onclick="setSleepQuality('ok')" id="sq-ok" class="sq-btn" style="flex:1;padding:7px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-size:12px;font-weight:600;cursor:pointer;color:var(--muted)">😐 OK</button>
-          <button onclick="setSleepQuality('good')" id="sq-good" class="sq-btn" style="flex:1;padding:7px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-size:12px;font-weight:600;cursor:pointer;color:var(--muted)">😊 Good</button>
-          <button onclick="setSleepQuality('great')" id="sq-great" class="sq-btn" style="flex:1;padding:7px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-size:12px;font-weight:600;cursor:pointer;color:var(--muted)">🔥 Great</button>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button class="stress-btn" onclick="setSQ('poor')" id="sq-poor">😴 Poor</button>
+          <button class="stress-btn" onclick="setSQ('ok')" id="sq-ok">😐 OK</button>
+          <button class="stress-btn" onclick="setSQ('good')" id="sq-good">😊 Good</button>
+          <button class="stress-btn" onclick="setSQ('great')" id="sq-great">🔥 Great</button>
         </div>
       </div>
-
-      <!-- HRV -->
-      <div style="margin-bottom:18px">
-        <label style="display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">HRV <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional — from Whoop, Garmin etc)</span></label>
-        <div style="display:flex;align-items:center;gap:10px">
-          <input type="number" id="hrvInput" placeholder="e.g. 62" min="0" max="200" style="width:100px;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:16px;font-weight:600;text-align:center;background:var(--chalk);outline:none;-moz-appearance:textfield">
-          <span style="font-size:13px;color:var(--muted)">ms — higher is better</span>
+      <div style="margin-bottom:14px">
+        <div class="form-label">HRV <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional — Whoop, Garmin etc)</span></div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <input type="number" id="hrvInput" placeholder="e.g. 68" min="0" max="200" class="form-input" style="width:100px;text-align:center;font-size:16px;font-weight:600">
+          <span style="font-size:13px;color:var(--muted)">ms</span>
         </div>
       </div>
-
-      <button onclick="saveCheckIn()" style="width:100%;padding:12px;background:var(--iron);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s">Log today's check-in</button>
-      <div id="checkInSuccess" style="display:none;margin-top:10px;padding:10px;background:var(--green-bg,#e6f4ed);border:1px solid rgba(44,122,75,0.2);border-radius:5px;font-size:13px;color:#2c7a4b;font-weight:600;text-align:center">✓ Check-in logged!</div>
+      <button class="btn-iron" onclick="saveCheckIn()">Log check-in</button>
+      <div class="success-msg" id="checkInSuccess">✓ Check-in logged!</div>
     </div>
 
-    <!-- Recovery Log -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Recovery Log</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:3px">Optional — log any body work, therapy or recovery sessions</div>
-        </div>
-        <button onclick="showAddRecovery()" style="padding:5px 12px;background:var(--iron);color:var(--white);border:none;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer">+ Add</button>
+    <!-- Nutrition -->
+    <div class="card">
+      <div class="card-title">Nutrition — Today <span class="card-title-sub">Optional — log what you can, skip what you can't</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div><label class="form-label">Calories</label><div style="display:flex;align-items:center;gap:6px"><input type="number" id="nutCal" placeholder="0" class="form-input" style="font-size:16px;font-weight:600"><span style="font-size:12px;color:var(--muted)">kcal</span></div></div>
+        <div><label class="form-label">Water</label><div style="display:flex;align-items:center;gap:6px"><input type="number" id="nutWater" placeholder="0" step="0.1" class="form-input" style="font-size:16px;font-weight:600"><span style="font-size:12px;color:var(--muted)">L</span></div></div>
       </div>
-
-      <!-- Add recovery form -->
-      <div id="addRecoveryForm" style="display:none;background:var(--chalk);border-radius:6px;padding:14px;margin-bottom:14px">
-        <div style="margin-bottom:10px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Treatment type</label>
-          <select id="recoveryType" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
-            <option value="">Select type</option>
-            <option>Massage</option>
-            <option>Cupping</option>
-            <option>Dry Needling</option>
-            <option>Ice Bath</option>
-            <option>Hot/Cold Contrast</option>
-            <option>Sauna</option>
-            <option>Foam Rolling</option>
-            <option>Stretching / Mobility</option>
-            <option>Physio</option>
-            <option>Chiro</option>
-            <option>Compression Therapy</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div style="margin-bottom:10px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Body area</label>
-          <input type="text" id="recoveryArea" placeholder="e.g. Lower back, Hamstrings, Full body" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none">
-        </div>
-        <div style="margin-bottom:10px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">How did it feel?</label>
-          <div style="display:flex;gap:8px">
-            <button onclick="setRecoveryFeel('😖 Rough')" class="feel-btn" style="flex:1;padding:7px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-size:12px;cursor:pointer;color:var(--muted)">😖 Rough</button>
-            <button onclick="setRecoveryFeel('👍 Good')" class="feel-btn" style="flex:1;padding:7px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-size:12px;cursor:pointer;color:var(--muted)">👍 Good</button>
-            <button onclick="setRecoveryFeel('🔥 Great')" class="feel-btn" style="flex:1;padding:7px;border-radius:5px;border:1px solid var(--border);background:var(--chalk);font-size:12px;cursor:pointer;color:var(--muted)">🔥 Great</button>
-          </div>
-        </div>
-        <div style="margin-bottom:12px">
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Notes (optional)</label>
-          <textarea id="recoveryNotes" placeholder="Anything else worth noting..." style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;background:var(--white);outline:none;resize:vertical;min-height:60px"></textarea>
-        </div>
-        <div style="display:flex;gap:8px">
-          <button onclick="saveRecovery()" style="flex:1;padding:9px;background:var(--rust);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer">Save</button>
-          <button onclick="cancelRecovery()" style="padding:9px 16px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:13px;cursor:pointer">Cancel</button>
-        </div>
+      <div class="form-label">Macros <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></div>
+      <div class="macro-grid" style="margin-top:6px;margin-bottom:10px">
+        <div class="macro-item"><label style="font-size:11px;color:#2c7a4b;font-weight:600">Protein</label><div style="display:flex;align-items:center;gap:4px"><input type="number" id="nutP" class="macro-input" placeholder="0" oninput="updateMacroBar()" style="color:#2c7a4b"><span style="font-size:11px;color:var(--muted)">g</span></div></div>
+        <div class="macro-item"><label style="font-size:11px;color:#7a5010;font-weight:600">Carbs</label><div style="display:flex;align-items:center;gap:4px"><input type="number" id="nutC" class="macro-input" placeholder="0" oninput="updateMacroBar()" style="color:#7a5010"><span style="font-size:11px;color:var(--muted)">g</span></div></div>
+        <div class="macro-item"><label style="font-size:11px;color:#8c3020;font-weight:600">Fats</label><div style="display:flex;align-items:center;gap:4px"><input type="number" id="nutF" class="macro-input" placeholder="0" oninput="updateMacroBar()" style="color:#8c3020"><span style="font-size:11px;color:var(--muted)">g</span></div></div>
       </div>
+      <div id="macroBarWrap" style="display:none">
+        <div class="macro-bar"><div class="macro-bar-p" id="mbP"></div><div class="macro-bar-c" id="mbC"></div><div class="macro-bar-f" id="mbF"></div></div>
+        <div class="macro-legend"><span style="color:#2c7a4b">● Protein</span><span style="color:#7a5010">● Carbs</span><span style="color:#8c3020">● Fats</span></div>
+      </div>
+      <button class="btn-rust" onclick="saveNutrition()" style="margin-top:12px">Log nutrition</button>
+      <div class="success-msg" id="nutritionSuccess">✓ Nutrition logged!</div>
+      <div id="nutritionHistory" style="margin-top:12px"></div>
+    </div>
 
+    <!-- Recovery log -->
+    <div class="card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
+        <div><div class="card-title" style="margin-bottom:2px">Recovery Log</div><div style="font-size:12px;color:var(--muted)">Optional — body work, therapy, recovery sessions</div></div>
+        <button class="btn-sm btn-sm-iron" onclick="showForm('recoveryForm')">+ Add</button>
+      </div>
       <div id="recoveryList">
-        <div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No recovery sessions logged yet.</div>
-      </div>
-    </div>
-
-    <!-- Nutrition Log -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-        <div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Nutrition — Today</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:3px">Optional — log what you can, skip what you can't</div>
+        <div class="log-item" style="border-left:3px solid var(--rust)">
+          <div class="log-item-head"><div class="log-item-title">Ice Bath</div><span class="tag-pill">🔥 Great</span></div>
+          <div class="log-item-body">Legs · 12 mins after heavy deadlift session</div>
+          <div class="log-item-date" style="margin-top:4px">14 Apr 2025</div>
         </div>
-        <div style="font-size:11px;color:var(--muted)" id="nutritionDate"></div>
-      </div>
-
-      <!-- Calories & Water -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
-        <div>
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Calories</label>
-          <div style="display:flex;align-items:center;gap:6px">
-            <input type="number" id="nutCalories" placeholder="0" min="0" max="9999" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:16px;font-weight:600;background:var(--chalk);outline:none;-moz-appearance:textfield">
-            <span style="font-size:12px;color:var(--muted);white-space:nowrap">kcal</span>
-          </div>
-        </div>
-        <div>
-          <label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Water</label>
-          <div style="display:flex;align-items:center;gap:6px">
-            <input type="number" id="nutWater" placeholder="0" min="0" max="10" step="0.1" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:16px;font-weight:600;background:var(--chalk);outline:none;-moz-appearance:textfield">
-            <span style="font-size:12px;color:var(--muted);white-space:nowrap">litres</span>
-          </div>
+        <div class="log-item" style="border-left:3px solid var(--rust)">
+          <div class="log-item-head"><div class="log-item-title">Dry Needling</div><span class="tag-pill">👍 Good</span></div>
+          <div class="log-item-body">Left shoulder — with physio Sarah</div>
+          <div class="log-item-date" style="margin-top:4px">10 Apr 2025</div>
         </div>
       </div>
-
-      <!-- Macros -->
-      <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Macros <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
-        <div>
-          <label style="display:block;font-size:11px;color:var(--muted);margin-bottom:4px">Protein</label>
-          <div style="display:flex;align-items:center;gap:4px">
-            <input type="number" id="nutProtein" placeholder="0" min="0" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:15px;font-weight:600;background:var(--chalk);outline:none;-moz-appearance:textfield;color:#2c7a4b">
-            <span style="font-size:11px;color:var(--muted)">g</span>
+      <div id="recoveryForm" style="display:none;margin-top:12px;background:var(--chalk);border-radius:6px;padding:12px">
+        <div class="form-group"><label class="form-label">Treatment type</label>
+          <select class="form-select" id="recType"><option>Massage</option><option>Cupping</option><option>Dry Needling</option><option>Ice Bath</option><option>Hot/Cold Contrast</option><option>Sauna</option><option>Foam Rolling</option><option>Stretching / Mobility</option><option>Physio</option><option>Chiro</option><option>Compression Therapy</option><option>Other</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">Body area</label><input class="form-input" id="recArea" placeholder="e.g. Lower back, Full body"></div>
+        <div class="form-group"><label class="form-label">How did it feel?</label>
+          <div style="display:flex;gap:8px">
+            <button class="stress-btn" onclick="setRecFeel('😖 Rough')" id="rf-rough">😖 Rough</button>
+            <button class="stress-btn" onclick="setRecFeel('👍 Good')" id="rf-good">👍 Good</button>
+            <button class="stress-btn" onclick="setRecFeel('🔥 Great')" id="rf-great">🔥 Great</button>
           </div>
         </div>
-        <div>
-          <label style="display:block;font-size:11px;color:var(--muted);margin-bottom:4px">Carbs</label>
-          <div style="display:flex;align-items:center;gap:4px">
-            <input type="number" id="nutCarbs" placeholder="0" min="0" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:15px;font-weight:600;background:var(--chalk);outline:none;-moz-appearance:textfield;color:#7a5010">
-            <span style="font-size:11px;color:var(--muted)">g</span>
-          </div>
-        </div>
-        <div>
-          <label style="display:block;font-size:11px;color:var(--muted);margin-bottom:4px">Fats</label>
-          <div style="display:flex;align-items:center;gap:4px">
-            <input type="number" id="nutFats" placeholder="0" min="0" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:15px;font-weight:600;background:var(--chalk);outline:none;-moz-appearance:textfield;color:#8c3020">
-            <span style="font-size:11px;color:var(--muted)">g</span>
-          </div>
-        </div>
+        <div class="form-group"><label class="form-label">Notes <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label><textarea class="form-textarea" id="recNotes" placeholder="Anything worth noting..."></textarea></div>
+        <div style="display:flex;gap:8px"><button class="btn-rust" style="padding:9px" onclick="saveRecovery()">Save</button><button class="btn-ghost" style="padding:9px" onclick="hideForm('recoveryForm')">Cancel</button></div>
       </div>
-
-      <!-- Macro visual bar -->
-      <div id="macroBar" style="display:none;margin-bottom:14px">
-        <div style="height:8px;border-radius:4px;overflow:hidden;display:flex;gap:2px">
-          <div id="macroProteinBar" style="background:#2c7a4b;height:100%;transition:width 0.3s"></div>
-          <div id="macroCarbBar" style="background:#7a5010;height:100%;transition:width 0.3s"></div>
-          <div id="macroFatBar" style="background:#8c3020;height:100%;transition:width 0.3s"></div>
-        </div>
-        <div style="display:flex;gap:12px;margin-top:6px;font-size:11px">
-          <span style="color:#2c7a4b">● Protein</span>
-          <span style="color:#7a5010">● Carbs</span>
-          <span style="color:#8c3020">● Fats</span>
-        </div>
-      </div>
-
-      <button onclick="saveNutrition()" style="width:100%;padding:11px;background:var(--rust);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:700;cursor:pointer">Log nutrition</button>
-      <div id="nutritionSuccess" style="display:none;margin-top:10px;padding:10px;background:#e6f4ed;border:1px solid rgba(44,122,75,0.2);border-radius:5px;font-size:13px;color:#2c7a4b;font-weight:600;text-align:center">✓ Nutrition logged!</div>
-
-      <!-- Nutrition history -->
-      <div id="nutritionHistory" style="margin-top:16px"></div>
     </div>
 
     <!-- Check-in history -->
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Check-in History</div>
+    <div class="card">
+      <div class="card-title">Check-in History</div>
       <div id="checkInHistory">
-        <div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No check-ins yet — log your first one above!</div>
+        <div class="log-item"><div class="log-item-tags"><span class="log-tag" style="color:#c03020">😣 Soreness: 5/10</span><span class="log-tag">😴 7.5h · Good</span><span class="log-tag" style="color:#4488cc">❤️ HRV: 68ms</span></div><div class="log-item-date" style="margin-top:4px">20 Apr 2025</div></div>
+        <div class="log-item"><div class="log-item-tags"><span class="log-tag" style="color:#c03020">😣 Soreness: 7/10</span><span class="log-tag">😴 6.5h · OK</span><span class="log-tag" style="color:#4488cc">❤️ HRV: 54ms</span></div><div class="log-item-date" style="margin-top:4px">19 Apr 2025</div></div>
+        <div class="log-item"><div class="log-item-tags"><span class="log-tag" style="color:#2c7a4b">😊 Soreness: 3/10</span><span class="log-tag">😴 8h · Great</span><span class="log-tag" style="color:#4488cc">❤️ HRV: 72ms</span></div><div class="log-item-date" style="margin-top:4px">18 Apr 2025</div></div>
       </div>
-    </div>
-
-  </div>
-
-  <!-- COMP DAY PANEL -->
-  <div class="panel" id="panel-comp" style="display:none">
-    <div class="panel-title">Comp Day Strategy</div>
-
-    <!-- No plan yet state -->
-    <div id="compNoPlan" style="text-align:center;padding:48px 24px;background:var(--white);border:1px solid var(--border);border-radius:8px;margin-bottom:16px;display:none">
-      <div style="font-size:40px;margin-bottom:12px">🏆</div>
-      <div style="font-size:16px;font-weight:600;color:var(--iron);margin-bottom:8px">No comp plan yet</div>
-      <div style="font-size:14px;color:var(--muted);line-height:1.6">Wade will build your competition day strategy once your program is underway. Check back closer to comp day.</div>
-    </div>
-
-    <!-- Comp plan (populated by Wade) -->
-    <div id="compPlan">
-
-      <!-- Competition Details -->
-      <div style="background:var(--iron);border-radius:8px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden">
-        <div style="position:absolute;right:-10px;bottom:-20px;font-family:'Bebas Neue',sans-serif;font-size:100px;color:rgba(255,255,255,0.04);line-height:1;pointer-events:none">COMP</div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--rust);margin-bottom:12px;position:relative;z-index:1">Competition</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--white);letter-spacing:1px;margin-bottom:4px;position:relative;z-index:1" id="compName">Strongman Corporation Arnold's Pro/Am</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;position:relative;z-index:1">
-          <div><div style="font-size:11px;color:rgba(255,255,255,0.4)">Date</div><div style="font-size:14px;font-weight:600;color:var(--white)" id="compDate">15 June 2025</div></div>
-          <div><div style="font-size:11px;color:rgba(255,255,255,0.4)">Location</div><div style="font-size:14px;font-weight:600;color:var(--white)" id="compLocation">Ohio, USA</div></div>
-          <div><div style="font-size:11px;color:rgba(255,255,255,0.4)">Weight class</div><div style="font-size:14px;font-weight:600;color:var(--white)" id="compWeightClass">Under 90kg</div></div>
-          <div><div style="font-size:11px;color:rgba(255,255,255,0.4)">Federation</div><div style="font-size:14px;font-weight:600;color:var(--white)" id="compFederation">Strongman Corporation</div></div>
-        </div>
-      </div>
-
-      <!-- Weight Cut -->
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px" id="weightCutSection">
-        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Weight Cut Plan</div>
-        <div id="weightCutContent" style="font-size:14px;color:var(--muted);line-height:1.8">
-          Current weight: <strong style="color:var(--iron)">91.5kg</strong> · Target: <strong style="color:var(--iron)">89.9kg</strong><br>
-          Cut water only in the final 24hrs. No food restriction. Rehydrate immediately after weigh-in with electrolytes + carbs.
-        </div>
-      </div>
-
-      <!-- Warm Up Plan -->
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Warm Up Plan</div>
-        <div id="warmUpContent" style="font-size:14px;color:var(--muted);line-height:1.8">
-          Arrive 90 min before first event. General movement 10 min → event-specific warm ups 20 min → final heavy single 15 min before start. Keep it minimal — save energy for the platform.
-        </div>
-      </div>
-
-      <!-- Events & Attempts -->
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:16px">Events & Attempt Selection</div>
-        <div id="eventsList"></div>
-      </div>
-
-      <!-- Day Of Notes from Wade -->
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Wade's Notes</div>
-        <div id="wadeCompNotes" style="font-size:14px;color:var(--muted);line-height:1.8;background:var(--chalk);border-radius:6px;padding:14px;border-left:3px solid var(--rust)">
-          You've put in the work. Trust the training. Stay in your own lane on the day — don't watch what anyone else is lifting. Your openers are conservative on purpose, we want three whites on every lift. Attack your thirds. — Wade
-        </div>
-      </div>
-
-      <!-- Competition Rules & Strategy -->
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px">Competition Rules & Tactical Strategy</div>
-
-        <!-- Order of play -->
-        <div style="background:var(--chalk);border-radius:6px;padding:14px;margin-bottom:10px;border-left:3px solid var(--rust)">
-          <div style="font-size:13px;font-weight:700;color:var(--iron);margin-bottom:6px">🎯 Order of competition</div>
-          <div style="font-size:13px;color:var(--muted);line-height:1.8">
-            Athletes compete in <strong style="color:var(--iron)">reverse placing order</strong> — the athlete in last place goes first, the leader goes last. This means:
-            <ul style="margin-top:8px;padding-left:18px;display:flex;flex-direction:column;gap:6px">
-              <li><strong style="color:var(--iron)">Leading after an event = you compete last</strong> in the next event. You can watch everyone else lift and know exactly what you need.</li>
-              <li><strong style="color:var(--iron)">Trailing = you compete earlier.</strong> Use this to set a target score that puts pressure on the leaders.</li>
-              <li>If you're leading — <strong style="color:var(--iron)">don't show your hand early.</strong> You can adjust your attempt based on what others lift.</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Attempt strategy -->
-        <div style="background:var(--chalk);border-radius:6px;padding:14px;margin-bottom:10px;border-left:3px solid #4488cc">
-          <div style="font-size:13px;font-weight:700;color:var(--iron);margin-bottom:6px">📊 Attempt selection rules</div>
-          <div style="font-size:13px;color:var(--muted);line-height:1.8">
-            <ul style="padding-left:18px;display:flex;flex-direction:column;gap:6px">
-              <li>You must <strong style="color:var(--iron)">declare your next attempt immediately</strong> after each lift — know your numbers before you compete.</li>
-              <li><strong style="color:var(--iron)">Openers should be 95%+ certainty.</strong> A missed opener costs you points and confidence.</li>
-              <li>If you're battling for position, your third attempt may need to change based on what others lift — Wade will advise on the day.</li>
-              <li>In events judged on reps or distance — <strong style="color:var(--iron)">pace yourself.</strong> Going too hard early can cost you more than a slower steady effort.</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Points system -->
-        <div style="background:var(--chalk);border-radius:6px;padding:14px;margin-bottom:10px;border-left:3px solid #2c7a4b">
-          <div style="font-size:13px;font-weight:700;color:var(--iron);margin-bottom:6px">🏅 Points & placing</div>
-          <div style="font-size:13px;color:var(--muted);line-height:1.8">
-            Points are awarded per event based on placing. <strong style="color:var(--iron)">Consistency across all events beats winning one and bombing another.</strong> A 2nd, 2nd, 2nd beats a 1st, 1st, last place. Wade programs all events — not just your strongest.
-          </div>
-        </div>
-
-        <!-- Wade's tactical notes -->
-        <div style="background:var(--chalk);border-radius:6px;padding:14px;border-left:3px solid var(--rust)">
-          <div style="font-size:13px;font-weight:700;color:var(--iron);margin-bottom:6px">💬 Wade's tactical notes for this comp</div>
-          <div id="wadeCompTactics" style="font-size:13px;color:var(--muted);line-height:1.8">
-            You're a contender in this field. If you podium event 1, you'll go last in event 2 — use that. Watch the top 3 lifters and know your number before you touch the bar. Your strongest events are later in the day — stay patient early.
-          </div>
-        </div>
-      </div>
-
-      <!-- Athlete Notes & Questions -->
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
-        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Your Notes & Questions</div>
-        <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Add questions or notes — these will be sent to Wade in messages and he'll update your plan if needed.</div>
-        <div id="athleteCompNotes" style="margin-bottom:12px"></div>
-        <textarea id="compNoteInput" placeholder="e.g. Should I go heavier on my log opener? What if conditions are bad? Feeling nervous about the atlas stones..." style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:14px;color:var(--iron);background:var(--chalk);outline:none;resize:vertical;min-height:80px"></textarea>
-        <button onclick="sendCompNote()" style="width:100%;margin-top:10px;padding:11px;background:var(--iron);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:700;cursor:pointer">Send to Wade →</button>
-      </div>
-
     </div>
   </div>
 
+  <!-- ══ COMP DAY PANEL ══ -->
+  <div class="panel" id="panel-comp">
+    <div class="panel-title">Comp Day</div>
+
+    <!-- Competition details -->
+    <div class="comp-header">
+      <div class="comp-bg">COMP</div>
+      <div class="comp-label">Competition</div>
+      <div class="comp-name">Strongman Corporation<br>Arnold's Pro/Am</div>
+      <div class="comp-meta">
+        <div class="comp-meta-item"><div class="comp-meta-label">Date</div><div class="comp-meta-val">15 June 2025</div></div>
+        <div class="comp-meta-item"><div class="comp-meta-label">Location</div><div class="comp-meta-val">Ohio, USA</div></div>
+        <div class="comp-meta-item"><div class="comp-meta-label">Weight class</div><div class="comp-meta-val">Under 90kg</div></div>
+        <div class="comp-meta-item"><div class="comp-meta-label">Federation</div><div class="comp-meta-val">Strongman Corp</div></div>
+      </div>
+    </div>
+
+    <!-- Weight cut -->
+    <div class="card">
+      <div class="card-title">Weight Cut Plan</div>
+      <p style="font-size:14px;color:var(--muted);line-height:1.7">Current: <strong style="color:var(--iron)">91.5kg</strong> · Target: <strong style="color:var(--iron)">89.9kg</strong><br>Water cut only in final 24hrs. No food restriction. Rehydrate immediately after weigh-in with electrolytes + carbs.</p>
+    </div>
+
+    <!-- Warm up -->
+    <div class="card">
+      <div class="card-title">Warm Up Plan</div>
+      <p style="font-size:14px;color:var(--muted);line-height:1.7">Arrive 90 min before first event. General movement 10 min → event-specific warm ups 20 min → final heavy single 15 min before start. Keep it minimal — save energy for the platform.</p>
+    </div>
+
+    <!-- Events -->
+    <div class="card">
+      <div class="card-title">Events & Attempt Selection</div>
+      <div id="eventsList"></div>
+    </div>
+
+    <!-- Competition rules -->
+    <div class="card">
+      <div class="card-title">Competition Rules & Tactics</div>
+      <div class="rule-card rule-card-rust">
+        <div class="rule-title">🎯 Order of competition</div>
+        <div class="rule-text">Athletes compete in <strong>reverse placing order</strong> — last place goes first, leader goes last. If you're leading after an event, you compete last in the next one and can watch everyone lift first. Use it.</div>
+      </div>
+      <div class="rule-card rule-card-blue">
+        <div class="rule-title">📊 Attempt selection</div>
+        <div class="rule-text"><ul><li>Declare your next attempt immediately after each lift</li><li>Openers must be 95%+ certainty — a missed opener costs points AND confidence</li><li>Wade may adjust your thirds based on what others lift</li></ul></div>
+      </div>
+      <div class="rule-card rule-card-green">
+        <div class="rule-title">🏅 Points & placing</div>
+        <div class="rule-text">Consistency beats heroics. A 2nd, 2nd, 2nd beats a 1st, 1st, bomb-out. Wade programs all events — not just your strongest.</div>
+      </div>
+      <div class="rule-card rule-card-rust" style="margin-top:8px">
+        <div class="rule-title">💬 Wade's tactical notes</div>
+        <div class="rule-text">You're a contender in this field. If you podium event 1 you go last in event 2 — use it. Watch the top 3 and know your number before you touch the bar. Your strongest events are late in the day. Stay patient early.</div>
+      </div>
+    </div>
+
+    <!-- Wade's notes -->
+    <div class="card">
+      <div class="card-title">Wade's Notes</div>
+      <div style="background:var(--chalk);border-radius:6px;padding:14px;border-left:3px solid var(--rust);font-size:14px;color:var(--muted);line-height:1.8">You've put in the work. Trust the training. Stay in your own lane — don't watch what anyone else is lifting. Your openers are conservative on purpose, we want three whites. Attack your thirds. — <strong style="color:var(--iron)">Wade</strong></div>
+    </div>
+
+    <!-- Athlete notes -->
+    <div class="card">
+      <div class="card-title">Your Questions & Notes</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Questions go straight to Wade in messages — he'll reply and update the plan if needed.</div>
+      <div id="compNotesList"></div>
+      <textarea class="form-textarea" id="compNoteInput" placeholder="e.g. Should I go heavier on my log opener? Nervous about the atlas stones..."></textarea>
+      <button class="btn-iron" onclick="sendCompNote()" style="margin-top:8px">Send to Wade →</button>
+    </div>
+  </div>
+
+  <!-- ══ MESSAGES PANEL ══ -->
   <div class="panel" id="panel-messages">
-    <div class="section-hdr" style="margin-bottom:20px">
-      <div class="section-title">MESSAGES</div>
-    </div>
-    <div id="messageThread" style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px"></div>
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px">
-      <textarea id="msgInput" style="width:100%;padding:8px 0;border:none;font-family:var(--font-body);font-size:14px;color:var(--iron);outline:none;resize:none;min-height:60px;background:transparent" placeholder="Message Wade..."></textarea>
-      <div id="voicePreview" style="display:none;background:var(--chalk);border-radius:5px;padding:8px 12px;margin-bottom:10px;display:none;align-items:center;gap:10px;font-size:13px">
-        <span>🎤</span>
-        <span id="voiceLabel" style="flex:1;color:var(--muted)">Voice note ready</span>
-        <span id="voiceTimer" style="font-weight:600;color:var(--rust)">0:00</span>
-        <span style="cursor:pointer;color:var(--muted)" onclick="cancelVoice()">×</span>
-      </div>
-      <div style="border-top:1px solid var(--border);padding-top:10px;display:flex;align-items:center;justify-content:space-between;gap:8px">
-        <div style="display:flex;gap:6px">
-          <button id="voiceBtn" title="Record voice note" onclick="toggleVoice()" style="width:34px;height:34px;border-radius:5px;border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.2s">🎤</button>
-        </div>
-        <button style="padding:8px 20px;background:var(--iron);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer" onclick="sendMessage()">Send</button>
-      </div>
-    </div>
+    <div class="panel-title">Messages</div>
+    <div class="msg-thread" id="msgThread"></div>
   </div>
 
+</div><!-- end scroll area -->
+
+<!-- MESSAGE INPUT (visible in messages tab) -->
+<div class="msg-input-area" id="msgInputArea">
+  <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()" title="Record voice note">🎤</button>
+  <textarea class="msg-textarea" id="msgInput" placeholder="Message Wade..." rows="1" oninput="autoResize(this)"></textarea>
+  <button class="msg-send" onclick="sendMessage()">➤</button>
 </div>
 
 <!-- BOTTOM NAV -->
-<div class="bottom-nav" id="bottomNav">
-  <div class="bottom-nav-inner">
-    <div class="bnav-item active" onclick="switchPanel('program',this)"><div class="bnav-icon">📋</div>Program</div>
-    <div class="bnav-item" onclick="switchPanel('progress',this)"><div class="bnav-icon">📈</div>Progress</div>
-    <div class="bnav-item" onclick="switchPanel('profile',this)"><div class="bnav-icon">👤</div>Profile</div>
-    <div class="bnav-item" onclick="switchPanel('uploads',this)"><div class="bnav-icon">🎥</div>Clips</div>
-    <div class="bnav-item" onclick="switchPanel('recovery',this)"><div class="bnav-icon">🔄</div>Recovery</div>
-    <div class="bnav-item" id="compTab" onclick="switchPanel('comp',this)"><div class="bnav-icon">🏆</div>Comp Day</div>
-    <div class="bnav-item" onclick="switchPanel('messages',this)"><div class="bnav-icon">💬</div>Messages</div>
-  </div>
+<div class="bnav">
+  <button class="bnav-item active" onclick="switchTab('program',this)"><div class="bnav-icon">📋</div>Program</button>
+  <button class="bnav-item" onclick="switchTab('progress',this)"><div class="bnav-icon">📈</div>Progress</button>
+  <button class="bnav-item" onclick="switchTab('profile',this)"><div class="bnav-icon">👤</div>Profile</button>
+  <button class="bnav-item" onclick="switchTab('recovery',this)"><div class="bnav-icon">🔄</div>Recovery</button>
+  <button class="bnav-item" onclick="switchTab('comp',this)"><div class="bnav-icon">🏆</div>Comp</button>
+  <button class="bnav-item" onclick="switchTab('messages',this)"><div class="bnav-icon">💬</div>Messages</button>
 </div>
 
 <div class="toast" id="toast"></div>
 
-
 <script>
-// Auto-load demo data
-sessionStorage.setItem('ws_injuries', JSON.stringify([
-  { area: 'Left knee', desc: 'Old meniscus issue from football. Flares up on heavy squats occasionally.', status: 'monitoring', date: '10 Apr 2025' },
-  { area: 'Lower back', desc: 'Mild tightness after deadlift sessions. Not painful, just stiff.', status: 'monitoring', date: '5 Apr 2025' },
-]));
-sessionStorage.setItem('ws_supplements', JSON.stringify([
-  { name: 'Creatine', dose: '5g', timing: 'Post-workout', notes: 'Optimum Nutrition' },
-  { name: 'Protein Powder', dose: '40g', timing: 'Post-workout', notes: 'Vanilla whey — hitting 180g protein daily' },
-  { name: 'Magnesium', dose: '400mg', timing: 'Before bed', notes: 'Helps with sleep and cramps' },
-  { name: 'Fish Oil', dose: '2 caps', timing: 'With meals', notes: 'Joint support' },
-]));
-sessionStorage.setItem('ws_recovery', JSON.stringify([
-  { type: 'Massage', area: 'Full body', feel: '🔥 Great', notes: 'Sports massage — felt much looser after', date: '14 Apr 2025' },
-  { type: 'Ice Bath', area: 'Legs', feel: '👍 Good', notes: '10 mins after heavy leg day', date: '12 Apr 2025' },
-  { type: 'Dry Needling', area: 'Left knee / quads', feel: '👍 Good', notes: 'With physio Sarah — targeting VMO', date: '8 Apr 2025' },
-]));
-sessionStorage.setItem('ws_checkins', JSON.stringify([
-  { date: '20 Apr 2025', soreness: 4, sleep: '7.5', sleepQuality: 'good', hrv: '68' },
-  { date: '19 Apr 2025', soreness: 6, sleep: '6.5', sleepQuality: 'ok', hrv: '54' },
-  { date: '18 Apr 2025', soreness: 3, sleep: '8', sleepQuality: 'great', hrv: '72' },
-]));
-sessionStorage.setItem('ws_nutrition', JSON.stringify([
-  { date: '20 Apr 2025', calories: '3200', water: '3.5', protein: '185', carbs: '380', fats: '95' },
-  { date: '19 Apr 2025', calories: '2900', water: '3.0', protein: '170', carbs: '320', fats: '88' },
-]));
-sessionStorage.setItem('ws_mental', JSON.stringify([
-  { date: '18 Apr 2025', mood: { emoji: '🙂', key: 'ok' }, stress: 'Moderate', motivation: 'Good', note: 'Work has been hectic but training is going well. Looking forward to the weekend session.' },
-]));
-sessionStorage.setItem('ws_pract_notes', JSON.stringify([
-  { practitioner: 'Sarah Jones — Physiotherapist', note: 'Continue strengthening VMO. Avoid full depth squats under heavy load for 2 weeks.', fileName: null, date: '8 Apr 2025' },
-]));
-sessionStorage.setItem('client_name', 'Chris Thompson');
-sessionStorage.setItem('program_type', 'pre_comp');
-// ── DEMO DATA ──
-const clientData = {
-  name:'Chris Thompson', initials:'CT', shortName:'Chris T.',
-  program:'Pre-Comp Build Up', week:5, totalWeeks:8,
-  type:'pre_comp'
-};
+// ── DATA ──────────────────────────────────────────────────────
+const CLIENT = { name:'Chris Thompson', initials:'CT', short:'Chris T.', program:'Pre-Comp Build Up', week:5, totalWeeks:8 };
 
-const programWeeks = [
-  {n:1,label:'Week 1',type:'build',complete:true},
-  {n:2,label:'Week 2',type:'build',complete:true},
-  {n:3,label:'Week 3',type:'build',complete:false,current:true},
-  {n:4,label:'Week 4',type:'peak',complete:false},
-  {n:5,label:'Week 5',type:'peak',complete:false},
-  {n:6,label:'Week 6',type:'deload',complete:false},
+const WEEKS = [
+  {n:1,label:'Week 1',complete:true},{n:2,label:'Week 2',complete:true},
+  {n:3,label:'Week 3',complete:true},{n:4,label:'Week 4',complete:true},
+  {n:5,label:'Week 5',complete:false,current:true},
+  {n:6,label:'Week 6',complete:false},{n:7,label:'Week 7',complete:false},
+  {n:8,label:'Week 8',complete:false}
 ];
 
-const sessions = {
-  3:[
-    {day:'Monday',name:'LOWER — PULL',status:'complete',rest:false,note:'Focus on keeping the back flat through the whole pull. Film your deadlift set 3.',
-      blocks:[
-        {name:'Main pull',rest:240,exercises:[
-          {name:'Deadlift',sets:4,reps:'4',weight:190,rpe:8,notes:'Conventional. Film set 3.'},
-          {name:'Romanian deadlift',sets:3,reps:'8',weight:140,rpe:7,notes:''},
-        ]},
-        {name:'Lower accessories',rest:90,exercises:[
-          {name:'Bulgarian split squat',sets:3,reps:'10',weight:30,rpe:8,notes:'Per leg, dumbbell'},
-          {name:'Leg curl',sets:3,reps:'12',weight:45,rpe:7,notes:''},
-        ]},
-      ]
-    },
-    {day:'Tuesday',name:'UPPER — PUSH',status:'complete',rest:false,note:'OHP dropped to 60kg this week — same sets/reps. Focus on owning the weight before we go up again.',
-      blocks:[
-        {name:'Main press',rest:180,exercises:[
-          {name:'Bench press',sets:4,reps:'6',weight:105,rpe:8,notes:''},
-          {name:'Overhead press',sets:3,reps:'8',weight:60,rpe:8,notes:'Dropped 5kg — own this weight'},
-        ]},
-        {name:'Upper accessories',rest:75,exercises:[
-          {name:'Incline dumbbell press',sets:3,reps:'10',weight:35,rpe:7,notes:'Per hand'},
-          {name:'Face pulls',sets:3,reps:'15',weight:20,rpe:7,notes:'Cable'},
-        ]},
-      ]
-    },
-    {day:'Wednesday',name:'REST',status:'rest',rest:true,note:'',blocks:[]},
-    {day:'Thursday',name:'LOWER — SQUAT',status:'today',rest:false,note:'Tempo squats today — 3 second down, 1 second pause, drive up. Lighter weight, more focus.',
-      blocks:[
-        {name:'Main squat',rest:240,exercises:[
-          {name:'Tempo squat',sets:4,reps:'5',weight:130,rpe:7,notes:'3-1-1 tempo'},
-          {name:'Paused deadlift',sets:3,reps:'4',weight:160,rpe:8,notes:'Pause just below knee'},
-        ]},
-        {name:'Lower accessories',rest:90,exercises:[
-          {name:'Good mornings',sets:3,reps:'10',weight:60,rpe:7,notes:''},
-          {name:'Cable crunch',sets:3,reps:'15',weight:35,rpe:7,notes:''},
-        ]},
-      ]
-    },
-    {day:'Friday',name:'UPPER — PULL',status:'upcoming',rest:false,note:'',blocks:[
-      {name:'Main pull',rest:180,exercises:[
-        {name:'Barbell row',sets:4,reps:'6',weight:100,rpe:8,notes:'Overhand, chest to bar'},
-        {name:'Pull-ups',sets:3,reps:'8',weight:0,rpe:8,notes:'Bodyweight'},
+const SESSIONS = {
+  5: [
+    { id:'5a', name:'Event Specific A', day:'Monday', rpe:'8', blocks:[
+      { name:'LOG PRESS', rest:180, exercises:[
+        {name:'Log Press',notes:'Competition grip',sets:5,reps:3,weight:80,rpe:8},
+        {name:'Log Press — Heavy Singles',notes:'Work up to comp opener',sets:3,reps:1,weight:92,rpe:9},
       ]},
-      {name:'Upper accessories',rest:75,exercises:[
-        {name:'Dumbbell row',sets:3,reps:'10',weight:40,rpe:7,notes:'Single arm'},
-        {name:'Bicep curl',sets:3,reps:'12',weight:20,rpe:7,notes:'Dumbbell'},
+      { name:'DEADLIFT', rest:240, exercises:[
+        {name:'Deadlift',notes:'Sumo stance',sets:4,reps:2,weight:200,rpe:8.5},
+        {name:'Deficit Deadlift',notes:'5cm deficit',sets:3,reps:3,weight:170,rpe:8},
       ]},
     ]},
-    {day:'Saturday',name:'REST',status:'rest',rest:true,note:'',blocks:[]},
-    {day:'Sunday',name:'REST',status:'rest',rest:true,note:'',blocks:[]},
+    { id:'5b', name:'Carries & Yoke', day:'Wednesday', rpe:'8-9', blocks:[
+      { name:'FARMERS CARRY', rest:180, exercises:[
+        {name:'Farmers Carry',notes:'60m runs, full speed',sets:5,reps:1,weight:110,rpe:9},
+        {name:'Farmers — Heavy Load',notes:'30m, max weight',sets:3,reps:1,weight:130,rpe:9.5},
+      ]},
+      { name:'YOKE WALK', rest:300, exercises:[
+        {name:'Yoke Walk',notes:'60m, fast turnover',sets:4,reps:1,weight:280,rpe:8},
+      ]},
+    ]},
+    { id:'5c', name:'Atlas Stones', day:'Saturday', rpe:'8-9', blocks:[
+      { name:'ATLAS STONES', rest:300, exercises:[
+        {name:'Atlas Stone — Progressive Ladder',notes:'Load 4 stones to platform',sets:3,reps:1,weight:100,rpe:8},
+        {name:'Stone to Shoulder',notes:'Alternate sides',sets:4,reps:2,weight:80,rpe:8.5},
+      ]},
+    ]},
   ]
 };
 
-const messages = [
-  {from:'wade',text:"Hey Dave — just reviewed your week 2 clips. Your deadlift is looking really solid, hips are staying down much better. The squat needs some work on knee tracking, hence the tempo squats Thursday. Trust the process.",time:'2 days ago'},
-  {from:'client',text:"Cheers Wade. Yeah I felt the squat was a bit off. Will film Thursday session.",time:'2 days ago'},
-  {from:'wade',text:"Perfect. And your OHP — I've dropped the weight 5kg this week. Don't fight it, just own 60kg before we go back up. You'll thank me in week 5.",time:'2 hours ago'},
+const EVENTS = [
+  {order:1,name:'Log Press',strategy:"Stay tight, big breath before the dip. Drive through the heels. Don't re-dip unless you have to.",opener:'100kg',second:'110kg',third:'117.5kg'},
+  {order:2,name:'Deadlift for Reps',strategy:"Hook grip all the way. Aim for 8+ reps. Drop after 6 if grip goes — don't grind.",opener:'200kg',second:null,third:null,reps:'8+ reps'},
+  {order:3,name:'Farmers Carry',strategy:"60m in two runs. Fast first 30m, don't stop at the turn. Lock wrists from the start.",opener:'110kg/hand',second:null,third:null},
+  {order:4,name:'Atlas Stones',strategy:"Lap the stone properly every time. Don't rush — position beats speed on every stone.",opener:'100kg',second:'120kg',third:'140kg'},
+  {order:5,name:'Yoke Walk',strategy:"Short steps, fast feet. Eyes forward. If it starts to drift — short steps, don't fight it.",opener:'300kg',second:null,third:null},
 ];
 
-let currentWeekNum = 3;
-let openSessions = new Set(['3-2']); // Thursday open by default (index 3)
-let completedSessions = new Set(['3-0','3-1']);
+const PROGRESS_DATA = [
+  {name:'Log Press',data:[{week:'Wk1',w:72.5},{week:'Wk2',w:75},{week:'Wk3',w:77.5},{week:'Wk4',w:80},{week:'Wk5',w:82.5}]},
+  {name:'Deadlift',data:[{week:'Wk1',w:185},{week:'Wk2',w:190},{week:'Wk3',w:195},{week:'Wk4',w:200},{week:'Wk5',w:205}]},
+  {name:'Farmers Carry',data:[{week:'Wk1',w:100},{week:'Wk2',w:105},{week:'Wk3',w:107.5},{week:'Wk4',w:110},{week:'Wk5',w:112.5}]},
+];
 
-// ── LOGIN ──
-function doLogin() {
-  const email = document.getElementById('loginEmail').value;
-  if(!email || !email.includes('@')) { showToast('Please enter a valid email'); return; }
-  document.getElementById('loginScreen').classList.add('hidden');
-  setTimeout(initApp, 400);
-}
+const MESSAGES = [
+  {from:'wade',text:"Great session on the log press yesterday Chris — 82.5kg for 5x3 looking strong. Your technique is locking in nicely. This week I want you to push to 92.5kg for the heavy singles. You've got it.",time:'Yesterday 4:32pm'},
+  {from:'client',text:"Cheers Wade! The cue about keeping the elbows up made a big difference. How conservative should I be with the atlas stones on Saturday?",time:'Yesterday 5:15pm'},
+  {from:'wade',text:"Start at 100kg and build up. Don't miss any — clean laps on every stone, no heroics. Save the heavy attempts for comp.",time:'Yesterday 5:28pm'},
+];
 
-function doLogout() {
-  document.getElementById('loginScreen').classList.remove('hidden');
-  document.getElementById('mainNav').style.display='none';
-  document.getElementById('mainContent').style.display='none';
-  document.getElementById('bottomNav').style.display='none';
-}
+let curWeek = 5;
+let openSessions = new Set();
+let doneSessions = new Set();
+let rpeSelections = {};
+let selectedSoreness = null;
+let selectedSQ = null;
+let selectedMood = null;
+let selectedStress = null;
+let selectedMotiv = null;
+let selectedRecFeel = null;
+let compNotes = [];
+let nutritionHistory = [];
 
-function initApp() {
-  document.getElementById('mainNav').style.display='flex';
-  document.getElementById('mainContent').style.display='block';
-  document.getElementById('bottomNav').style.display='block';
-  document.getElementById('navAvatar').textContent = clientData.initials;
-  document.getElementById('navName').textContent = clientData.shortName;
-  renderWeekSelector();
-  renderSessions(currentWeekNum);
+// ── INIT ──────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('navName').textContent = CLIENT.short;
+  document.getElementById('navAvatar').textContent = CLIENT.initials;
+  document.getElementById('navWeek').textContent = `PRE-COMP · WEEK ${CLIENT.week}/${CLIENT.totalWeeks}`;
+  document.getElementById('profName').textContent = CLIENT.name;
+  renderWeekTabs();
+  renderSessions(curWeek);
+  renderProgress();
+  renderEvents();
   renderMessages();
+});
+
+// ── TAB SWITCHING ─────────────────────────────────────────────
+function switchTab(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('scrollArea').scrollTop = 0;
+  const msgInput = document.getElementById('msgInputArea');
+  msgInput.classList.toggle('visible', id === 'messages');
 }
 
-// auto-login for demo
-setTimeout(()=>{ initApp(); document.getElementById('loginScreen').classList.add('hidden'); }, 300);
-
-// ── WEEK SELECTOR ──
-function renderWeekSelector() {
-  const ws = document.getElementById('weekSelector');
-  ws.innerHTML = programWeeks.map(w=>{
-    let cls = 'week-pill';
-    if(w.complete) cls+=' complete';
-    if(w.current) cls+=' current';
-    if(w.n===currentWeekNum) cls+=' active';
-    const icon = w.complete?'✓ ':'';
-    return `<div class="${cls}" onclick="switchWeek(${w.n})">${icon}${w.label}</div>`;
-  }).join('');
+// ── WEEK TABS ─────────────────────────────────────────────────
+function renderWeekTabs() {
+  const container = document.getElementById('weekTabs');
+  container.innerHTML = WEEKS.map(w => `
+    <button class="week-tab ${w.complete?'done':''} ${w.current?'active':''}" onclick="selectWeek(${w.n},this)">
+      ${w.label}${w.complete?' ✓':''}
+    </button>`).join('');
 }
 
-function switchWeek(n) {
-  currentWeekNum = n;
-  renderWeekSelector();
+function selectWeek(n, el) {
+  curWeek = n;
+  document.querySelectorAll('.week-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
   renderSessions(n);
 }
 
-// ── SESSIONS ──
-function renderSessions(weekNum) {
-  const list = document.getElementById('sessionList');
-  const weekSessions = sessions[weekNum] || [];
-  if(!weekSessions.length){ list.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);font-size:14px">Program for this week isn\'t published yet — Wade\'s working on it.</div>'; return; }
-  list.innerHTML = weekSessions.map((s,i)=>renderSessionCard(s,weekNum,i)).join('');
-}
-
-function renderSessionCard(s,weekNum,idx) {
-  const key = `${weekNum}-${idx}`;
-  const isOpen = openSessions.has(key);
-  const isDone = completedSessions.has(key);
-
-  if(s.rest) return `<div class="session-card rest">
-    <div class="sc-header">
-      <div class="sc-left">
-        <div class="sc-day">${s.day}</div>
-        <div class="sc-name">REST DAY</div>
-      </div>
-      <span class="sc-badge badge-rest">Rest</span>
-    </div>
-  </div>`;
-
-  const statusBadge = isDone ? '<span class="sc-badge badge-complete">✓ Complete</span>'
-    : s.status==='today' ? '<span class="sc-badge badge-today">Today</span>'
-    : '<span class="sc-badge badge-upcoming">Upcoming</span>';
-
-  const bodyHtml = isOpen ? `<div class="sc-body open">
-    ${s.note?`<div class="sc-note">${s.note}</div>`:''}
-    ${s.blocks.map(b=>renderBlockTable(b)).join('')}
-    ${!isDone?renderRpeLogger(s,key):'<div class="session-complete-badge">✓ Session logged — Wade has your feedback</div>'}
-
-  </div>` : '';
-
-  return `<div class="session-card" id="sc_${key}">
-    <div class="sc-header" onclick="toggleSession('${key}')">
-      <div class="sc-left">
-        <div class="sc-day">${s.day}</div>
-        <div class="sc-name">${s.name}</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        ${statusBadge}
-        <span class="sc-toggle${isOpen?' open':''}">▼</span>
-      </div>
-    </div>
-    ${bodyHtml}
-  </div>`;
-}
-
-function renderBlockTable(b) {
-  const rows = b.exercises.map((e,i)=>{
-    const uid = `${b.title}_${i}_${Date.now()}`.replace(/\s/g,'_');
+// ── SESSIONS ──────────────────────────────────────────────────
+function renderSessions(week) {
+  const container = document.getElementById('sessionList');
+  const sessions = SESSIONS[week] || [];
+  if (!sessions.length) {
+    container.innerHTML = '<div class="card" style="text-align:center;padding:32px;color:var(--muted)">Program for this week coming soon.</div>';
+    return;
+  }
+  container.innerHTML = sessions.map(s => {
+    const done = doneSessions.has(s.id);
     return `
-    <tr>
-      <td class="ex-name-cell">${e.name}${e.notes?`<div class="ex-detail">${e.notes}</div>`:''}</td>
-      <td class="ex-metric">${e.sets}</td>
-      <td class="ex-metric">${e.reps}</td>
-      <td class="ex-metric">${e.weight>0?e.weight+'kg':'BW'}</td>
-      <td class="ex-metric"><span class="rpe-chip r${e.rpe}">${e.rpe}</span></td>
-      <td style="text-align:center">
-        <label style="cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:5px;border:1px solid var(--border);background:var(--white);transition:all 0.15s" title="Upload clip for ${e.name}" onmouseover="this.style.borderColor='var(--rust)'" onmouseout="this.style.borderColor='var(--border)'">
-          <input type="file" accept="video/*,image/*" style="display:none" onchange="handleExerciseUpload(this,'${e.name}','${uid}')">
-          <span style="font-size:14px">🎥</span>
-        </label>
-        <div id="upload_${uid}" style="font-size:10px;color:var(--green);margin-top:2px;display:none">✓ Sent</div>
-      </td>
-      <td><input type="checkbox" class="ex-check"></td>
-    </tr>`;
+    <div class="session-card">
+      <div class="session-head" onclick="toggleSession('${s.id}')">
+        <div>
+          <div class="session-name">${s.name}</div>
+          <div class="session-meta">${s.day} · Target RPE ${s.rpe}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="session-badge ${done?'badge-done':'badge-today'}">${done?'✓ Done':'Today'}</span>
+          <span style="color:var(--muted);font-size:14px" id="arrow-${s.id}">▼</span>
+        </div>
+      </div>
+      <div class="session-body" id="body-${s.id}">
+        ${s.blocks.map(b => renderBlock(b, s.id)).join('')}
+        ${!done ? renderRPELogger(s) : '<div style="text-align:center;padding:14px;color:var(--green);font-weight:600;font-size:14px">✓ Session logged — Wade has your feedback</div>'}
+      </div>
+    </div>`;
   }).join('');
+}
 
-  return `<div style="margin-bottom:14px">
-    <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:8px">
+function renderBlock(b, sid) {
+  return `
+  <div style="margin-bottom:14px">
+    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:8px">
       ${b.name} <span style="font-weight:400;color:rgba(107,101,96,0.6)">· Rest ${b.rest}s</span>
     </div>
     <table class="ex-table">
       <thead><tr>
         <th>Exercise</th><th style="text-align:center">Sets</th>
-        <th style="text-align:center">Reps</th><th style="text-align:center">Weight</th>
-        <th style="text-align:center">Target RPE</th><th style="text-align:center">Clip</th>
-        <th style="text-align:center">Done</th>
+        <th style="text-align:center">Reps</th><th style="text-align:center">Wt</th>
+        <th style="text-align:center">RPE</th><th style="text-align:center">📹</th>
+        <th style="text-align:center">✓</th>
       </tr></thead>
-      <tbody>${rows}</tbody>
+      <tbody>
+        ${b.exercises.map((e,i) => {
+          const uid = `${sid}_${b.name}_${i}`.replace(/\s/g,'_');
+          return `<tr>
+            <td><div class="ex-name">${e.name}</div>${e.notes?`<div class="ex-detail">${e.notes}</div>`:''}</td>
+            <td class="ex-metric">${e.sets}</td>
+            <td class="ex-metric">${e.reps}</td>
+            <td class="ex-metric">${e.weight>0?e.weight+'kg':'BW'}</td>
+            <td class="ex-metric"><span class="rpe-pill r${Math.floor(e.rpe)}">${e.rpe}</span></td>
+            <td style="text-align:center">
+              <label class="clip-btn" title="Upload clip for ${e.name}">
+                <input type="file" accept="video/*,image/*" style="display:none" onchange="handleClip(this,'${e.name}','${uid}')">📹
+              </label>
+              <div id="clip_${uid}" style="font-size:9px;color:var(--green);display:none">✓</div>
+            </td>
+            <td style="text-align:center"><input type="checkbox" class="ex-check" id="chk_${uid}"></td>
+          </tr>`;
+        }).join('')}
+      </tbody>
     </table>
   </div>`;
 }
 
-function handleExerciseUpload(input, exerciseName, uid) {
-  const file = input.files[0];
-  if (!file) return;
-  const maxMB = 200;
-  if (file.size > maxMB * 1024 * 1024) {
-    showToast('File too large — keep clips under 2 minutes');
-    return;
-  }
-  // Show sent confirmation
-  const indicator = document.getElementById('upload_' + uid);
-  if (indicator) indicator.style.display = 'block';
-  showToast(`Clip for "${exerciseName}" sent to Wade ✓`);
-  // In production: upload to Cloudflare R2 via Supabase storage
-  // logUpload(clientId, sessionId, { file_name: file.name, file_type: file.type.startsWith('video') ? 'video' : 'image', file_size_bytes: file.size, storage_path: '', client_note: exerciseName });
-}
-
-function renderRpeLogger(s,key) {
-  const allEx = s.blocks.flatMap(b=>b.exercises);
-  const rows = allEx.map((e,i)=>`
-    <div class="rpe-log-row">
-      <div class="rpe-log-name">${e.name}</div>
-      <div class="rpe-pills-sm">
-        ${[6,7,8,9,10].map(n=>`<label class="rpe-pill-sm"><input type="radio" name="rpe_${key}_${i}" value="${n}"><span>${n}</span></label>`).join('')}
-      </div>
-    </div>`).join('');
-
-  return `<div class="rpe-logger">
-    <div class="rpe-logger-title">Log your RPE — how hard was each set?</div>
-    ${rows}
-    <textarea style="width:100%;margin-top:8px;padding:8px 10px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:13px;background:var(--white);outline:none;resize:none;min-height:60px;color:var(--iron)" placeholder="Any notes for Wade about this session..."></textarea>
-    <button class="session-submit-btn" onclick="submitSession('${key}')">Submit to Wade</button>
+function renderRPELogger(s) {
+  const allEx = s.blocks.flatMap(b => b.exercises);
+  return `
+  <div class="log-section">
+    <div class="log-title">Log your RPE</div>
+    ${allEx.map(e => `
+      <div class="rpe-log-row">
+        <div class="rpe-log-name">${e.name}</div>
+        <div class="rpe-pills">
+          ${[6,6.5,7,7.5,8,8.5,9,9.5,10].map(r => `
+            <button class="rpe-pill-sm" id="rpe_${s.id}_${e.name.replace(/\s/g,'_')}_${r}" onclick="selectRPE('${s.id}','${e.name}',${r},this)">${r}</button>
+          `).join('')}
+        </div>
+      </div>`).join('')}
+    <button class="log-btn" onclick="logSession('${s.id}')">Log session ✓</button>
   </div>`;
 }
 
-function toggleSession(key) {
-  if(openSessions.has(key)) openSessions.delete(key);
-  else openSessions.add(key);
-  renderSessions(currentWeekNum);
+function toggleSession(id) {
+  const body = document.getElementById('body-'+id);
+  const arrow = document.getElementById('arrow-'+id);
+  const open = body.classList.toggle('open');
+  if(arrow) arrow.textContent = open ? '▲' : '▼';
 }
 
-function submitSession(key) {
-  completedSessions.add(key);
-  showToast('Session logged — Wade can see your feedback ✓');
-  renderSessions(currentWeekNum);
-}
-
-// ── MESSAGES ──
-function renderMessages() {
-  const thread = document.getElementById('messageThread');
-  thread.innerHTML = messages.map((m,idx)=>{
-    const isWade = m.from==='wade';
-    const bubbleBg = isWade ? 'var(--white)' : 'var(--iron)';
-    const bubbleColor = isWade ? 'var(--iron)' : 'var(--white)';
-    const bubbleBorder = isWade ? 'var(--border)' : 'var(--iron)';
-    const bubbleRadius = isWade ? '4px 12px 12px 12px' : '12px 4px 12px 12px';
-    let bubbleContent = '';
-    if (m.isVoice && m.blob) {
-      const url = URL.createObjectURL(m.blob);
-      bubbleContent = `<audio controls src="${url}" style="width:180px;height:32px;outline:none"></audio>`;
-    } else {
-      bubbleContent = m.text;
-    }
-    return `<div style="display:flex;flex-direction:column;align-items:${isWade?'flex-start':'flex-end'}">
-      <div style="max-width:82%;background:${bubbleBg};color:${bubbleColor};border:1px solid ${bubbleBorder};border-radius:${bubbleRadius};padding:12px 14px;font-size:14px;line-height:1.6">
-        ${isWade?'<div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--rust);margin-bottom:4px">Wade</div>':''}
-        ${bubbleContent}
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px;padding:0 4px">${m.time}</div>
-    </div>`;
-  }).join('');
-}
-
-function sendMessage() {
-  const input = document.getElementById('msgInput');
-  const text = input.value.trim();
-  if(!text) return;
-  messages.push({from:'client',text,time:'Just now'});
-  input.value='';
-  renderMessages();
-  showToast('Message sent to Wade');
-}
-
-// ── FILE UPLOAD ──
-function handleFileUpload(input) {
-  const container = document.getElementById('uploadedFiles');
-  [...input.files].forEach(f=>{
-    const div = document.createElement('div');
-    div.className = 'uploaded-file';
-    div.innerHTML = `<span class="uf-icon">${f.type.startsWith('video')?'🎥':'📸'}</span><span class="uf-name">${f.name}</span><span style="font-size:11px;color:var(--muted)">${(f.size/1024/1024).toFixed(1)}MB</span><span class="uf-remove" onclick="this.parentElement.remove()">×</span>`;
-    container.appendChild(div);
+function selectRPE(sid, exName, rpe, el) {
+  const key = `${sid}_${exName}`;
+  rpeSelections[key] = rpe;
+  // Clear other buttons for this exercise
+  [6,6.5,7,7.5,8,8.5,9,9.5,10].forEach(r => {
+    const btn = document.getElementById(`rpe_${sid}_${exName.replace(/\s/g,'_')}_${r}`);
+    if(btn) btn.classList.toggle('sel', r === rpe);
   });
 }
 
-// ── PANELS ──
-function switchPanel(id, el) {
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('panel-'+id).classList.add('active');
-  document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
-  if(el) el.classList.add('active');
-  else {
-    const map = {program:0,progress:1,profile:2,uploads:3,recovery:4,comp:5,messages:6};
-  if(id==='profile') loadProfile();
-  if(id==='progress') loadProgress();
-  if(id==='recovery') loadRecovery();
-  if(id==='comp') loadComp();
-    document.querySelectorAll('.bnav-item')[map[id]]?.classList.add('active');
-  }
-  window.scrollTo({top:0,behavior:'smooth'});
+function logSession(sid) {
+  doneSessions.add(sid);
+  renderSessions(curWeek);
+  showToast('Session logged — Wade has been notified ✓');
 }
 
-// ── TOAST ──
-// ── PROGRESS CHARTS ──────────────────────────────────────────
-function loadProgress() {
+// ── PROGRESS ──────────────────────────────────────────────────
+function renderProgress() {
   const container = document.getElementById('progressCharts');
-  if (!container) return;
-
-  // In production: pull tracked exercises from program + session logs via Supabase
-  // For now: mock data showing how it will look
-  const trackedLifts = [
-    {
-      name: 'Deadlift',
-      data: [
-        { week: 'Wk 1', weight: 160 },
-        { week: 'Wk 2', weight: 165 },
-        { week: 'Wk 3', weight: 167.5 },
-      ]
-    },
-    {
-      name: 'Squat',
-      data: [
-        { week: 'Wk 1', weight: 120 },
-        { week: 'Wk 2', weight: 122.5 },
-        { week: 'Wk 3', weight: 125 },
-      ]
-    },
-    {
-      name: 'Push Press',
-      data: [
-        { week: 'Wk 1', weight: 65 },
-        { week: 'Wk 2', weight: 67.5 },
-        { week: 'Wk 3', weight: 67.5 },
-      ]
-    },
-  ];
-
-  container.innerHTML = trackedLifts.map(lift => {
-    const max = Math.max(...lift.data.map(d=>d.weight));
-    const min = Math.min(...lift.data.map(d=>d.weight)) - 10;
-    const range = max - min || 1;
-    const latest = lift.data[lift.data.length-1].weight;
-    const first = lift.data[0].weight;
+  container.innerHTML = PROGRESS_DATA.map(lift => {
+    const latest = lift.data[lift.data.length-1].w;
+    const first = lift.data[0].w;
     const gain = latest - first;
-    const gainStr = gain >= 0 ? `+${gain}kg` : `${gain}kg`;
-    const gainColor = gain >= 0 ? '#2c7a4b' : '#c03020';
-
-    const w = 280;
-    const h = 80;
+    const min = Math.min(...lift.data.map(d=>d.w)) - 5;
+    const max = Math.max(...lift.data.map(d=>d.w));
+    const range = max - min || 1;
+    const W = 280, H = 70;
     const pts = lift.data.map((d,i) => {
-      const x = (i / (lift.data.length-1)) * (w-20) + 10;
-      const y = h - ((d.weight - min) / range) * (h-20) - 10;
+      const x = (i/(lift.data.length-1))*(W-20)+10;
+      const y = H - ((d.w-min)/range)*(H-20) - 10;
       return `${x},${y}`;
     }).join(' ');
-
     return `
-    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <div class="progress-chart">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
         <div>
-          <div style="font-size:14px;font-weight:700;color:var(--iron)">${lift.name}</div>
-          <div style="font-size:11px;color:var(--muted)">Wade's selected main lift</div>
+          <div class="progress-lift-name">${lift.name}</div>
+          <div style="font-size:12px;font-weight:600;color:var(--green)">+${gain}kg since start</div>
         </div>
         <div style="text-align:right">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--iron);letter-spacing:1px">${latest}kg</div>
-          <div style="font-size:12px;font-weight:600;color:${gainColor}">${gainStr} since start</div>
+          <div class="progress-latest">${latest}kg</div>
+          <div style="font-size:11px;color:var(--muted)">latest</div>
         </div>
       </div>
-      <svg viewBox="0 0 ${w} ${h}" width="100%" height="80" style="overflow:visible">
+      <svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" style="overflow:visible">
         <polyline points="${pts}" fill="none" stroke="var(--rust)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
         ${lift.data.map((d,i)=>{
-          const x = (i/(lift.data.length-1))*(w-20)+10;
-          const y = h-((d.weight-min)/range)*(h-20)-10;
+          const x=(i/(lift.data.length-1))*(W-20)+10;
+          const y=H-((d.w-min)/range)*(H-20)-10;
           return `<circle cx="${x}" cy="${y}" r="4" fill="var(--rust)" stroke="white" stroke-width="2"/>
-                  <text x="${x}" y="${y-10}" text-anchor="middle" font-size="10" fill="var(--muted)" font-family="var(--font-body)">${d.weight}kg</text>
-                  <text x="${x}" y="${h+14}" text-anchor="middle" font-size="10" fill="var(--muted)" font-family="var(--font-body)">${d.week}</text>`;
+                  <text x="${x}" y="${y-8}" text-anchor="middle" font-size="10" fill="var(--muted)" font-family="Instrument Sans,sans-serif">${d.w}kg</text>
+                  <text x="${x}" y="${H+14}" text-anchor="middle" font-size="10" fill="var(--muted)" font-family="Instrument Sans,sans-serif">${d.week}</text>`;
         }).join('')}
       </svg>
     </div>`;
   }).join('');
 }
 
-// ── VOICE NOTES ──────────────────────────────────────────────
-let mediaRecorder = null;
-let audioChunks = [];
-let voiceBlob = null;
-let recordingInterval = null;
-let recordingSeconds = 0;
-let isRecording = false;
-
-async function toggleVoice() {
-  if (isRecording) {
-    stopVoice();
-  } else {
-    startVoice();
-  }
-}
-
-async function startVoice() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder = new MediaRecorder(stream);
-    audioChunks = [];
-    recordingSeconds = 0;
-
-    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-    mediaRecorder.onstop = () => {
-      voiceBlob = new Blob(audioChunks, { type: 'audio/webm' });
-      stream.getTracks().forEach(t => t.stop());
-      showVoicePreview();
-    };
-
-    mediaRecorder.start();
-    isRecording = true;
-
-    // Update button to recording state
-    const btn = document.getElementById('voiceBtn');
-    btn.style.background = '#fce8e8';
-    btn.style.borderColor = '#c03020';
-    btn.innerHTML = '⏹';
-    btn.title = 'Stop recording';
-
-    // Start timer
-    recordingInterval = setInterval(() => {
-      recordingSeconds++;
-      document.getElementById('voiceTimer').textContent = formatTime(recordingSeconds);
-      // Auto stop at 2 minutes
-      if (recordingSeconds >= 120) stopVoice();
-    }, 1000);
-
-    document.getElementById('voiceTimer').textContent = '0:00';
-    const preview = document.getElementById('voicePreview');
-    preview.style.display = 'flex';
-    document.getElementById('voiceLabel').textContent = 'Recording...';
-
-  } catch(err) {
-    showToast('Microphone access denied — check your browser settings');
-  }
-}
-
-function stopVoice() {
-  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-    mediaRecorder.stop();
-  }
-  isRecording = false;
-  clearInterval(recordingInterval);
-
-  const btn = document.getElementById('voiceBtn');
-  btn.style.background = 'var(--white)';
-  btn.style.borderColor = 'var(--border)';
-  btn.innerHTML = '🎤';
-  btn.title = 'Record voice note';
-}
-
-function showVoicePreview() {
-  const duration = formatTime(recordingSeconds);
-  document.getElementById('voiceLabel').textContent = `Voice note · ${duration}`;
-  document.getElementById('voiceTimer').textContent = '';
-}
-
-function cancelVoice() {
-  voiceBlob = null;
-  audioChunks = [];
-  recordingSeconds = 0;
-  const preview = document.getElementById('voicePreview');
-  preview.style.display = 'none';
-  if (isRecording) stopVoice();
-}
-
-function formatTime(secs) {
-  const m = Math.floor(secs / 60);
-  const s = secs % 60;
-  return `${m}:${s.toString().padStart(2,'0')}`;
-}
-
-// Override sendMessage to handle voice notes
-const _origSendMessage = sendMessage;
-function sendMessage() {
-  const input = document.getElementById('msgInput');
-  const text = input.value.trim();
-
-  if (voiceBlob) {
-    // Send voice note
-    const duration = formatTime(recordingSeconds);
-    messages.push({
-      from: 'client',
-      text: `🎤 Voice note (${duration})`,
-      time: 'Just now',
-      isVoice: true,
-      blob: voiceBlob
-    });
-    input.value = '';
-    voiceBlob = null;
-    cancelVoice();
-    renderMessages();
-    showToast('Voice note sent to Wade ✓');
-    return;
-  }
-
-  if (!text) return;
-  messages.push({ from: 'client', text, time: 'Just now' });
-  input.value = '';
-  renderMessages();
-  showToast('Message sent to Wade');
-}
-
-// ── COMP DAY ──────────────────────────────────────────────────
-const compEvents = [
-  { name: 'Log Press', order: 1, strategy: 'Stay tight, big breath before the dip. Drive through the heels.', opener: '100kg', second: '110kg', third: '117.5kg' },
-  { name: 'Deadlift for Reps', order: 2, strategy: 'Hook grip all the way. Aim for 8+ reps. Drop after 6 if grip goes.', opener: '200kg', second: null, third: null, repsTarget: '8+' },
-  { name: 'Farmers Carry', order: 3, strategy: '60m in two runs. Fast first 30m, don't stop. Lock wrists.', opener: '110kg/hand', second: null, third: null },
-  { name: 'Atlas Stones', order: 4, strategy: 'Lap the stone properly every time. Don't rush — position beats speed.', opener: '100kg', second: '120kg', third: '140kg' },
-  { name: 'Yoke Walk', order: 5, strategy: 'Short steps, fast feet. Eyes forward. Don't stop.', opener: '300kg', second: null, third: null },
-];
-
-let compNotes = JSON.parse(sessionStorage.getItem('ws_comp_notes') || '[]');
-
-function loadComp() {
-  // Show/hide comp tab based on program type
-  // For now show for all — in production check client.program_type === 'pre_comp'
-  document.getElementById('compTab').style.display = 'flex';
-  document.getElementById('compNoPlan').style.display = 'none';
-  document.getElementById('compPlan').style.display = 'block';
-
-  renderEvents();
-  renderCompNotes();
-}
-
+// ── EVENTS ────────────────────────────────────────────────────
 function renderEvents() {
-  const el = document.getElementById('eventsList');
-  if (!el) return;
-  el.innerHTML = compEvents.map((ev, i) => `
-    <div style="border:1px solid var(--border);border-radius:6px;margin-bottom:12px;overflow:hidden">
-      <div style="background:var(--chalk);padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)">
-        <div style="background:var(--iron);color:var(--white);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">${ev.order}</div>
-        <div style="font-size:15px;font-weight:700;color:var(--iron)">${ev.name}</div>
+  const container = document.getElementById('eventsList');
+  container.innerHTML = EVENTS.map(ev => `
+    <div class="event-card">
+      <div class="event-head">
+        <div class="event-num">${ev.order}</div>
+        <div class="event-name">${ev.name}</div>
       </div>
-      <div style="padding:14px 16px">
-        <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px;font-style:italic">"${ev.strategy}"</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          ${ev.opener ? `<div style="background:var(--chalk);border-radius:5px;padding:8px 12px;text-align:center"><div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)">Opener</div><div style="font-size:16px;font-weight:700;color:var(--iron);margin-top:2px">${ev.opener}</div></div>` : ''}
-          ${ev.second ? `<div style="background:var(--chalk);border-radius:5px;padding:8px 12px;text-align:center"><div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)">Second</div><div style="font-size:16px;font-weight:700;color:var(--iron);margin-top:2px">${ev.second}</div></div>` : ''}
-          ${ev.third ? `<div style="background:var(--rust);border-radius:5px;padding:8px 12px;text-align:center"><div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.7)">Third</div><div style="font-size:16px;font-weight:700;color:var(--white);margin-top:2px">${ev.third}</div></div>` : ''}
-          ${ev.repsTarget ? `<div style="background:var(--chalk);border-radius:5px;padding:8px 12px;text-align:center"><div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted)">Target</div><div style="font-size:16px;font-weight:700;color:var(--iron);margin-top:2px">${ev.repsTarget} reps</div></div>` : ''}
+      <div class="event-body">
+        <div class="event-strategy">"${ev.strategy}"</div>
+        <div class="attempt-row">
+          ${ev.opener?`<div class="attempt-card"><div class="attempt-label">Opener</div><div class="attempt-val">${ev.opener}</div></div>`:''}
+          ${ev.second?`<div class="attempt-card"><div class="attempt-label">Second</div><div class="attempt-val">${ev.second}</div></div>`:''}
+          ${ev.third?`<div class="attempt-card third"><div class="attempt-label">Third</div><div class="attempt-val">${ev.third}</div></div>`:''}
+          ${ev.reps?`<div class="attempt-card"><div class="attempt-label">Target</div><div class="attempt-val">${ev.reps}</div></div>`:''}
         </div>
       </div>
     </div>`).join('');
 }
 
+// ── MESSAGES ──────────────────────────────────────────────────
+function renderMessages() {
+  const thread = document.getElementById('msgThread');
+  thread.innerHTML = MESSAGES.map(m => `
+    <div style="display:flex;flex-direction:column;align-items:${m.from==='wade'?'flex-start':'flex-end'}">
+      <div class="msg-bubble ${m.from==='wade'?'msg-from-wade':'msg-from-client'}">
+        ${m.from==='wade'?'<div class="msg-sender">Wade</div>':''}
+        ${m.text}
+      </div>
+      <div class="msg-time">${m.time}</div>
+    </div>`).join('');
+  setTimeout(() => {
+    const s = document.getElementById('scrollArea');
+    s.scrollTop = s.scrollHeight;
+  }, 100);
+}
+
+function sendMessage() {
+  const input = document.getElementById('msgInput');
+  const text = input.value.trim();
+  if (!text) return;
+  MESSAGES.push({from:'client',text,time:'Just now'});
+  input.value = '';
+  input.style.height = 'auto';
+  renderMessages();
+  showToast('Message sent to Wade ✓');
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+// ── COMP NOTES ────────────────────────────────────────────────
 function sendCompNote() {
   const text = document.getElementById('compNoteInput').value.trim();
   if (!text) return;
-
-  const note = {
-    text,
-    date: new Date().toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'})
-  };
-  compNotes.unshift(note);
-  sessionStorage.setItem('ws_comp_notes', JSON.stringify(compNotes));
-
-  // Push to messages
-  messages.push({
-    from: 'client',
-    text: '🏆 Comp plan question: ' + text,
-    time: 'Just now'
-  });
-
+  compNotes.unshift({text, date: new Date().toLocaleDateString('en-AU',{day:'numeric',month:'short'})});
   document.getElementById('compNoteInput').value = '';
   renderCompNotes();
-  showToast('Question sent to Wade ✓ — check messages for his reply');
+  MESSAGES.push({from:'client',text:'🏆 Comp question: '+text,time:'Just now'});
+  showToast('Question sent to Wade ✓ — check messages for reply');
 }
 
 function renderCompNotes() {
-  const el = document.getElementById('athleteCompNotes');
-  if (!el || !compNotes.length) return;
-  el.innerHTML = compNotes.map(n => `
-    <div style="padding:10px 12px;background:var(--chalk);border-radius:5px;margin-bottom:8px;border-left:3px solid var(--border)">
-      <div style="font-size:13px;color:var(--iron);margin-bottom:3px">${n.text}</div>
-      <div style="font-size:11px;color:var(--muted)">${n.date}</div>
-    </div>`).join('');
+  const el = document.getElementById('compNotesList');
+  el.innerHTML = compNotes.map(n=>`<div class="log-item" style="border-left:3px solid var(--border)"><div class="log-item-body">${n.text}</div><div class="log-item-date" style="margin-top:4px">${n.date}</div></div>`).join('');
 }
 
-// ── RECOVERY ──────────────────────────────────────────────────
-let recoveryLog = JSON.parse(sessionStorage.getItem('ws_recovery') || '[]');
-let checkIns = JSON.parse(sessionStorage.getItem('ws_checkins') || '[]');
-let selectedSoreness = null;
-let selectedSleepQuality = null;
-let selectedRecoveryFeel = null;
-
-function loadRecovery() {
-  document.getElementById('nutritionDate').textContent = new Date().toLocaleDateString('en-AU', {weekday:'long',day:'numeric',month:'long'});
-  renderNutritionHistory();
-  document.getElementById('checkInDate').textContent = new Date().toLocaleDateString('en-AU', {weekday:'long',day:'numeric',month:'long'});
-  renderRecoveryList();
-  renderCheckInHistory();
-}
-
+// ── SORENESS ──────────────────────────────────────────────────
 function setSoreness(n) {
   selectedSoreness = n;
-  for(let i=1;i<=10;i++) {
+  for(let i=1;i<=10;i++){
     const btn = document.getElementById('sor-'+i);
-    if(btn) {
-      btn.style.background = i <= n ? 'var(--rust)' : 'var(--chalk)';
-      btn.style.color = i <= n ? 'var(--white)' : 'var(--muted)';
-      btn.style.borderColor = i <= n ? 'var(--rust)' : 'var(--border)';
-    }
+    if(btn){btn.style.background=i<=n?'var(--rust)':'var(--chalk)';btn.style.color=i<=n?'var(--white)':'var(--muted)';btn.style.borderColor=i<=n?'var(--rust)':'var(--border)';}
   }
 }
 
-function updateSleep(val) {
-  document.getElementById('sleepVal').textContent = val;
-}
-
-function setSleepQuality(q) {
-  selectedSleepQuality = q;
-  document.querySelectorAll('.sq-btn').forEach(b => {
-    b.style.background = 'var(--chalk)';
-    b.style.color = 'var(--muted)';
-    b.style.borderColor = 'var(--border)';
-  });
-  const btn = document.getElementById('sq-'+q);
-  if(btn) {
-    btn.style.background = 'var(--iron)';
-    btn.style.color = 'var(--white)';
-    btn.style.borderColor = 'var(--iron)';
-  }
-}
-
-function setRecoveryFeel(feel) {
-  selectedRecoveryFeel = feel;
-  document.querySelectorAll('.feel-btn').forEach(b => {
-    b.style.background = b.textContent.trim() === feel ? 'var(--iron)' : 'var(--chalk)';
-    b.style.color = b.textContent.trim() === feel ? 'var(--white)' : 'var(--muted)';
+function setSQ(q) {
+  selectedSQ = q;
+  ['poor','ok','good','great'].forEach(k=>{
+    const b=document.getElementById('sq-'+k);
+    if(b){b.classList.toggle('sel',k===q);}
   });
 }
 
 function saveCheckIn() {
-  const sleep = document.getElementById('sleepHours').value;
-  const hrv = document.getElementById('hrvInput').value;
-  const entry = {
-    date: new Date().toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'}),
-    soreness: selectedSoreness,
-    sleep: sleep,
-    sleepQuality: selectedSleepQuality,
-    hrv: hrv || null,
-  };
-  checkIns.unshift(entry);
-  sessionStorage.setItem('ws_checkins', JSON.stringify(checkIns));
-  document.getElementById('checkInSuccess').style.display = 'block';
-  setTimeout(() => document.getElementById('checkInSuccess').style.display = 'none', 3000);
-  renderCheckInHistory();
+  showSuccess('checkInSuccess');
   showToast('Check-in logged ✓');
 }
 
-function renderCheckInHistory() {
-  const el = document.getElementById('checkInHistory');
-  if(!checkIns.length) {
-    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No check-ins yet — log your first one above!</div>';
-    return;
-  }
-  el.innerHTML = checkIns.slice(0,7).map(c => `
-    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
-      <div style="font-size:11px;color:var(--muted);min-width:80px">${c.date}</div>
-      <div style="display:flex;gap:10px;flex:1;flex-wrap:wrap">
-        ${c.soreness ? `<span style="font-size:12px;background:var(--chalk);padding:3px 8px;border-radius:4px">😣 Soreness: ${c.soreness}/10</span>` : ''}
-        ${c.sleep ? `<span style="font-size:12px;background:var(--chalk);padding:3px 8px;border-radius:4px">😴 ${c.sleep}h ${c.sleepQuality ? '· '+c.sleepQuality : ''}</span>` : ''}
-        ${c.hrv ? `<span style="font-size:12px;background:var(--chalk);padding:3px 8px;border-radius:4px">❤️ HRV: ${c.hrv}ms</span>` : ''}
-      </div>
-    </div>`).join('');
-}
-
-function showAddRecovery() {
-  document.getElementById('addRecoveryForm').style.display = 'block';
-}
-
-function cancelRecovery() {
-  document.getElementById('addRecoveryForm').style.display = 'none';
-  document.getElementById('recoveryType').value = '';
-  document.getElementById('recoveryArea').value = '';
-  document.getElementById('recoveryNotes').value = '';
-  selectedRecoveryFeel = null;
-}
-
-function saveRecovery() {
-  const type = document.getElementById('recoveryType').value;
-  const area = document.getElementById('recoveryArea').value.trim();
-  if(!type) { showToast('Please select a treatment type'); return; }
-  recoveryLog.unshift({
-    type, area, feel: selectedRecoveryFeel,
-    notes: document.getElementById('recoveryNotes').value.trim(),
-    date: new Date().toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'})
-  });
-  sessionStorage.setItem('ws_recovery', JSON.stringify(recoveryLog));
-  cancelRecovery();
-  renderRecoveryList();
-  showToast('Recovery session logged ✓');
-}
-
-function renderRecoveryList() {
-  const el = document.getElementById('recoveryList');
-  if(!recoveryLog.length) {
-    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No recovery sessions logged yet.</div>';
-    return;
-  }
-  el.innerHTML = recoveryLog.map((r,i) => `
-    <div style="padding:12px;background:var(--chalk);border-radius:6px;margin-bottom:8px;border-left:3px solid var(--rust)">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px">
-        <div>
-          <span style="font-size:14px;font-weight:600;color:var(--iron)">${r.type}</span>
-          ${r.feel ? `<span style="font-size:12px;color:var(--muted);margin-left:8px">${r.feel}</span>` : ''}
-        </div>
-        <span style="cursor:pointer;color:var(--muted);font-size:16px" onclick="removeRecovery(${i})">×</span>
-      </div>
-      ${r.area ? `<div style="font-size:13px;color:var(--muted);margin-bottom:4px">📍 ${r.area}</div>` : ''}
-      ${r.notes ? `<div style="font-size:13px;color:var(--muted)">${r.notes}</div>` : ''}
-      <div style="font-size:11px;color:var(--muted);margin-top:6px">${r.date}</div>
-    </div>`).join('');
-}
-
 // ── NUTRITION ─────────────────────────────────────────────────
-let nutritionLog = JSON.parse(sessionStorage.getItem('ws_nutrition') || '[]');
+function updateMacroBar() {
+  const p=parseFloat(document.getElementById('nutP').value)||0;
+  const c=parseFloat(document.getElementById('nutC').value)||0;
+  const f=parseFloat(document.getElementById('nutF').value)||0;
+  const t=p+c+f;
+  if(t>0){
+    document.getElementById('macroBarWrap').style.display='block';
+    document.getElementById('mbP').style.width=(p/t*100)+'%';
+    document.getElementById('mbC').style.width=(c/t*100)+'%';
+    document.getElementById('mbF').style.width=(f/t*100)+'%';
+  }
+}
 
 function saveNutrition() {
-  const calories = document.getElementById('nutCalories').value;
-  const water = document.getElementById('nutWater').value;
-  const protein = document.getElementById('nutProtein').value;
-  const carbs = document.getElementById('nutCarbs').value;
-  const fats = document.getElementById('nutFats').value;
-
-  if (!calories && !water) { showToast('Enter at least calories or water'); return; }
-
-  const entry = {
-    date: new Date().toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'}),
-    calories: calories || null,
-    water: water || null,
-    protein: protein || null,
-    carbs: carbs || null,
-    fats: fats || null,
-  };
-
-  nutritionLog.unshift(entry);
-  sessionStorage.setItem('ws_nutrition', JSON.stringify(nutritionLog));
-  document.getElementById('nutritionSuccess').style.display = 'block';
-  setTimeout(() => document.getElementById('nutritionSuccess').style.display = 'none', 3000);
+  const cal=document.getElementById('nutCal').value;
+  const water=document.getElementById('nutWater').value;
+  if(!cal&&!water){showToast('Enter at least calories or water');return;}
+  nutritionHistory.unshift({
+    date:new Date().toLocaleDateString('en-AU',{day:'numeric',month:'short'}),
+    cal,water,
+    p:document.getElementById('nutP').value,
+    c:document.getElementById('nutC').value,
+    f:document.getElementById('nutF').value
+  });
   renderNutritionHistory();
-  updateMacroBar();
+  showSuccess('nutritionSuccess');
   showToast('Nutrition logged ✓');
 }
 
-function updateMacroBar() {
-  const p = parseFloat(document.getElementById('nutProtein').value) || 0;
-  const c = parseFloat(document.getElementById('nutCarbs').value) || 0;
-  const f = parseFloat(document.getElementById('nutFats').value) || 0;
-  const total = p + c + f;
-  if (total > 0) {
-    document.getElementById('macroBar').style.display = 'block';
-    document.getElementById('macroProteinBar').style.width = (p/total*100) + '%';
-    document.getElementById('macroCarbBar').style.width = (c/total*100) + '%';
-    document.getElementById('macroFatBar').style.width = (f/total*100) + '%';
-  }
-}
-
-// Update macro bar in real time
-['nutProtein','nutCarbs','nutFats'].forEach(id => {
-  setTimeout(() => {
-    const el = document.getElementById(id);
-    if(el) el.addEventListener('input', updateMacroBar);
-  }, 500);
-});
-
 function renderNutritionHistory() {
-  const el = document.getElementById('nutritionHistory');
-  if (!el || !nutritionLog.length) return;
-  el.innerHTML = '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Recent</div>' +
-    nutritionLog.slice(0,5).map(n => `
-    <div style="padding:10px 0;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-      <span style="font-size:11px;color:var(--muted);min-width:70px">${n.date}</span>
-      ${n.calories ? `<span style="font-size:12px;background:var(--chalk);padding:3px 8px;border-radius:4px;font-weight:600">${n.calories} kcal</span>` : ''}
-      ${n.water ? `<span style="font-size:12px;background:var(--chalk);padding:3px 8px;border-radius:4px">💧 ${n.water}L</span>` : ''}
-      ${n.protein ? `<span style="font-size:12px;background:#e6f4ed;padding:3px 8px;border-radius:4px;color:#2c7a4b">P: ${n.protein}g</span>` : ''}
-      ${n.carbs ? `<span style="font-size:12px;background:#fef3e0;padding:3px 8px;border-radius:4px;color:#7a5010">C: ${n.carbs}g</span>` : ''}
-      ${n.fats ? `<span style="font-size:12px;background:#fce8e8;padding:3px 8px;border-radius:4px;color:#8c3020">F: ${n.fats}g</span>` : ''}
+  const el=document.getElementById('nutritionHistory');
+  if(!nutritionHistory.length)return;
+  el.innerHTML='<div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Recent</div>'+
+    nutritionHistory.slice(0,3).map(n=>`
+    <div style="padding:8px 0;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+      <span style="font-size:11px;color:var(--muted);min-width:60px">${n.date}</span>
+      ${n.cal?`<span class="tag-pill" style="font-weight:600">${n.cal}kcal</span>`:''}
+      ${n.water?`<span class="tag-pill">💧${n.water}L</span>`:''}
+      ${n.p?`<span class="tag-pill" style="color:#2c7a4b">P:${n.p}g</span>`:''}
+      ${n.c?`<span class="tag-pill" style="color:#7a5010">C:${n.c}g</span>`:''}
+      ${n.f?`<span class="tag-pill" style="color:#8c3020">F:${n.f}g</span>`:''}
     </div>`).join('');
 }
 
-function removeRecovery(i) {
-  recoveryLog.splice(i,1);
-  sessionStorage.setItem('ws_recovery', JSON.stringify(recoveryLog));
-  renderRecoveryList();
-}
-
-// ── PROFILE ───────────────────────────────────────────────────
-let injuries = JSON.parse(sessionStorage.getItem('ws_injuries') || '[]');
-
-function loadDemoAccount() {
-  // Pre-load demo data into session
-  sessionStorage.setItem('ws_injuries', JSON.stringify([
-    { area: 'Left knee', desc: 'Old meniscus issue from football. Flares up on heavy squats occasionally.', status: 'monitoring', date: '10 Apr 2025' },
-    { area: 'Lower back', desc: 'Mild tightness after deadlift sessions. Not painful, just stiff.', status: 'monitoring', date: '5 Apr 2025' },
-  ]));
-  sessionStorage.setItem('ws_supplements', JSON.stringify([
-    { name: 'Creatine', dose: '5g', timing: 'Post-workout', notes: 'Optimum Nutrition' },
-    { name: 'Protein Powder', dose: '40g', timing: 'Post-workout', notes: 'Vanilla whey — hitting 180g protein daily' },
-    { name: 'Magnesium', dose: '400mg', timing: 'Before bed', notes: 'Helps with sleep and cramps' },
-    { name: 'Fish Oil', dose: '2 caps', timing: 'With meals', notes: 'Joint support' },
-  ]));
-  sessionStorage.setItem('ws_recovery', JSON.stringify([
-    { type: 'Massage', area: 'Full body', feel: '🔥 Great', notes: 'Sports massage — felt much looser after', date: '14 Apr 2025' },
-    { type: 'Ice Bath', area: 'Legs', feel: '👍 Good', notes: '10 mins after heavy leg day', date: '12 Apr 2025' },
-    { type: 'Dry Needling', area: 'Left knee / quads', feel: '👍 Good', notes: 'With physio Sarah — targeting VMO', date: '8 Apr 2025' },
-  ]));
-  sessionStorage.setItem('ws_checkins', JSON.stringify([
-    { date: '20 Apr 2025', soreness: 4, sleep: '7.5', sleepQuality: 'good', hrv: '68' },
-    { date: '19 Apr 2025', soreness: 6, sleep: '6.5', sleepQuality: 'ok', hrv: '54' },
-    { date: '18 Apr 2025', soreness: 3, sleep: '8', sleepQuality: 'great', hrv: '72' },
-  ]));
-  sessionStorage.setItem('ws_nutrition', JSON.stringify([
-    { date: '20 Apr 2025', calories: '3200', water: '3.5', protein: '185', carbs: '380', fats: '95' },
-    { date: '19 Apr 2025', calories: '2900', water: '3.0', protein: '170', carbs: '320', fats: '88' },
-  ]));
-  sessionStorage.setItem('ws_mental', JSON.stringify([
-    { date: '18 Apr 2025', mood: { emoji: '🙂', key: 'ok' }, stress: 'Moderate', motivation: 'Good', note: 'Work has been hectic but training is going well. Looking forward to the weekend session.' },
-  ]));
-  sessionStorage.setItem('ws_pract_notes', JSON.stringify([
-    { practitioner: 'Sarah Jones — Physiotherapist', note: 'Continue strengthening VMO. Avoid full depth squats under heavy load for 2 weeks. Leg press and hack squat fine.', fileName: null, date: '8 Apr 2025' },
-  ]));
-  document.getElementById('demoGate').style.display = 'none';
-  sessionStorage.setItem('demo_mode', 'true');
-  sessionStorage.setItem('client_name', 'Chris Thompson');
-sessionStorage.setItem('program_type', 'pre_comp');
-}
-
-function sendMagicLink() {
-  const email = document.getElementById('loginEmail').value;
-  if (!email || !email.includes('@')) { return; }
-  document.getElementById('demoGate').innerHTML = `
-    <div style="text-align:center;color:#f5f0e0">
-      <div style="font-size:40px;margin-bottom:16px">📧</div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;margin-bottom:8px">CHECK YOUR EMAIL</div>
-      <div style="font-size:14px;color:rgba(255,255,255,0.5)">Magic link sent to ${email}</div>
-    </div>`;
-}
-
-if (sessionStorage.getItem('demo_mode') === 'true') {
-  document.addEventListener('DOMContentLoaded', () => {
-    const gate = document.getElementById('demoGate');
-    if (gate) gate.style.display = 'none';
+// ── RECOVERY ──────────────────────────────────────────────────
+function setRecFeel(feel) {
+  selectedRecFeel = feel;
+  ['rough','good','great'].forEach(k=>{
+    const b=document.getElementById('rf-'+k);
+    if(b) b.classList.toggle('sel', b.textContent.trim().toLowerCase().includes(k));
   });
 }
 
-function loadProfile() {
-  document.getElementById('prof-name').textContent = sessionStorage.getItem('client_name') || 'Chris Thompson';
-  document.getElementById('prof-age').textContent = '38';
-  document.getElementById('prof-height').textContent = '182cm';
-  document.getElementById('prof-weight').textContent = '91.5kg';
-  document.getElementById('prof-location').textContent = 'Auckland, NZ';
-  document.getElementById('prof-program').textContent = 'Pre-Comp Build Up — Week 5 of 8';
-
-  // Mock RPE results — in production pull from rpe10_results table
-  const rpe = {
-    'squat-raw-1rm':'145kg','squat-raw-3rm':'130kg','squat-raw-5rm':'120kg',
-    'squat-wraps-1rm':'165kg','squat-wraps-3rm':'150kg','squat-wraps-5rm':'140kg',
-    'bench-1rm':'110kg','bench-3rm':'100kg','bench-5rm':'92.5kg',
-    'deadlift-1rm':'200kg','deadlift-3rm':'182.5kg','deadlift-5rm':'170kg',
-    'press-1rm':'80kg','press-3rm':'72.5kg','press-5rm':'65kg',
-  };
-  Object.entries(rpe).forEach(([k,v])=>{
-    const el = document.getElementById('rpe-'+k);
-    if(el) el.textContent = v;
-  });
-  document.getElementById('rpeTestDate').textContent = 'Tested: 15 April 2025';
-
-  // Load practitioner notes from session
-  renderPractNotes();
-
-  renderInjuries();
-  renderSupplements();
-  renderMentalLog();
+function saveRecovery() {
+  hideForm('recoveryForm');
+  showToast('Recovery session logged ✓');
 }
 
-function renderInjuries() {
-  const list = document.getElementById('injuryList');
-  if (!injuries.length) {
-    list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No injuries logged — great work! 💪</div>';
-    return;
-  }
-  list.innerHTML = injuries.map((inj,i) => `
-    <div class="injury-item ${inj.status}">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
-        <div style="font-size:14px;font-weight:600">${inj.area}</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="injury-status-badge status-${inj.status}">${inj.status}</span>
-          <span style="cursor:pointer;color:var(--muted);font-size:16px" onclick="removeInjury(${i})">×</span>
-        </div>
-      </div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:6px">${inj.desc}</div>
-      <div style="font-size:11px;color:var(--muted)">${inj.date}</div>
-    </div>`).join('');
+// ── MENTAL ────────────────────────────────────────────────────
+function setMood(emoji,key){selectedMood={emoji,key};document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('mood-'+key).classList.add('sel');}
+function setStress(l){selectedStress=l;document.querySelectorAll('.stress-btn').forEach(b=>b.classList.toggle('sel',b.id==='stress-'+l.replace(' ','')));}
+function setMotiv(l){selectedMotiv=l;document.querySelectorAll('.motiv-btn').forEach(b=>b.classList.toggle('sel',b.id==='motiv-'+l));}
+function saveMental(){hideForm('mentalForm');showToast('Entry saved ✓');}
+
+// ── INJURY / SUPPS / PRACT ────────────────────────────────────
+function saveInjury(){hideForm('injuryForm');showToast('Injury logged ✓');}
+function saveSupp(){hideForm('suppForm');showToast('Supplement saved ✓');}
+function savePract(){hideForm('practForm');showToast('Note sent to Wade ✓');}
+
+// ── CLIP UPLOAD ───────────────────────────────────────────────
+function handleClip(input, exName, uid) {
+  const f=input.files[0];if(!f)return;
+  const el=document.getElementById('clip_'+uid);
+  if(el)el.style.display='block';
+  showToast(`Clip for "${exName}" sent to Wade ✓`);
 }
 
-// ── SUPPLEMENTS ───────────────────────────────────────────────
-let supplements = JSON.parse(sessionStorage.getItem('ws_supplements') || '[]');
-
-function showAddSupp() {
-  document.getElementById('addSuppForm').style.display = 'block';
+// ── VOICE NOTE ────────────────────────────────────────────────
+let mediaRecorder=null,audioChunks=[],isRecording=false,recInterval=null,recSecs=0;
+async function toggleVoice(){isRecording?stopVoice():startVoice();}
+async function startVoice(){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    mediaRecorder=new MediaRecorder(stream);audioChunks=[];recSecs=0;
+    mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);
+    mediaRecorder.onstop=()=>{const blob=new Blob(audioChunks,{type:'audio/webm'});stream.getTracks().forEach(t=>t.stop());sendVoiceNote(blob,recSecs);};
+    mediaRecorder.start();isRecording=true;
+    const btn=document.getElementById('voiceBtn');btn.style.background='#fce8e8';btn.style.border='1px solid #c03020';btn.textContent='⏹';
+    recInterval=setInterval(()=>{recSecs++;if(recSecs>=120)stopVoice();},1000);
+  }catch(e){showToast('Mic access denied');}
+}
+function stopVoice(){if(mediaRecorder&&mediaRecorder.state!=='inactive')mediaRecorder.stop();isRecording=false;clearInterval(recInterval);const btn=document.getElementById('voiceBtn');btn.style.background='var(--white)';btn.style.border='1px solid var(--border)';btn.textContent='🎤';}
+function sendVoiceNote(blob,secs){
+  const m=Math.floor(secs/60),s=secs%60;
+  const url=URL.createObjectURL(blob);
+  MESSAGES.push({from:'client',text:`<audio controls src="${url}" style="width:180px;height:32px"></audio>`,time:'Just now'});
+  renderMessages();showToast('Voice note sent ✓');
 }
 
-function cancelSupp() {
-  document.getElementById('addSuppForm').style.display = 'none';
-  document.getElementById('suppName').value = '';
-  document.getElementById('suppDose').value = '';
-  document.getElementById('suppTiming').value = '';
-  document.getElementById('suppNotes').value = '';
+// ── COLLAPSIBLE ───────────────────────────────────────────────
+function toggleCollapse(id, header) {
+  const body=document.getElementById(id);
+  const arrow=header.querySelector('.collapsible-arrow');
+  body.classList.toggle('open');
+  if(arrow)arrow.classList.toggle('open',body.classList.contains('open'));
 }
 
-function saveSupp() {
-  const name = document.getElementById('suppName').value.trim();
-  if (!name) { showToast('Please enter a supplement name'); return; }
-  supplements.push({
-    name,
-    dose: document.getElementById('suppDose').value.trim(),
-    timing: document.getElementById('suppTiming').value,
-    notes: document.getElementById('suppNotes').value.trim(),
-  });
-  sessionStorage.setItem('ws_supplements', JSON.stringify(supplements));
-  cancelSupp();
-  renderSupplements();
-  renderMentalLog();
-  showToast('Supplement saved ✓');
-}
+// ── FORMS ─────────────────────────────────────────────────────
+function showForm(id){document.getElementById(id).style.display='block';}
+function hideForm(id){document.getElementById(id).style.display='none';}
+function showSuccess(id){const el=document.getElementById(id);el.style.display='block';setTimeout(()=>el.style.display='none',3000);}
 
-function renderSupplements() {
-  const el = document.getElementById('suppList');
-  if (!supplements.length) {
-    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No supplements added yet — tap + Add to get started</div>';
-    return;
-  }
-  el.innerHTML = supplements.map((s,i) => `
-    <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--chalk);border-radius:6px;margin-bottom:8px">
-      <div style="flex:1">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-          <span style="font-size:14px;font-weight:600;color:var(--iron)">${s.name}</span>
-          ${s.timing ? `<span style="font-size:11px;background:var(--rust-light);color:var(--rust-dark);padding:2px 8px;border-radius:100px;font-weight:600">${s.timing}</span>` : ''}
-        </div>
-        ${s.dose ? `<div style="font-size:13px;color:var(--muted)">Dose: ${s.dose}</div>` : ''}
-        ${s.notes ? `<div style="font-size:13px;color:var(--muted)">${s.notes}</div>` : ''}
-      </div>
-      <span style="cursor:pointer;color:var(--muted);font-size:16px;flex-shrink:0" onclick="removeSupp(${i})">×</span>
-    </div>`).join('');
-}
+// ── TOAST ─────────────────────────────────────────────────────
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
 
-function removeSupp(i) {
-  supplements.splice(i,1);
-  sessionStorage.setItem('ws_supplements', JSON.stringify(supplements));
-  renderSupplements();
-  renderMentalLog();
-}
-
-// ── MENTAL HEALTH ─────────────────────────────────────────────
-let mentalLog = JSON.parse(sessionStorage.getItem('ws_mental') || '[]');
-let selectedMood = null;
-let selectedStress = null;
-let selectedMotivation = null;
-
-function showAddMental() {
-  document.getElementById('addMentalForm').style.display = 'block';
-}
-
-function cancelMental() {
-  document.getElementById('addMentalForm').style.display = 'none';
-  document.getElementById('mentalNote').value = '';
-  selectedMood = null;
-  selectedStress = null;
-  selectedMotivation = null;
-  document.querySelectorAll('.mood-btn,.stress-btn,.motiv-btn').forEach(b => {
-    b.style.background = 'var(--chalk)';
-    b.style.borderColor = 'var(--border)';
-  });
-}
-
-function setMood(emoji, key) {
-  selectedMood = { emoji, key };
-  document.querySelectorAll('.mood-btn').forEach(b => {
-    b.style.background = 'var(--chalk)';
-    b.style.borderColor = 'var(--border)';
-  });
-  const btn = document.getElementById('mood-'+key);
-  if(btn) { btn.style.background = 'var(--iron)'; btn.style.borderColor = 'var(--iron)'; }
-}
-
-function setStress(level) {
-  selectedStress = level;
-  document.querySelectorAll('.stress-btn').forEach(b => {
-    b.style.background = 'var(--chalk)';
-    b.style.color = 'var(--muted)';
-    b.style.borderColor = 'var(--border)';
-  });
-  const btn = document.getElementById('stress-'+level);
-  if(btn) { btn.style.background = 'var(--iron)'; btn.style.color = 'var(--white)'; btn.style.borderColor = 'var(--iron)'; }
-}
-
-function setMotivation(level) {
-  selectedMotivation = level;
-  document.querySelectorAll('.motiv-btn').forEach(b => {
-    b.style.background = 'var(--chalk)';
-    b.style.color = 'var(--muted)';
-    b.style.borderColor = 'var(--border)';
-  });
-  const btn = document.getElementById('motiv-'+level);
-  if(btn) { btn.style.background = 'var(--iron)'; btn.style.color = 'var(--white)'; btn.style.borderColor = 'var(--iron)'; }
-}
-
-function saveMental() {
-  if (!selectedMood && !selectedStress) { showToast('Please select at least a mood or stress level'); return; }
-  const entry = {
-    date: new Date().toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'}),
-    mood: selectedMood,
-    stress: selectedStress,
-    motivation: selectedMotivation,
-    note: document.getElementById('mentalNote').value.trim(),
-  };
-  mentalLog.unshift(entry);
-  sessionStorage.setItem('ws_mental', JSON.stringify(mentalLog));
-  cancelMental();
-  renderMentalLog();
-  showToast('Entry saved ✓');
-}
-
-function renderMentalLog() {
-  const el = document.getElementById('mentalList');
-  if (!mentalLog.length) {
-    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No entries yet. This is a safe space — be honest with Wade.</div>';
-    return;
-  }
-  el.innerHTML = mentalLog.map((m,i) => `
-    <div style="padding:14px;background:var(--chalk);border-radius:6px;margin-bottom:8px;border-left:3px solid #4488cc">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-        <div style="display:flex;align-items:center;gap:10px">
-          ${m.mood ? `<span style="font-size:22px">${m.mood.emoji}</span>` : ''}
-          <div>
-            ${m.stress ? `<span style="font-size:12px;background:var(--white);padding:2px 8px;border-radius:4px;margin-right:6px;font-weight:600;color:var(--iron)">Stress: ${m.stress}</span>` : ''}
-            ${m.motivation ? `<span style="font-size:12px;background:var(--white);padding:2px 8px;border-radius:4px;font-weight:600;color:var(--iron)">Motivation: ${m.motivation}</span>` : ''}
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-size:11px;color:var(--muted)">${m.date}</span>
-          <span style="cursor:pointer;color:var(--muted);font-size:16px" onclick="removeMental(${i})">×</span>
-        </div>
-      </div>
-      ${m.note ? `<div style="font-size:13px;color:var(--muted);line-height:1.6;font-style:italic">"${m.note}"</div>` : ''}
-    </div>`).join('');
-}
-
-function removeMental(i) {
-  mentalLog.splice(i,1);
-  sessionStorage.setItem('ws_mental', JSON.stringify(mentalLog));
-  renderMentalLog();
-}
-
-// ── PRACTITIONER NOTES ────────────────────────────────────────
-let practNotes = JSON.parse(sessionStorage.getItem('ws_pract_notes') || '[]');
-
-function showAddPractNote() {
-  document.getElementById('addPractNoteForm').style.display = 'block';
-}
-
-function cancelPractNote() {
-  document.getElementById('addPractNoteForm').style.display = 'none';
-  document.getElementById('practName').value = '';
-  document.getElementById('practNote').value = '';
-  document.getElementById('practFile').value = '';
-}
-
-function savePractNote() {
-  const name = document.getElementById('practName').value.trim();
-  const note = document.getElementById('practNote').value.trim();
-  const file = document.getElementById('practFile').files[0];
-  if (!note) { showToast('Please enter the practitioner note'); return; }
-  practNotes.unshift({
-    practitioner: name || 'Unknown practitioner',
-    note,
-    fileName: file ? file.name : null,
-    date: new Date().toLocaleDateString('en-AU', {day:'numeric',month:'long',year:'numeric'})
-  });
-  sessionStorage.setItem('ws_pract_notes', JSON.stringify(practNotes));
-  cancelPractNote();
-  renderPractNotes();
-  showToast('Note sent to Wade ✓');
-}
-
-function renderPractNotes() {
-  const list = document.getElementById('practNotesList');
-  if (!list) return;
-  if (!practNotes.length) {
-    list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No practitioner notes added yet.</div>';
-    return;
-  }
-  list.innerHTML = practNotes.map((n,i) => `
-    <div style="padding:14px;background:var(--chalk);border-radius:6px;margin-bottom:8px;border-left:3px solid #4488cc">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--iron)">${n.practitioner}</div>
-          <div style="font-size:11px;color:var(--muted)">${n.date}</div>
-        </div>
-        <span style="cursor:pointer;color:var(--muted);font-size:16px" onclick="removePractNote(${i})">×</span>
-      </div>
-      <div style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:${n.fileName?'8px':'0'}">${n.note}</div>
-      ${n.fileName ? `<div style="font-size:12px;color:#4488cc;font-weight:500">📎 ${n.fileName}</div>` : ''}
-    </div>`).join('');
-}
-
-function removePractNote(i) {
-  practNotes.splice(i,1);
-  sessionStorage.setItem('ws_pract_notes', JSON.stringify(practNotes));
-  renderPractNotes();
-}
-
-function showAddInjury() {
-  document.getElementById('addInjuryForm').style.display = 'block';
-}
-
-function cancelAddInjury() {
-  document.getElementById('addInjuryForm').style.display = 'none';
-  document.getElementById('injuryArea').value = '';
-  document.getElementById('injuryDesc').value = '';
-}
-
-function saveInjury() {
-  const area = document.getElementById('injuryArea').value.trim();
-  const desc = document.getElementById('injuryDesc').value.trim();
-  const status = document.getElementById('injuryStatus').value;
-  if (!area) { showToast('Please enter the injured area'); return; }
-  injuries.unshift({
-    area, desc, status,
-    date: new Date().toLocaleDateString('en-AU', {day:'numeric',month:'long',year:'numeric'})
-  });
-  sessionStorage.setItem('ws_injuries', JSON.stringify(injuries));
-  cancelAddInjury();
-  renderInjuries();
-  renderSupplements();
-  renderMentalLog();
-  showToast('Injury logged ✓');
-}
-
-function removeInjury(i) {
-  injuries.splice(i,1);
-  sessionStorage.setItem('ws_injuries', JSON.stringify(injuries));
-  renderInjuries();
-  renderSupplements();
-  renderMentalLog();
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2800);
-}
-// Auto-initialise for demo
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('loginScreen').style.display = 'none';
-  initApp();
-});
+// ── SORENESS ROW (template literal issue fix) ─────────────────
+document.getElementById('sorenessRow').innerHTML = Array.from({length:10},(_,i)=>`<button onclick="setSoreness(${i+1})" id="sor-${i+1}" style="flex:1;height:30px;border-radius:4px;border:1px solid var(--border);background:var(--chalk);font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);transition:all 0.15s">${i+1}</button>`).join('');
 </script>
 </body>
 </html>

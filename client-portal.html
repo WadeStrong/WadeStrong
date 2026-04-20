@@ -498,7 +498,10 @@ nav{background:var(--iron);padding:0 24px;display:flex;align-items:center;justif
     <!-- Injury Log -->
     <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:16px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Injury Log</div>
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Health & Wellbeing</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:3px">Physical injuries, mental health and general wellbeing — Wade factors all of this into your program</div>
+        </div>
         <button onclick="showAddInjury()" style="padding:5px 12px;background:var(--iron);color:var(--white);border:none;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer">+ Add</button>
       </div>
 
@@ -1826,6 +1829,7 @@ function loadProfile() {
 
   renderInjuries();
   renderSupplements();
+  renderMentalLog();
 }
 
 function renderInjuries() {
@@ -1875,6 +1879,7 @@ function saveSupp() {
   sessionStorage.setItem('ws_supplements', JSON.stringify(supplements));
   cancelSupp();
   renderSupplements();
+  renderMentalLog();
   showToast('Supplement saved ✓');
 }
 
@@ -1902,6 +1907,108 @@ function removeSupp(i) {
   supplements.splice(i,1);
   sessionStorage.setItem('ws_supplements', JSON.stringify(supplements));
   renderSupplements();
+  renderMentalLog();
+}
+
+// ── MENTAL HEALTH ─────────────────────────────────────────────
+let mentalLog = JSON.parse(sessionStorage.getItem('ws_mental') || '[]');
+let selectedMood = null;
+let selectedStress = null;
+let selectedMotivation = null;
+
+function showAddMental() {
+  document.getElementById('addMentalForm').style.display = 'block';
+}
+
+function cancelMental() {
+  document.getElementById('addMentalForm').style.display = 'none';
+  document.getElementById('mentalNote').value = '';
+  selectedMood = null;
+  selectedStress = null;
+  selectedMotivation = null;
+  document.querySelectorAll('.mood-btn,.stress-btn,.motiv-btn').forEach(b => {
+    b.style.background = 'var(--chalk)';
+    b.style.borderColor = 'var(--border)';
+  });
+}
+
+function setMood(emoji, key) {
+  selectedMood = { emoji, key };
+  document.querySelectorAll('.mood-btn').forEach(b => {
+    b.style.background = 'var(--chalk)';
+    b.style.borderColor = 'var(--border)';
+  });
+  const btn = document.getElementById('mood-'+key);
+  if(btn) { btn.style.background = 'var(--iron)'; btn.style.borderColor = 'var(--iron)'; }
+}
+
+function setStress(level) {
+  selectedStress = level;
+  document.querySelectorAll('.stress-btn').forEach(b => {
+    b.style.background = 'var(--chalk)';
+    b.style.color = 'var(--muted)';
+    b.style.borderColor = 'var(--border)';
+  });
+  const btn = document.getElementById('stress-'+level);
+  if(btn) { btn.style.background = 'var(--iron)'; btn.style.color = 'var(--white)'; btn.style.borderColor = 'var(--iron)'; }
+}
+
+function setMotivation(level) {
+  selectedMotivation = level;
+  document.querySelectorAll('.motiv-btn').forEach(b => {
+    b.style.background = 'var(--chalk)';
+    b.style.color = 'var(--muted)';
+    b.style.borderColor = 'var(--border)';
+  });
+  const btn = document.getElementById('motiv-'+level);
+  if(btn) { btn.style.background = 'var(--iron)'; btn.style.color = 'var(--white)'; btn.style.borderColor = 'var(--iron)'; }
+}
+
+function saveMental() {
+  if (!selectedMood && !selectedStress) { showToast('Please select at least a mood or stress level'); return; }
+  const entry = {
+    date: new Date().toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'}),
+    mood: selectedMood,
+    stress: selectedStress,
+    motivation: selectedMotivation,
+    note: document.getElementById('mentalNote').value.trim(),
+  };
+  mentalLog.unshift(entry);
+  sessionStorage.setItem('ws_mental', JSON.stringify(mentalLog));
+  cancelMental();
+  renderMentalLog();
+  showToast('Entry saved ✓');
+}
+
+function renderMentalLog() {
+  const el = document.getElementById('mentalList');
+  if (!mentalLog.length) {
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:14px">No entries yet. This is a safe space — be honest with Wade.</div>';
+    return;
+  }
+  el.innerHTML = mentalLog.map((m,i) => `
+    <div style="padding:14px;background:var(--chalk);border-radius:6px;margin-bottom:8px;border-left:3px solid #4488cc">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:10px">
+          ${m.mood ? `<span style="font-size:22px">${m.mood.emoji}</span>` : ''}
+          <div>
+            ${m.stress ? `<span style="font-size:12px;background:var(--white);padding:2px 8px;border-radius:4px;margin-right:6px;font-weight:600;color:var(--iron)">Stress: ${m.stress}</span>` : ''}
+            ${m.motivation ? `<span style="font-size:12px;background:var(--white);padding:2px 8px;border-radius:4px;font-weight:600;color:var(--iron)">Motivation: ${m.motivation}</span>` : ''}
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:11px;color:var(--muted)">${m.date}</span>
+          <span style="cursor:pointer;color:var(--muted);font-size:16px" onclick="removeMental(${i})">×</span>
+        </div>
+      </div>
+      ${m.note ? `<div style="font-size:13px;color:var(--muted);line-height:1.6;font-style:italic">"${m.note}"</div>` : ''}
+    </div>`).join('');
+}
+
+function removeMental(i) {
+  mentalLog.splice(i,1);
+  sessionStorage.setItem('ws_mental', JSON.stringify(mentalLog));
+  renderMentalLog();
 }
 
 // ── PRACTITIONER NOTES ────────────────────────────────────────
@@ -1985,6 +2092,7 @@ function saveInjury() {
   cancelAddInjury();
   renderInjuries();
   renderSupplements();
+  renderMentalLog();
   showToast('Injury logged ✓');
 }
 
@@ -1993,6 +2101,7 @@ function removeInjury(i) {
   sessionStorage.setItem('ws_injuries', JSON.stringify(injuries));
   renderInjuries();
   renderSupplements();
+  renderMentalLog();
 }
 
 function showToast(msg) {

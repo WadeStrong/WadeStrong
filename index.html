@@ -83,24 +83,24 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .program-card:hover .feat-check{color:var(--rust-mid,#D85A30)}
 .program-card:hover .btn-outline{background:transparent;color:var(--white);border-color:rgba(255,255,255,0.3)}
 .program-card:hover .prog-tag{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);border-color:transparent}
-.program-card.featured{background:var(--iron);border-color:var(--iron)}
+
 .prog-tag{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:5px 12px;border-radius:100px;display:inline-block;width:fit-content;margin-bottom:24px}
 .tag-start{background:var(--chalk);color:var(--muted);border:1px solid var(--border)}
 .tag-comp{background:var(--rust-light);color:var(--rust-dark)}
 .prog-name{font-family:var(--font-display);font-size:36px;letter-spacing:1px;margin-bottom:8px;color:var(--iron)}
-.program-card.featured .prog-name{color:var(--white)}
+
 .prog-desc{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:28px}
-.program-card.featured .prog-desc{color:rgba(255,255,255,0.5)}
+
 .prog-price{font-family:var(--font-display);font-size:52px;letter-spacing:1px;color:var(--iron);line-height:1}
-.program-card.featured .prog-price{color:var(--white)}
+
 .prog-price sup{font-family:var(--font-body);font-size:22px;vertical-align:top;margin-top:8px;display:inline-block;font-weight:400}
 .prog-price-note{font-size:13px;color:var(--muted);margin-top:4px;margin-bottom:28px}
-.program-card.featured .prog-price-note{color:rgba(255,255,255,0.4)}
+
 .prog-divider{border:none;border-top:1px solid var(--border);margin-bottom:24px}
-.program-card.featured .prog-divider{border-color:rgba(255,255,255,0.1)}
+
 .prog-features{list-style:none;flex:1}
 .prog-features li{font-size:14px;color:var(--muted);padding:9px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px;line-height:1.45}
-.program-card.featured .prog-features li{color:rgba(255,255,255,0.55);border-color:rgba(255,255,255,0.08)}
+
 .prog-features li:last-child{border-bottom:none}
 .feat-check{color:var(--rust);font-weight:700;font-size:13px;flex-shrink:0;padding-top:1px}
 .program-card.featured .feat-check{color:var(--rust-mid)}
@@ -129,14 +129,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .pay-btn{width:100%;padding:14px;border-radius:4px;font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;border:none}
 .pay-btn-stripe{background:var(--iron);color:var(--white)}
 .pay-btn-stripe:hover{background:var(--rust)}
-.pay-btn-afterpay{background:#B2FCE4;color:#000;font-weight:700}
-.pay-btn-afterpay:hover{background:#8ff0d0}
-.afterpay-split{font-size:12px;color:var(--muted);margin-top:4px;text-align:center}
+
+
+
 .stripe-badge{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--muted);margin-top:20px}
-.afterpay-strip{background:#B2FCE4;border-radius:8px;padding:22px 32px;display:flex;align-items:center;gap:24px}
-.afterpay-logo{font-family:var(--font-display);font-size:24px;letter-spacing:1px;color:#000;flex-shrink:0}
-.afterpay-text{font-size:14px;color:#000;line-height:1.6}
-.afterpay-text strong{font-weight:600}
+
+
+
+
 
 /* PHILOSOPHY */
 .philosophy{background:var(--iron)}
@@ -317,7 +317,7 @@ footer{background:var(--iron);padding:40px 64px}
       </ul>
       <button class="prog-btn btn-outline" onclick="window.location.href='https://buy.stripe.com/bJe3cobvL62P6Sj8yv28802'">get started</button>
     </div>
-    <div class="program-card featured">
+    <div class="program-card">
       <span class="prog-tag tag-comp">Strongman specific</span>
       <div style="display:flex;align-items:center;gap:6px;margin-bottom:16px;margin-top:-10px">
         <div style="width:8px;height:8px;border-radius:50%;background:#c03020;animation:pulse 1.5s infinite"></div>
@@ -336,7 +336,7 @@ footer{background:var(--iron);padding:40px 64px}
         <li><span class="feat-check">+</span> Recovery &amp; taper protocol included</li>
         <li><span class="feat-check">+</span> Feedback right up to comp day</li>
       </ul>
-      <button class="prog-btn btn-rust" onclick="window.location.href='https://buy.stripe.com/aFa5kw43jdvh2C316328800'">apply now</button>
+      <button class="prog-btn btn-outline" onclick="window.location.href='https://buy.stripe.com/aFa5kw43jdvh2C316328800'">apply now</button>
     </div>
     <div class="program-card">
       <span class="prog-tag tag-start">Fully custom</span>
@@ -357,47 +357,6 @@ footer{background:var(--iron);padding:40px 64px}
   </div>
 </section>
 
-<section class="payment section" id="payment">
-  <div class="section-tag">secure checkout</div>
-  <div class="section-title">READY TO GET STARTED?</div>
-  <p class="payment-intro">Pay securely online and Wade will be in touch within 24 hours to kick things off. Both programs are available via card or Afterpay — split into four fortnightly payments, completely interest free.</p>
-  <div class="payment-grid">
-    <div class="pay-card">
-      <div class="pay-card-header">
-        <div class="pay-card-name">GET STRONG</div>
-        <div class="pay-card-sub">6-week custom program &nbsp;·&nbsp; weekly video calls &nbsp;·&nbsp; ongoing feedback</div>
-      </div>
-      <div class="pay-card-body">
-        <div class="pay-amount"><sup>$</sup>600</div>
-        <div class="pay-options">
-          <button class="pay-btn pay-btn-stripe">&#x1F4B3; Pay with card — $600</button>
-          <button class="pay-btn pay-btn-afterpay">Afterpay &nbsp;·&nbsp; 4 &times; $150</button>
-          <div class="afterpay-split">4 fortnightly payments of $150 &nbsp;·&nbsp; interest free</div>
-        </div>
-        <div class="stripe-badge">&#x1F512; Secured by Stripe</div>
-      </div>
-    </div>
-    <div class="pay-card">
-      <div class="pay-card-header dark">
-        <div class="pay-card-name">PRE-COMP BUILD UP</div>
-        <div class="pay-card-sub">Strongman-specific &nbsp;·&nbsp; competition peaking &nbsp;·&nbsp; full support to comp day</div>
-      </div>
-      <div class="pay-card-body">
-        <div class="pay-amount"><sup>$</sup>1,200</div>
-        <div class="pay-options">
-          <button class="pay-btn pay-btn-stripe">&#x1F4B3; Pay with card — $1,200</button>
-          <button class="pay-btn pay-btn-afterpay">Afterpay &nbsp;·&nbsp; 4 &times; $300</button>
-          <div class="afterpay-split">4 fortnightly payments of $300 &nbsp;·&nbsp; interest free</div>
-        </div>
-        <div class="stripe-badge">&#x1F512; Secured by Stripe</div>
-      </div>
-    </div>
-  </div>
-  <div class="afterpay-strip">
-    <div class="afterpay-logo">Afterpay</div>
-    <div class="afterpay-text"><strong>Buy now, pay later — interest free.</strong> Split your coaching into 4 equal fortnightly instalments with no interest and no fees if you pay on time. Available to Australian and New Zealand customers.</div>
-  </div>
-</section>
 
 <section class="philosophy section">
   <div class="section-tag">the method</div>

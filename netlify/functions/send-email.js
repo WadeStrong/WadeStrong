@@ -204,6 +204,86 @@ function emailProgramReady({ firstName, portalLink, vipCode }) {
     </div>`);
 }
 
+// EMAIL 5: Athlete accepted
+function emailAthleteAccepted({ firstName, note }) {
+  return baseTemplate(`
+    <div class="body">
+      <div class="greeting">You're in, ${firstName}. Welcome to the team.</div>
+      <p class="text">Wade has reviewed your application and you've been accepted into the Pre-Comp Build Up program. This is a serious program for serious athletes — and Wade is serious about getting you to the start line in the best shape of your life.</p>
+
+      ${note ? `<div class="info-box" style="border-left:3px solid #B85A30;border-radius:0 5px 5px 0;background:#fff9f6">
+        <div class="info-box-title">A note from Wade</div>
+        <p style="font-size:14px;color:#4a4a4a;line-height:1.8">${note}</p>
+      </div>` : ''}
+
+      <div class="info-box">
+        <div class="info-box-title">What happens next</div>
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Complete payment</h4>
+            <p>Your program fee of A$1,200 secures your spot. Wade only takes a limited number of pre-comp athletes per block.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>RPE testing</h4>
+            <p>Complete your RPE testing session and submit your numbers. Wade will use these to set your training intensities.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Program build</h4>
+            <p>Wade builds your comp-specific program around your events, your timeline and your numbers.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin:28px 0">
+        <a href="https://buy.stripe.com/aFa5kw43jdvh2C316328800" class="btn">Complete payment — A$1,200 →</a>
+      </div>
+
+      <hr class="divider">
+      <p class="text" style="font-size:14px;color:#888">Questions? Reply directly to this email and Wade will get back to you personally.</p>
+    </div>`);
+}
+
+// EMAIL 6: Athlete declined
+function emailAthleteDeclined({ firstName }) {
+  return baseTemplate(`
+    <div class="body">
+      <div class="greeting">Thanks for applying, ${firstName}.</div>
+      <p class="text">Wade has carefully reviewed your application for the Pre-Comp Build Up program. Unfortunately he's not able to take you on for this competition block — this is usually due to timing, the number of athletes he can take on at once, or wanting to make sure the fit is right.</p>
+      <p class="text">This isn't a door closed permanently. Wade is selective because he wants to give every athlete the attention they deserve — and sometimes the timing just isn't right.</p>
+
+      <div class="info-box">
+        <div class="info-box-title">Other options</div>
+        <div class="step">
+          <div class="step-num">→</div>
+          <div class="step-content">
+            <h4>Get Strong program</h4>
+            <p>Wade's 6-week online coaching program is open to all levels. A great way to build your foundation and work directly with Wade before your next competition.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">→</div>
+          <div class="step-content">
+            <h4>Book a consult call</h4>
+            <p>A 15-minute call with Wade to talk through your goals and figure out the best path forward.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin:28px 0">
+        <a href="https://wadestrong.com.au/#programs" class="btn btn-dark">See other programs →</a>
+      </div>
+
+      <p class="text" style="font-size:14px;color:#888">Feel free to reply to this email if you have any questions — Wade reads every response personally.</p>
+    </div>`);
+}
+
 // ── SEND FUNCTION ─────────────────────────────────────────────
 
 async function sendEmail(to, subject, html) {
@@ -269,6 +349,16 @@ exports.handler = async (event) => {
       case 'program_ready':
         subject = `Your program is live, ${data.firstName} — let's go`;
         html = emailProgramReady(data);
+        break;
+
+      case 'athlete_accepted':
+        subject = `You're in, ${data.firstName} — welcome to the Pre-Comp program`;
+        html = emailAthleteAccepted(data);
+        break;
+
+      case 'athlete_declined':
+        subject = `Your Pre-Comp application — Wade Strong`;
+        html = emailAthleteDeclined(data);
         break;
 
       default:

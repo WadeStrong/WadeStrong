@@ -624,6 +624,74 @@ function sendDetailMsg(clientId) {
 function openAddClientModal() { showToast('Add client — coming in full build'); }
 
 // ── TOAST ──
+async function sendAthleteAcceptEmail() {
+  const client = getSelectedClient();
+  if (!client) { showToast('No client selected'); return; }
+  const note = document.getElementById('athleteAcceptNote')?.value || '';
+  const firstName = client.first_name || client.name?.split(' ')[0] || 'there';
+
+  try {
+    const res = await fetch('/.netlify/functions/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'athlete_accepted',
+        to: client.email,
+        data: { firstName, note }
+      })
+    });
+    if (res.ok) {
+      await updateClientStatus(client.id, 'active');
+      document.getElementById('athleteEmailConfirm').style.display = 'block';
+      document.getElementById('athleteEmailConfirm').textContent = '✓ Acceptance email sent!';
+      showToast(`Acceptance email sent to ${client.email} ✓`);
+      setTimeout(() => document.getElementById('athleteEmailConfirm').style.display = 'none', 4000);
+    }
+  } catch(err) {
+    showToast('Email failed — check Resend is configured');
+    console.error(err);
+  }
+}
+
+async function sendAthleteDeclineEmail() {
+  const client = getSelectedClient();
+  if (!client) { showToast('No client selected'); return; }
+  const firstName = client.first_name || client.name?.split(' ')[0] || 'there';
+
+  if (!confirm(`Send decline email to ${client.email}?`)) return;
+
+  try {
+    const res = await fetch('/.netlify/functions/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'athlete_declined',
+        to: client.email,
+        data: { firstName }
+      })
+    });
+    if (res.ok) {
+      await updateClientStatus(client.id, 'declined');
+      document.getElementById('athleteEmailConfirm').style.display = 'block';
+      document.getElementById('athleteEmailConfirm').textContent = '✓ Decline email sent';
+      document.getElementById('athleteEmailConfirm').style.background = '#fce8e8';
+      document.getElementById('athleteEmailConfirm').style.color = '#c03020';
+      showToast(`Decline email sent to ${client.email}`);
+      setTimeout(() => document.getElementById('athleteEmailConfirm').style.display = 'none', 4000);
+    }
+  } catch(err) {
+    showToast('Email failed — check Resend is configured');
+    console.error(err);
+  }
+}
+
+function showAthletePanel(client) {
+  const panel = document.getElementById('athleteAcceptPanel');
+  if (panel) {
+    panel.style.display = client?.program_type === 'pre_comp' ? 'block' : 'none';
+  }
+}
+
 async function sendProgramReadyEmail() {
   const client = getSelectedClient();
   if (!client) { showToast('No client selected'); return; }

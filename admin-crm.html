@@ -624,6 +624,63 @@ function sendDetailMsg(clientId) {
 function openAddClientModal() { showToast('Add client — coming in full build'); }
 
 // ── TOAST ──
+async function sendProgramReadyEmail() {
+  const client = getSelectedClient();
+  if (!client) { showToast('No client selected'); return; }
+
+  const vipCode = document.getElementById('vipCodeInput')?.value || 'WADESTRONG';
+  const btn = event.target;
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/.netlify/functions/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'program_ready',
+        to: client.email,
+        data: {
+          firstName: client.first_name || client.name?.split(' ')[0] || 'there',
+          portalLink: 'https://wadestrong.com.au/client-portal.html',
+          vipCode: vipCode
+        }
+      })
+    });
+
+    if (res.ok) {
+      document.getElementById('emailSentConfirm').style.display = 'block';
+      btn.textContent = '✓ Sent';
+      btn.style.background = '#2c7a4b';
+      showToast(`Program ready email sent to ${client.email} ✓`);
+
+      // Update client status to active in Supabase
+      await updateClientStatus(client.id, 'active');
+
+      setTimeout(() => {
+        document.getElementById('emailSentConfirm').style.display = 'none';
+        btn.textContent = '✉️ Send "Program Ready" to client';
+        btn.style.background = 'var(--rust)';
+        btn.disabled = false;
+      }, 4000);
+    } else {
+      throw new Error('Send failed');
+    }
+  } catch(err) {
+    showToast('Email failed — check Resend is configured');
+    btn.textContent = '✉️ Send "Program Ready" to client';
+    btn.disabled = false;
+    console.error(err);
+  }
+}
+
+function getSelectedClient() {
+  const activeRow = document.querySelector('.client-row.active');
+  if (!activeRow) return null;
+  const clientId = activeRow.dataset.clientId;
+  return allClients?.find(c => c.id === clientId) || null;
+}
+
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;

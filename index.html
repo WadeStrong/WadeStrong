@@ -236,18 +236,21 @@ footer{background:var(--iron);padding:40px 64px}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
 
 /* STICKY CONSULT BANNER */
-.sticky-banner{position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--iron);border-top:2px solid var(--rust);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;transform:translateY(0);transition:transform 0.3s}
+.sticky-banner{position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--iron);border-top:2px solid var(--rust);padding:12px 24px;display:flex;align-items:center;justify-content:center;gap:16px;transform:translateY(0);transition:transform 0.3s}
 .sticky-banner.hidden{transform:translateY(100%)}
-.sticky-banner-text{font-size:14px;color:rgba(255,255,255,0.7);line-height:1.4}
+.sticky-banner-inner{display:flex;align-items:center;justify-content:center;gap:16px;flex:1;max-width:800px}
+.sticky-banner-text{font-size:14px;color:rgba(255,255,255,0.7);line-height:1.4;text-align:center}
 .sticky-banner-text strong{color:var(--white);font-weight:600}
 .sticky-banner-btn{background:var(--rust);color:var(--white);border:none;padding:10px 20px;border-radius:4px;font-family:var(--font-body);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.2s}
 .sticky-banner-btn:hover{background:var(--rust-dark)}
-.sticky-banner-close{background:transparent;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:20px;padding:4px;line-height:1;flex-shrink:0;transition:color 0.2s}
+.sticky-banner-close{background:transparent;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:20px;padding:4px;line-height:1;flex-shrink:0;transition:color 0.2s;position:absolute;right:24px}
 .sticky-banner-close:hover{color:rgba(255,255,255,0.7)}
 @media(max-width:600px){
   .sticky-banner{flex-wrap:wrap;gap:10px}
+  .sticky-banner-inner{flex-direction:column;gap:10px}
   .sticky-banner-text{font-size:13px}
   .sticky-banner-btn{width:100%}
+  .sticky-banner-close{position:static}
 }
 </style>
 </head>
@@ -276,15 +279,10 @@ footer{background:var(--iron);padding:40px 64px}
     </div>
   </div>
   <div class="hero-right">
-    <div class="hero-bg-text">WADE</div>
     <div class="hero-photo-placeholder" style="overflow:hidden">
       <img src="wade-photo.jpg" alt="Wade — Professional Strongman" style="width:100%;height:100%;object-fit:cover;object-position:center top;filter:grayscale(15%)">
     </div>
-    <div class="hero-stats-bar">
-      <div class="stat"><div class="stat-val">7TH</div><div class="stat-label">Strongman Corporation Arnold's Pro/Am, Ohio</div></div>
-      <div class="stat"><div class="stat-val">PRO</div><div class="stat-label">level athlete</div></div>
-      <div class="stat"><div class="stat-val">3</div><div class="stat-label">countries competed</div></div>
-    </div>
+
   </div>
 </section>
 
@@ -526,10 +524,12 @@ function handleSubmit(e){
 
 <!-- STICKY CONSULT BANNER -->
 <div class="sticky-banner" id="stickyBanner">
-  <div class="sticky-banner-text">
-    <strong>Not sure where to start?</strong> Book a 15 min call with Wade — ask anything, no pressure.
+  <div class="sticky-banner-inner">
+    <div class="sticky-banner-text">
+      <strong>Not sure where to start?</strong> Book a 15 min call with Wade — ask anything, no pressure.
+    </div>
+    <button class="sticky-banner-btn" onclick="window.location.href='https://calendly.com/wadestrong-info/30min'">Book a call →</button>
   </div>
-  <button class="sticky-banner-btn" onclick="window.location.href='https://calendly.com/wadestrong-info/30min'">Book a call →</button>
   <button class="sticky-banner-close" onclick="dismissBanner()" title="Dismiss">×</button>
 </div>
 

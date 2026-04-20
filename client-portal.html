@@ -215,6 +215,26 @@ nav{background:var(--iron);padding:0 24px;display:flex;align-items:center;justif
 </head>
 <body>
 
+<!-- DEMO LOGIN GATE -->
+<div id="demoGate" style="position:fixed;inset:0;background:var(--iron);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px">
+  <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:40px;width:100%;max-width:380px;text-align:center">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:#f5f0e0;margin-bottom:4px">WADE<span style="color:#B85A30">.</span>STRONG</div>
+    <div style="font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:28px">Client Portal</div>
+    <div style="font-size:32px;margin-bottom:12px">💪</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:#f5f0e0;letter-spacing:1px;margin-bottom:8px">WELCOME BACK</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:24px;line-height:1.6">Enter your email to receive a magic link, or use the demo account below.</div>
+    <input type="email" id="loginEmail" placeholder="your@email.com" style="width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;background:rgba(255,255,255,0.06);color:#f5f0e0;font-family:inherit;font-size:14px;outline:none;margin-bottom:10px;text-align:center">
+    <button onclick="sendMagicLink()" style="width:100%;padding:12px;background:#B85A30;color:#fff;border:none;border-radius:6px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:16px">Send magic link</button>
+    <div style="display:flex;align-items:center;gap:12px;margin:16px 0;color:rgba(255,255,255,0.2);font-size:12px">
+      <span style="flex:1;height:1px;background:rgba(255,255,255,0.1);display:block"></span>or<span style="flex:1;height:1px;background:rgba(255,255,255,0.1);display:block"></span>
+    </div>
+    <button onclick="loadDemoAccount()" style="width:100%;padding:12px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">
+      👀 View demo account
+    </button>
+    <div style="margin-top:12px;font-size:11px;color:rgba(255,255,255,0.25)">Demo: Dave Mitchell · Get Strong · Week 3</div>
+  </div>
+</div>
+
 <!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-logo">WADE<span>.</span>STRONG</div>
@@ -1801,9 +1821,63 @@ function removeRecovery(i) {
 // ── PROFILE ───────────────────────────────────────────────────
 let injuries = JSON.parse(sessionStorage.getItem('ws_injuries') || '[]');
 
+function loadDemoAccount() {
+  // Pre-load demo data into session
+  sessionStorage.setItem('ws_injuries', JSON.stringify([
+    { area: 'Left knee', desc: 'Old meniscus issue from football. Flares up on heavy squats occasionally.', status: 'monitoring', date: '10 Apr 2025' },
+    { area: 'Lower back', desc: 'Mild tightness after deadlift sessions. Not painful, just stiff.', status: 'monitoring', date: '5 Apr 2025' },
+  ]));
+  sessionStorage.setItem('ws_supplements', JSON.stringify([
+    { name: 'Creatine', dose: '5g', timing: 'Post-workout', notes: 'Optimum Nutrition' },
+    { name: 'Protein Powder', dose: '40g', timing: 'Post-workout', notes: 'Vanilla whey — hitting 180g protein daily' },
+    { name: 'Magnesium', dose: '400mg', timing: 'Before bed', notes: 'Helps with sleep and cramps' },
+    { name: 'Fish Oil', dose: '2 caps', timing: 'With meals', notes: 'Joint support' },
+  ]));
+  sessionStorage.setItem('ws_recovery', JSON.stringify([
+    { type: 'Massage', area: 'Full body', feel: '🔥 Great', notes: 'Sports massage — felt much looser after', date: '14 Apr 2025' },
+    { type: 'Ice Bath', area: 'Legs', feel: '👍 Good', notes: '10 mins after heavy leg day', date: '12 Apr 2025' },
+    { type: 'Dry Needling', area: 'Left knee / quads', feel: '👍 Good', notes: 'With physio Sarah — targeting VMO', date: '8 Apr 2025' },
+  ]));
+  sessionStorage.setItem('ws_checkins', JSON.stringify([
+    { date: '20 Apr 2025', soreness: 4, sleep: '7.5', sleepQuality: 'good', hrv: '68' },
+    { date: '19 Apr 2025', soreness: 6, sleep: '6.5', sleepQuality: 'ok', hrv: '54' },
+    { date: '18 Apr 2025', soreness: 3, sleep: '8', sleepQuality: 'great', hrv: '72' },
+  ]));
+  sessionStorage.setItem('ws_nutrition', JSON.stringify([
+    { date: '20 Apr 2025', calories: '3200', water: '3.5', protein: '185', carbs: '380', fats: '95' },
+    { date: '19 Apr 2025', calories: '2900', water: '3.0', protein: '170', carbs: '320', fats: '88' },
+  ]));
+  sessionStorage.setItem('ws_mental', JSON.stringify([
+    { date: '18 Apr 2025', mood: { emoji: '🙂', key: 'ok' }, stress: 'Moderate', motivation: 'Good', note: 'Work has been hectic but training is going well. Looking forward to the weekend session.' },
+  ]));
+  sessionStorage.setItem('ws_pract_notes', JSON.stringify([
+    { practitioner: 'Sarah Jones — Physiotherapist', note: 'Continue strengthening VMO. Avoid full depth squats under heavy load for 2 weeks. Leg press and hack squat fine.', fileName: null, date: '8 Apr 2025' },
+  ]));
+  document.getElementById('demoGate').style.display = 'none';
+  sessionStorage.setItem('demo_mode', 'true');
+  sessionStorage.setItem('client_name', 'Dave Mitchell');
+}
+
+function sendMagicLink() {
+  const email = document.getElementById('loginEmail').value;
+  if (!email || !email.includes('@')) { return; }
+  document.getElementById('demoGate').innerHTML = `
+    <div style="text-align:center;color:#f5f0e0">
+      <div style="font-size:40px;margin-bottom:16px">📧</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;margin-bottom:8px">CHECK YOUR EMAIL</div>
+      <div style="font-size:14px;color:rgba(255,255,255,0.5)">Magic link sent to ${email}</div>
+    </div>`;
+}
+
+if (sessionStorage.getItem('demo_mode') === 'true') {
+  document.addEventListener('DOMContentLoaded', () => {
+    const gate = document.getElementById('demoGate');
+    if (gate) gate.style.display = 'none';
+  });
+}
+
 function loadProfile() {
-  // In production pull from Supabase — for now use session/mock data
-  document.getElementById('prof-name').textContent = 'Dave Mitchell';
+  document.getElementById('prof-name').textContent = sessionStorage.getItem('client_name') || 'Dave Mitchell';
   document.getElementById('prof-age').textContent = '38';
   document.getElementById('prof-height').textContent = '182cm';
   document.getElementById('prof-weight').textContent = '89kg';

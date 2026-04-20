@@ -234,7 +234,7 @@ nav{background:var(--iron);padding:0 24px;display:flex;align-items:center;justif
   <div class="nav-logo">WADE<span>.</span>STRONG</div>
   <div class="nav-user">
     <div class="nav-avatar" id="navAvatar">DM</div>
-    <div class="nav-name" id="navName">Dave M.</div>
+    <div class="nav-name" id="navName">Chris T.</div>
     <div class="nav-logout" onclick="doLogout()">Log out</div>
   </div>
 </nav>
@@ -981,7 +981,7 @@ nav{background:var(--iron);padding:0 24px;display:flex;align-items:center;justif
     <div class="bnav-item" onclick="switchPanel('profile',this)"><div class="bnav-icon">👤</div>Profile</div>
     <div class="bnav-item" onclick="switchPanel('uploads',this)"><div class="bnav-icon">🎥</div>Clips</div>
     <div class="bnav-item" onclick="switchPanel('recovery',this)"><div class="bnav-icon">🔄</div>Recovery</div>
-    <div class="bnav-item" id="compTab" onclick="switchPanel('comp',this)" style="display:none"><div class="bnav-icon">🏆</div>Comp Day</div>
+    <div class="bnav-item" id="compTab" onclick="switchPanel('comp',this)"><div class="bnav-icon">🏆</div>Comp Day</div>
     <div class="bnav-item" onclick="switchPanel('messages',this)"><div class="bnav-icon">💬</div>Messages</div>
   </div>
 </div>
@@ -1021,11 +1021,13 @@ sessionStorage.setItem('ws_mental', JSON.stringify([
 sessionStorage.setItem('ws_pract_notes', JSON.stringify([
   { practitioner: 'Sarah Jones — Physiotherapist', note: 'Continue strengthening VMO. Avoid full depth squats under heavy load for 2 weeks.', fileName: null, date: '8 Apr 2025' },
 ]));
-sessionStorage.setItem('client_name', 'Dave Mitchell');
+sessionStorage.setItem('client_name', 'Chris Thompson');
+sessionStorage.setItem('program_type', 'pre_comp');
 // ── DEMO DATA ──
 const clientData = {
-  name:'Dave Mitchell', initials:'DM', shortName:'Dave M.',
-  program:'Get Strong', week:3, totalWeeks:6
+  name:'Chris Thompson', initials:'CT', shortName:'Chris T.',
+  program:'Pre-Comp Build Up', week:5, totalWeeks:8,
+  type:'pre_comp'
 };
 
 const programWeeks = [
@@ -1870,7 +1872,8 @@ function loadDemoAccount() {
   ]));
   document.getElementById('demoGate').style.display = 'none';
   sessionStorage.setItem('demo_mode', 'true');
-  sessionStorage.setItem('client_name', 'Dave Mitchell');
+  sessionStorage.setItem('client_name', 'Chris Thompson');
+sessionStorage.setItem('program_type', 'pre_comp');
 }
 
 function sendMagicLink() {
@@ -1892,12 +1895,12 @@ if (sessionStorage.getItem('demo_mode') === 'true') {
 }
 
 function loadProfile() {
-  document.getElementById('prof-name').textContent = sessionStorage.getItem('client_name') || 'Dave Mitchell';
+  document.getElementById('prof-name').textContent = sessionStorage.getItem('client_name') || 'Chris Thompson';
   document.getElementById('prof-age').textContent = '38';
   document.getElementById('prof-height').textContent = '182cm';
-  document.getElementById('prof-weight').textContent = '89kg';
-  document.getElementById('prof-location').textContent = 'Brisbane, QLD';
-  document.getElementById('prof-program').textContent = 'Get Strong — Week 3 of 6';
+  document.getElementById('prof-weight').textContent = '91.5kg';
+  document.getElementById('prof-location').textContent = 'Auckland, NZ';
+  document.getElementById('prof-program').textContent = 'Pre-Comp Build Up — Week 5 of 8';
 
   // Mock RPE results — in production pull from rpe10_results table
   const rpe = {
@@ -2199,6 +2202,11 @@ function showToast(msg) {
   t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2800);
 }
+// Auto-initialise for demo
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('loginScreen').style.display = 'none';
+  initApp();
+});
 </script>
 </body>
 </html>

@@ -498,10 +498,56 @@ document.getElementById('paymentModal').addEventListener('click', function(e) {
   if (e.target === this) closePayment();
 });
 
-function handleSubmit(e){
+async function handleSubmit(e){
   e.preventDefault();
+  const form = e.target;
+  const inputs = form.querySelectorAll('input,select,textarea');
+  const firstName = inputs[0].value;
+  const lastName = inputs[1].value;
+  const email = inputs[2].value;
+  const location = inputs[3].value;
+  const type = inputs[4].value;
+  const details = inputs[5].value;
+
+  // Send to Slack
+  try {
+    await fetch('https://wade-slack-notifications.nameless-wind-f1be.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'custom_request',
+        data: {
+          name: firstName + ' ' + lastName,
+          email: email,
+          location: location,
+          details: `Type: ${type}\n${details}`
+        }
+      })
+    });
+  } catch(err) { console.error('Slack notification failed:', err); }
+
+  // Send email to info@wadestrong.com.au
+  try {
+    await fetch('https://wade-send-email.nameless-wind-f1be.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'custom_request',
+        to: 'info@wadestrong.com.au',
+        data: {
+          firstName: 'Wade',
+          clientName: firstName + ' ' + lastName,
+          clientEmail: email,
+          location: location,
+          requestType: type,
+          details: details
+        }
+      })
+    });
+  } catch(err) { console.error('Email notification failed:', err); }
+
   document.getElementById('formSuccess').style.display='block';
-  e.target.querySelector('.form-submit').style.display='none';
+  form.querySelector('.form-submit').style.display='none';
 }
 </script>
 

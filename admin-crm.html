@@ -401,9 +401,11 @@ html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(-
               <div class="detail-card">
                 <div class="detail-card-title">Actions</div>
                 <div class="action-btns">
+                  <button class="act-btn act-btn-rust" onclick="sendWelcomeEmail()">📧 Send welcome + questionnaire</button>
                   <button class="act-btn act-btn-iron" onclick="openProgramBuilder()">🏋️ Build / edit program</button>
                   <button class="act-btn act-btn-ghost" onclick="viewClientPortal()">👤 View client portal</button>
                 </div>
+                <div class="email-success" id="welcomeEmailSuccess">✓ Welcome email sent!</div>
               </div>
 
               <!-- Program ready email -->
@@ -875,6 +877,42 @@ async function sendDetailMessage() {
 }
 
 // ── ACTIONS ───────────────────────────────────────────────────
+async function sendWelcomeEmail() {
+  if (!currentClient) return;
+  const firstName = currentClient.first_name || 'there';
+  const prog = currentClient.program_type === 'pre_comp' ? 'Pre-Comp Build Up' : 'Get Strong';
+  const questionnaireUrl = currentClient.program_type === 'pre_comp'
+    ? 'https://wadestrong.com.au/questionnaire-precomp.html'
+    : 'https://wadestrong.com.au/questionnaire-get-strong.html';
+
+  try {
+    const res = await fetch('https://wade-send-email.nameless-wind-f1be.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'welcome_manual',
+        to: currentClient.email,
+        data: {
+          firstName,
+          program: prog,
+          questionnaireUrl,
+          amount: currentClient.program_type === 'pre_comp' ? '1,200' : '600'
+        }
+      })
+    });
+    if (res.ok) {
+      document.getElementById('welcomeEmailSuccess').style.display = 'block';
+      showToast(`Welcome email sent to ${currentClient.email} ✓`);
+      setTimeout(() => document.getElementById('welcomeEmailSuccess').style.display = 'none', 4000);
+    } else {
+      showToast('Email failed — check Resend is configured');
+    }
+  } catch(err) {
+    console.error('Welcome email error:', err);
+    showToast('Email failed — check connection');
+  }
+}
+
 function openProgramBuilder() {
   if (!currentClient) return;
   window.location.href = `program-builder.html?client=${encodeURIComponent(currentClient.email)}`;

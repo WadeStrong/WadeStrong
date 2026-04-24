@@ -5,760 +5,1055 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wade Strong — Admin CRM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --rust:#B85A30;--rust-dark:#8C4122;--rust-light:#FAECE7;
-  --iron:#1a1a1a;--iron-mid:#2c2c2c;--chalk:#f5f2ee;--white:#fff;--muted:#6b6560;
-  --border:rgba(0,0,0,0.09);--border-med:rgba(0,0,0,0.15);
-  --green:#2c7a4b;--green-bg:#e6f4ed;--amber:#7a5010;--amber-bg:#fef3d8;
-  --font-display:'Bebas Neue',sans-serif;--font-body:'Instrument Sans',sans-serif;
-  --sidebar:220px;
+  --rust:#B85A30;--rust-d:#8C4122;--rust-l:#FAECE7;
+  --iron:#1a1a1a;--chalk:#f5f2ee;--white:#fff;--muted:#6b6560;
+  --border:rgba(0,0,0,0.09);--green:#2c7a4b;--green-bg:#e6f4ed;
+  --amber:#e08020;--amber-bg:#fef3e0;
+  --blue:#4488cc;--blue-bg:#e8f0fa;
+  --font-d:'Bebas Neue',sans-serif;--font-b:'Instrument Sans',sans-serif;
+  --sidebar:260px;--topbar:52px;
 }
-html,body{height:100%;overflow:hidden}
-body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);display:flex;flex-direction:column}
+html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(--chalk);color:var(--iron)}
 
-/* LOGIN */
-#loginScreen{position:fixed;inset:0;background:var(--iron);display:flex;align-items:center;justify-content:center;z-index:200;transition:opacity 0.3s}
-#loginScreen.hidden{opacity:0;pointer-events:none}
-.login-box{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:36px;width:360px;text-align:center}
-.login-logo{font-family:var(--font-display);font-size:28px;letter-spacing:2px;color:var(--white);margin-bottom:6px}
-.login-logo span{color:var(--rust)}
-.login-sub{font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:28px;text-transform:uppercase;letter-spacing:1px}
-.login-input{width:100%;padding:11px 14px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;background:rgba(255,255,255,0.06);color:var(--white);font-family:var(--font-body);font-size:14px;outline:none;margin-bottom:10px}
-.login-input:focus{border-color:var(--rust)}
-.login-input::placeholder{color:rgba(255,255,255,0.25)}
-.login-btn{width:100%;padding:12px;background:var(--rust);color:var(--white);border:none;border-radius:6px;font-family:var(--font-body);font-size:14px;font-weight:600;cursor:pointer}
-.login-btn:hover{background:var(--rust-dark)}
-
-/* TOPBAR */
-.topbar{height:52px;background:var(--iron);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0}
-.topbar-logo{font-family:var(--font-display);font-size:20px;letter-spacing:2px;color:var(--white)}
-.topbar-logo span{color:var(--rust)}
-.topbar-tag{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-left:12px}
-.topbar-right{display:flex;align-items:center;gap:8px}
-.tb-notif{position:relative;cursor:pointer}
-.tb-notif-dot{position:absolute;top:-2px;right:-2px;width:8px;height:8px;background:var(--rust);border-radius:50%;border:1.5px solid var(--iron)}
-.tb-icon-btn{width:32px;height:32px;border-radius:5px;border:1px solid rgba(255,255,255,0.12);background:transparent;color:rgba(255,255,255,0.6);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.tb-icon-btn:hover{background:rgba(255,255,255,0.08);color:var(--white)}
-.tb-btn{padding:7px 14px;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer;border:none;background:var(--rust);color:var(--white)}
-.tb-btn:hover{background:var(--rust-dark)}
+/* LOGIN GATE */
+#loginGate{position:fixed;inset:0;background:var(--iron);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px}
+#loginGate.hidden{display:none}
+.gate-box{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:40px;width:100%;max-width:360px;text-align:center}
+.gate-logo{font-family:var(--font-d);font-size:28px;letter-spacing:2px;color:#f5f0e0;margin-bottom:2px}
+.gate-logo span{color:var(--rust)}
+.gate-tag{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:28px}
+.gate-input{width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;background:rgba(255,255,255,0.06);color:#f5f0e0;font-family:var(--font-b);font-size:15px;outline:none;margin-bottom:10px;text-align:center}
+.gate-input:focus{border-color:var(--rust)}
+.gate-btn{width:100%;padding:12px;background:var(--rust);color:#fff;border:none;border-radius:6px;font-family:var(--font-b);font-size:15px;font-weight:600;cursor:pointer}
+.gate-error{font-size:12px;color:#f09595;margin-top:8px;display:none}
 
 /* LAYOUT */
-.app-body{display:flex;flex:1;overflow:hidden}
+#app{display:none;height:100%;flex-direction:column}
+#app.visible{display:flex}
 
-/* LEFT NAV */
-.leftnav{width:var(--sidebar);background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
-.leftnav-section{padding:12px 12px 8px}
-.leftnav-section-title{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;padding:0 8px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;color:var(--muted);transition:all 0.15s;border:1px solid transparent}
-.nav-item:hover{background:var(--chalk);color:var(--iron)}
-.nav-item.active{background:var(--rust-light);color:var(--rust-dark);border-color:rgba(184,90,48,0.15)}
-.nav-item-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
-.nav-item-badge{margin-left:auto;font-size:10px;font-weight:700;background:var(--rust);color:var(--white);padding:1px 6px;border-radius:100px}
+/* TOP BAR */
+.topbar{height:var(--topbar);background:var(--iron);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0;border-bottom:2px solid var(--rust)}
+.topbar-logo{font-family:var(--font-d);font-size:20px;letter-spacing:2px;color:#f5f0e0}
+.topbar-logo span{color:var(--rust)}
+.topbar-tag{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-left:10px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-btn{padding:6px 14px;border-radius:4px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.6);font-family:var(--font-b);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.topbar-btn:hover{background:rgba(255,255,255,0.08);color:#fff}
+.topbar-btn-rust{background:var(--rust);border-color:var(--rust);color:#fff}
+.topbar-btn-rust:hover{background:var(--rust-d)}
+
+/* BODY */
+.body{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar-section{padding:14px 12px 8px}
+.sidebar-section-title{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;padding:0 8px}
+.nav-btn{width:100%;padding:8px 12px;border:none;background:transparent;font-family:var(--font-b);font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-radius:6px;text-align:left;display:flex;align-items:center;gap:8px;transition:all 0.15s}
+.nav-btn:hover{background:var(--chalk);color:var(--iron)}
+.nav-btn.active{background:var(--rust-l);color:var(--rust-d);font-weight:600}
+.nav-btn .nav-icon{font-size:15px;width:20px;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--rust);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px}
 
 /* MAIN */
-.main{flex:1;overflow:hidden;display:flex;flex-direction:column}
-.view{display:none;flex:1;overflow:hidden;flex-direction:column}
-.view.active{display:flex}
+.main{flex:1;overflow-y:auto;padding:0}
 
-/* ── DASHBOARD VIEW ── */
-.dash-scroll{flex:1;overflow-y:auto;padding:20px}
-.dash-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
-.stat-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px 18px}
-.stat-val{font-family:var(--font-display);font-size:32px;letter-spacing:1px;margin-bottom:2px}
-.stat-lbl{font-size:12px;color:var(--muted)}
-.stat-change{font-size:11px;font-weight:600;margin-top:4px}
-.sc-up{color:var(--green)}.sc-down{color:#c03020}.sc-neutral{color:var(--muted)}
+/* VIEWS */
+.view{display:none;padding:24px}
+.view.active{display:block}
+.view-title{font-family:var(--font-d);font-size:32px;letter-spacing:1px;margin-bottom:4px}
+.view-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
 
-.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.dash-card{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden}
-.dc-header{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.dc-title{font-size:13px;font-weight:600}
-.dc-action{font-size:12px;color:var(--rust);cursor:pointer}
-.dc-body{padding:14px 16px}
-.activity-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.04)}
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px}
+.stat-val{font-family:var(--font-d);font-size:32px;letter-spacing:1px;line-height:1}
+.stat-label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.stat-card.rust{border-color:var(--rust);background:var(--rust-l)}
+.stat-card.rust .stat-val{color:var(--rust-d)}
+
+/* CLIENT LIST */
+.client-filters{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.filter-btn{padding:6px 14px;border-radius:100px;border:1px solid var(--border);background:var(--white);font-family:var(--font-b);font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.15s}
+.filter-btn.active{background:var(--iron);color:#fff;border-color:var(--iron)}
+.search-bar{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:6px;font-family:var(--font-b);font-size:14px;background:var(--white);outline:none;margin-bottom:14px}
+.search-bar:focus{border-color:var(--rust)}
+
+.client-table{width:100%;border-collapse:collapse;background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.client-table th{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:10px 14px;text-align:left;background:var(--chalk);border-bottom:1px solid var(--border)}
+.client-table td{padding:12px 14px;border-bottom:1px solid rgba(0,0,0,0.04);font-size:13px;vertical-align:middle}
+.client-table tr:last-child td{border-bottom:none}
+.client-table tr:hover td{background:var(--chalk);cursor:pointer}
+.client-avatar-sm{width:32px;height:32px;border-radius:50%;background:var(--iron);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.client-name-cell{display:flex;align-items:center;gap:10px}
+.client-name-val{font-weight:600}
+.client-email-val{font-size:11px;color:var(--muted)}
+
+/* STATUS BADGES */
+.status{display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:0.5px}
+.status-new{background:var(--amber-bg);color:var(--amber)}
+.status-active{background:var(--green-bg);color:var(--green)}
+.status-complete{background:var(--chalk);color:var(--muted)}
+.status-paused{background:var(--blue-bg);color:var(--blue)}
+.status-declined{background:#fce8e8;color:#c03020}
+
+/* PROGRAM STATUS */
+.prog-status{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600}
+.prog-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.prog-dot-none{background:var(--muted)}
+.prog-dot-draft{background:var(--amber)}
+.prog-dot-published{background:var(--green)}
+
+/* CLIENT DETAIL */
+.detail-layout{display:grid;grid-template-columns:1fr 340px;gap:16px}
+.detail-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:12px}
+.detail-card-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.detail-item{}
+.detail-label{font-size:11px;color:var(--muted);margin-bottom:2px}
+.detail-val{font-size:14px;font-weight:600}
+.rpe-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rpe-lift{background:var(--chalk);border-radius:6px;padding:10px}
+.rpe-lift-name{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.rpe-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0}
+.rpe-label{color:var(--muted)}
+.rpe-val{font-weight:600}
+
+/* ACTION BUTTONS */
+.action-btns{display:flex;flex-direction:column;gap:8px}
+.act-btn{width:100%;padding:10px 14px;border-radius:6px;border:none;font-family:var(--font-b);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;text-align:left;display:flex;align-items:center;gap:8px}
+.act-btn-iron{background:var(--iron);color:#fff}
+.act-btn-iron:hover{background:#333}
+.act-btn-rust{background:var(--rust);color:#fff}
+.act-btn-rust:hover{background:var(--rust-d)}
+.act-btn-green{background:var(--green);color:#fff}
+.act-btn-green:hover{background:#1a5a35}
+.act-btn-ghost{background:var(--chalk);color:var(--iron);border:1px solid var(--border)}
+.act-btn-ghost:hover{background:#ece8e2}
+.act-btn-red{background:#fce8e8;color:#c03020;border:1px solid #f0c0c0}
+.act-btn-red:hover{background:#f8d0d0}
+
+/* EMAIL PANEL */
+.email-panel{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px}
+.email-panel-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.email-panel-sub{font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5}
+.email-note-input{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-b);font-size:13px;background:var(--chalk);outline:none;resize:vertical;min-height:60px;margin-bottom:8px}
+.email-note-input:focus{border-color:var(--rust);background:#fff}
+.email-success{display:none;padding:8px 12px;background:var(--green-bg);border:1px solid rgba(44,122,75,0.2);border-radius:5px;font-size:12px;color:var(--green);font-weight:600;text-align:center;margin-top:8px}
+
+/* ATHLETE PANEL */
+.athlete-panel{background:var(--green-bg);border:1px solid rgba(44,122,75,0.2);border-radius:8px;padding:16px;margin-bottom:12px;display:none}
+.athlete-panel-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:6px}
+
+/* ACTIVITY */
+.activity-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05)}
 .activity-item:last-child{border-bottom:none}
-.activity-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
-.dot-green{background:var(--green)}.dot-rust{background:var(--rust)}.dot-amber{background:#e0a020}
-.activity-text{font-size:13px;line-height:1.4;flex:1}
+.activity-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.dot-green{background:var(--green)}.dot-rust{background:var(--rust)}.dot-amber{background:var(--amber)}.dot-blue{background:var(--blue)}
+.activity-text{font-size:13px;flex:1;line-height:1.5}
 .activity-time{font-size:11px;color:var(--muted);flex-shrink:0}
-.action-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.04)}
-.action-item:last-child{border-bottom:none}
-.action-label{font-size:13px;font-weight:500}
-.action-sub{font-size:11px;color:var(--muted);margin-top:1px}
-.action-btn{padding:5px 12px;border-radius:4px;font-family:var(--font-body);font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--iron);white-space:nowrap;transition:all 0.15s}
-.action-btn:hover{background:var(--iron);color:var(--white);border-color:var(--iron)}
-.action-btn.primary{background:var(--rust);color:var(--white);border-color:var(--rust)}
-.action-btn.primary:hover{background:var(--rust-dark)}
 
-/* ── CLIENTS VIEW ── */
-.clients-toolbar{padding:12px 20px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
-.search-wrap{position:relative;flex:1;max-width:320px}
-.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px}
-.search-input{width:100%;padding:7px 10px 7px 30px;border:1px solid var(--border);border-radius:6px;font-family:var(--font-body);font-size:13px;outline:none;background:var(--chalk)}
-.search-input:focus{border-color:var(--rust);background:var(--white)}
-.filter-btn{padding:6px 12px;border:1px solid var(--border);border-radius:5px;background:var(--white);font-family:var(--font-body);font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;transition:all 0.15s;white-space:nowrap}
-.filter-btn:hover,.filter-btn.active{background:var(--iron);color:var(--white);border-color:var(--iron)}
+/* PROGRAM BUILDER LINK */
+.program-status-banner{border-radius:6px;padding:12px 14px;margin-bottom:8px;font-size:13px;line-height:1.6}
+.psb-none{background:var(--chalk);border:1px dashed var(--border);color:var(--muted)}
+.psb-draft{background:var(--amber-bg);border:1px solid rgba(224,128,32,0.2);color:#5a3800}
+.psb-published{background:var(--green-bg);border:1px solid rgba(44,122,75,0.2);color:#1a4a2a}
 
-.clients-list{flex:1;overflow-y:auto;padding:0}
-.client-row{display:grid;grid-template-columns:40px 1fr 120px 100px 90px 110px 90px 36px;gap:8px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.12s}
-.client-row:hover{background:var(--chalk)}
-.client-row.header{cursor:default;background:var(--chalk);border-bottom:1px solid var(--border-med)}
-.client-row.header:hover{background:var(--chalk)}
-.cr-hdr{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
-.cr-avatar{width:32px;height:32px;border-radius:50%;background:var(--iron);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--white);flex-shrink:0}
-.cr-name{font-size:14px;font-weight:600}
-.cr-meta{font-size:11px;color:var(--muted);margin-top:1px}
-.cr-prog{font-size:12px;font-weight:500}
-.cr-prog-sub{font-size:11px;color:var(--muted)}
-.status-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:100px}
-.sp-active{background:var(--green-bg);color:var(--green)}
-.sp-pending{background:var(--amber-bg);color:var(--amber)}
-.sp-new{background:var(--rust-light);color:var(--rust-dark)}
-.sp-complete{background:var(--chalk);color:var(--muted);border:1px solid var(--border)}
-.cr-week{font-size:13px;font-weight:600;text-align:center}
-.cr-week-sub{font-size:11px;color:var(--muted);text-align:center}
-.cr-actions{display:flex;gap:4px}
-.cr-btn{width:28px;height:28px;border:1px solid var(--border);border-radius:4px;background:var(--white);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all 0.15s}
-.cr-btn:hover{background:var(--iron);color:var(--white);border-color:var(--iron)}
-.cr-rpe{font-size:11px;font-weight:600;text-align:center}
-.rpe-good{color:var(--green)}.rpe-warn{color:var(--amber)}.rpe-bad{color:#c03020}
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--iron);color:#fff;padding:9px 18px;border-radius:6px;font-size:13px;font-weight:500;z-index:300;transition:all 0.25s;opacity:0;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ── CLIENT DETAIL VIEW ── */
-.detail-header{padding:16px 20px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
-.detail-back{font-size:13px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:4px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;transition:all 0.15s}
-.detail-back:hover{color:var(--iron);border-color:var(--iron)}
-.detail-name{font-family:var(--font-display);font-size:22px;letter-spacing:1px;flex:1}
-.detail-status{margin-left:auto}
-.detail-actions{display:flex;gap:8px}
-.detail-btn{padding:7px 14px;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s}
-.detail-btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
-.detail-btn-ghost:hover{border-color:var(--iron);color:var(--iron)}
-.detail-btn-primary{background:var(--rust);color:var(--white);border:none}
-.detail-btn-primary:hover{background:var(--rust-dark)}
+/* ADD CLIENT MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:10px;padding:28px;width:100%;max-width:480px;max-height:80vh;overflow-y:auto}
+.modal-title{font-family:var(--font-d);font-size:24px;letter-spacing:1px;margin-bottom:16px}
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.form-input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font-b);font-size:14px;color:var(--iron);background:var(--chalk);outline:none}
+.form-input:focus{border-color:var(--rust);background:#fff}
+.form-select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-family:var(--font-b);font-size:14px;color:var(--iron);background:var(--chalk);outline:none;-webkit-appearance:none}
+.modal-btns{display:flex;gap:8px;margin-top:16px}
+.modal-btn{flex:1;padding:11px;border-radius:6px;border:none;font-family:var(--font-b);font-size:14px;font-weight:600;cursor:pointer}
+.modal-btn-rust{background:var(--rust);color:#fff}
+.modal-btn-ghost{background:var(--chalk);color:var(--muted)}
 
-.detail-scroll{flex:1;overflow-y:auto;padding:20px}
-.detail-grid{display:grid;grid-template-columns:1fr 320px;gap:16px}
-.detail-main{display:flex;flex-direction:column;gap:14px}
-.detail-side{display:flex;flex-direction:column;gap:14px}
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:48px 24px;color:var(--muted)}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty-title{font-size:16px;font-weight:600;color:var(--iron);margin-bottom:6px}
+.empty-sub{font-size:14px;line-height:1.6}
 
-.info-card{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden}
-.ic-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.ic-title{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
-.ic-action{font-size:12px;color:var(--rust);cursor:pointer;font-weight:500}
-.ic-body{padding:14px 16px}
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.info-item{}
-.info-label{font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
-.info-val{font-size:14px;font-weight:500}
-.divider{border:none;border-top:1px solid var(--border);margin:12px 0}
-.rpe-results{display:flex;flex-direction:column;gap:6px}
-.rpe-result-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(0,0,0,0.04)}
-.rpe-result-row:last-child{border-bottom:none}
-.rr-name{font-size:13px;font-weight:500}
-.rr-weight{font-size:13px;font-weight:600}
-.rpe-badge-sm{display:inline-flex;align-items:center;justify-content:center;width:24px;height:20px;border-radius:3px;font-size:10px;font-weight:700}
-.rb-6{background:#e8f4e8;color:#2d6a2d}.rb-7{background:#f0f4e0;color:#4a6020}
-.rb-8{background:#f8f0d8;color:#7a5010}.rb-9{background:#fce8d8;color:#8c3020}
-.rb-10{background:var(--iron);color:var(--white)}
+/* QUESTIONNAIRE VIEWER */
+.q-answer{padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05)}
+.q-answer:last-child{border-bottom:none}
+.q-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.q-val{font-size:14px;color:var(--iron);line-height:1.5}
 
-/* magic link */
-.magic-link-box{background:var(--chalk);border:1px solid var(--border);border-radius:6px;padding:12px 14px;margin-bottom:10px}
-.ml-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px}
-.ml-link{font-size:12px;color:var(--iron);word-break:break-all;background:var(--white);border:1px solid var(--border);border-radius:4px;padding:7px 10px;font-family:monospace;margin-bottom:8px;line-height:1.5}
-.ml-actions{display:flex;gap:6px}
-.ml-btn{padding:6px 12px;border-radius:4px;font-family:var(--font-body);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s}
-.ml-copy{background:var(--iron);color:var(--white);border:none}
-.ml-copy:hover{background:var(--rust)}
-.ml-regen{background:var(--white);color:var(--muted);border:1px solid var(--border)}
-.ml-regen:hover{border-color:var(--iron);color:var(--iron)}
-.ml-expiry{font-size:11px;color:var(--muted);margin-top:6px}
-
-/* msg thread in detail */
-.msg-thread{display:flex;flex-direction:column;gap:8px;max-height:200px;overflow-y:auto;margin-bottom:10px}
-.msg-bubble{padding:9px 12px;border-radius:6px;font-size:13px;line-height:1.5}
-.msg-wade{background:var(--chalk);color:var(--iron)}
-.msg-client{background:var(--iron);color:var(--white);margin-left:20%}
-.msg-meta{font-size:10px;color:var(--muted);margin-top:3px}
-.msg-input-row{display:flex;gap:6px}
-.msg-input{flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:13px;outline:none;background:var(--chalk)}
-.msg-input:focus{border-color:var(--rust);background:var(--white)}
-.msg-send{padding:8px 14px;background:var(--iron);color:var(--white);border:none;border-radius:5px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer}
-.msg-send:hover{background:var(--rust)}
-
-/* toast */
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--iron);color:var(--white);padding:10px 20px;border-radius:6px;font-size:13px;font-weight:500;z-index:300;transition:transform 0.3s;white-space:nowrap}
-.toast.show{transform:translateX(-50%) translateY(0)}
-
-::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.15);border-radius:2px}
-
-/* ADMIN GATE */
-#adminGate{position:fixed;inset:0;background:#0a0a0a;z-index:500;display:flex;align-items:center;justify-content:center;padding:24px}
-#adminGate.hidden{display:none}
-.gate-box{background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:40px;width:100%;max-width:380px;text-align:center}
-.gate-logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:#f5f0e0;margin-bottom:4px}
-.gate-logo span{color:#B85A30}
-.gate-tag{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:28px}
-.gate-box h2{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#f5f0e0;letter-spacing:1px;margin-bottom:8px}
-.gate-box p{font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px;line-height:1.6}
-.gate-input{width:100%;padding:12px 16px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;background:rgba(255,255,255,0.06);color:#f5f0e0;font-family:inherit;font-size:15px;outline:none;margin-bottom:10px;text-align:center}
-.gate-input:focus{border-color:#B85A30}
-.gate-btn{width:100%;padding:12px;background:#B85A30;color:#fff;border:none;border-radius:6px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer}
-.gate-btn:hover{background:#8C4122}
-.gate-error{font-size:12px;color:#f09595;margin-top:6px;display:none}
+@media(max-width:900px){
+  .sidebar{display:none}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .detail-layout{grid-template-columns:1fr}
+}
 </style>
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-config.js"></script>
 </head>
 <body>
 
-<div id="adminGate">
+<!-- LOGIN GATE -->
+<div id="loginGate">
   <div class="gate-box">
     <div class="gate-logo">WADE<span>.</span>STRONG</div>
     <div class="gate-tag">Admin Access</div>
     <div style="font-size:32px;margin-bottom:12px">🔒</div>
-    <h2>ADMIN ONLY</h2>
-    <p>This area is restricted to Wade and his team.</p>
-    <input class="gate-input" type="password" id="adminPassword" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkAdmin()">
-    <button class="gate-btn" onclick="checkAdmin()">Enter</button>
-    <div class="gate-error" id="adminError">Incorrect password</div>
+    <input class="gate-input" type="password" id="adminPw" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkLogin()">
+    <button class="gate-btn" onclick="checkLogin()">Enter</button>
+    <div class="gate-error" id="loginError">Incorrect password</div>
   </div>
 </div>
 
-<script>
-const ADMIN_PW = 'StrongLikeDonkeyKong2026!';
-function checkAdmin() {
-  const pw = document.getElementById('adminPassword').value;
-  if (pw === ADMIN_PW) {
-    document.getElementById('adminGate').classList.add('hidden');
-    sessionStorage.setItem('admin_access', 'true');
-  } else {
-    document.getElementById('adminError').style.display = 'block';
-    document.getElementById('adminPassword').style.borderColor = '#f09595';
-  }
-}
-if (sessionStorage.getItem('admin_access') === 'true') {
-  document.getElementById('adminGate').classList.add('hidden');
-}
-</script>
+<!-- APP -->
+<div id="app">
 
-
-<!-- LOGIN -->
-<div id="loginScreen">
-  <div class="login-box">
-    <div class="login-logo">WADE<span>.</span>STRONG</div>
-    <div class="login-sub">Admin Panel</div>
-    <input class="login-input" type="email" placeholder="wade@wadestrong.com" id="adminEmail">
-    <input class="login-input" type="password" placeholder="Password" id="adminPass" style="margin-top:0">
-    <button class="login-btn" onclick="adminLogin()" style="margin-top:4px">Sign in</button>
-  </div>
-</div>
-
-<!-- TOPBAR -->
-<div class="topbar" id="mainTopbar" style="display:none">
-  <div style="display:flex;align-items:center;gap:12px">
-    <img src="wade-photo.jpg" alt="Wade" style="width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:center top;border:2px solid var(--rust)">
-    <div class="topbar-logo">WADE<span>.</span>STRONG</div>
-    <div class="topbar-tag">Admin</div>
-  </div>
-  <div class="topbar-right">
-    <div class="tb-notif">
-      <button class="tb-icon-btn" onclick="showToast('3 new RPE submissions')">🔔</button>
-      <div class="tb-notif-dot"></div>
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:6px">
+      <div class="topbar-logo">WADE<span>.</span>STRONG</div>
+      <div class="topbar-tag">Admin</div>
     </div>
-    <button class="tb-btn" onclick="openAddClientModal()">+ New client</button>
-  </div>
-</div>
-
-<div class="app-body" id="mainApp" style="display:none">
-
-  <!-- LEFT NAV -->
-  <div class="leftnav">
-    <div class="leftnav-section">
-      <div class="leftnav-section-title">Overview</div>
-      <div class="nav-item active" onclick="switchView('dashboard',this)">
-        <span class="nav-item-icon">📊</span> Dashboard
-      </div>
-      <div class="nav-item" onclick="switchView('clients',this)">
-        <span class="nav-item-icon">👥</span> All clients
-        <span class="nav-item-badge">8</span>
-      </div>
-    </div>
-    <div class="leftnav-section">
-      <div class="leftnav-section-title">Actions</div>
-      <div class="nav-item" onclick="switchView('clients',this);setTimeout(()=>filterClients('new'),100)">
-        <span class="nav-item-icon">🆕</span> New signups
-        <span class="nav-item-badge">2</span>
-      </div>
-      <div class="nav-item" onclick="showToast('Opening RPE submissions')">
-        <span class="nav-item-icon">📋</span> RPE submissions
-        <span class="nav-item-badge">3</span>
-      </div>
-      <div class="nav-item" onclick="showToast('Opening video clips')">
-        <span class="nav-item-icon">🎥</span> Clips to review
-        <span class="nav-item-badge">2</span>
-      </div>
-    </div>
-    <div class="leftnav-section">
-      <div class="leftnav-section-title">Tools</div>
-      <div class="nav-item" onclick="window.open('program-builder.html')">
-        <span class="nav-item-icon">🏋️</span> Program builder
-      </div>
-      <div class="nav-item" onclick="showToast('Exercise library')">
-        <span class="nav-item-icon">📚</span> Exercise library
-      </div>
-    </div>
-    <div style="margin-top:auto;padding:12px">
-      <div class="nav-item" onclick="adminLogout()">
-        <span class="nav-item-icon">🚪</span> Sign out
-      </div>
+    <div class="topbar-right">
+      <button class="topbar-btn topbar-btn-rust" onclick="openAddClient()">+ Add client</button>
+      <button class="topbar-btn" onclick="refreshAll()">↻ Refresh</button>
+      <button class="topbar-btn" onclick="logout()">Sign out</button>
     </div>
   </div>
 
-  <!-- MAIN -->
-  <div class="main">
+  <div class="body">
 
-    <!-- DASHBOARD VIEW -->
-    <div class="view active" id="view-dashboard">
-      <div class="dash-scroll">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Overview</div>
+        <button class="nav-btn active" onclick="switchView('dashboard',this)"><span class="nav-icon">📊</span>Dashboard</button>
+        <button class="nav-btn" onclick="switchView('clients',this)"><span class="nav-icon">👥</span>All clients <span class="nav-badge" id="clientBadge">0</span></button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Actions needed</div>
+        <button class="nav-btn" onclick="switchView('needs-program',this)"><span class="nav-icon">🏋️</span>Build program <span class="nav-badge" id="needsProgramBadge">0</span></button>
+        <button class="nav-btn" onclick="switchView('athlete-review',this)"><span class="nav-icon">🥇</span>Athlete review <span class="nav-badge" id="athleteBadge">0</span></button>
+        <button class="nav-btn" onclick="switchView('new-enquiries',this)"><span class="nav-icon">📬</span>New enquiries <span class="nav-badge" id="enquiryBadge">0</span></button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Tools</div>
+        <button class="nav-btn" onclick="window.location.href='program-builder.html'"><span class="nav-icon">📋</span>Program builder</button>
+        <button class="nav-btn" onclick="window.location.href='index.html' + '?preview=1'"><span class="nav-icon">🌐</span>View website</button>
+      </div>
+    </div>
 
-        <div class="dash-stats">
-          <div class="stat-card">
-            <div class="stat-val">8</div>
-            <div class="stat-lbl">Active clients</div>
-            <div class="stat-change sc-up">↑ +2 this month</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-val">3</div>
-            <div class="stat-lbl">RPE submissions</div>
-            <div class="stat-change sc-neutral">Awaiting review</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-val">2</div>
-            <div class="stat-lbl">Video clips</div>
-            <div class="stat-change sc-neutral">To review</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-val">$5.4k</div>
-            <div class="stat-lbl">Revenue MTD</div>
-            <div class="stat-change sc-up">↑ +$1.2k vs last month</div>
-          </div>
-        </div>
+    <!-- MAIN CONTENT -->
+    <div class="main">
 
-        <div class="dash-grid">
-          <div class="dash-card">
-            <div class="dc-header">
-              <div class="dc-title">Recent activity</div>
-              <div class="dc-action" onclick="switchView('clients',document.querySelector('.nav-item:nth-child(2)'))">View all</div>
+      <!-- DASHBOARD VIEW -->
+      <div class="view active" id="view-dashboard">
+        <div style="padding:24px">
+          <div class="view-title">Dashboard</div>
+          <div class="view-sub" id="dashDate"></div>
+
+          <div class="stats-row">
+            <div class="stat-card rust">
+              <div class="stat-val" id="statActive">0</div>
+              <div class="stat-label">Active clients</div>
             </div>
-            <div class="dc-body">
-              <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">No recent activity yet.</div>
-              <div class="activity-item"><div class="activity-dot dot-green"></div><div class="activity-text"><strong>Mark T.</strong> paid — Pre-comp Build Up</div><div class="activity-time">1d ago</div></div>
-              <div class="activity-item"><div class="activity-dot dot-rust"></div><div class="activity-text"><strong>Jamie L.</strong> completed questionnaire</div><div class="activity-time">1d ago</div></div>
-              <div class="activity-item"><div class="activity-dot dot-green"></div><div class="activity-text"><strong>Chris W.</strong> finished Week 6 — program complete</div><div class="activity-time">2d ago</div></div>
+            <div class="stat-card">
+              <div class="stat-val" id="statNew">0</div>
+              <div class="stat-label">New this month</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val" id="statNeedsProgram">0</div>
+              <div class="stat-label">Need program</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val" id="statAthletes">0</div>
+              <div class="stat-label">Athletes pending</div>
             </div>
           </div>
-          <div class="dash-card">
-            <div class="dc-header"><div class="dc-title">Needs your attention</div></div>
-            <div class="dc-body">
-              <div class="action-item">
-                <div><div class="action-label">Tom R. — RPE10 test submitted</div><div class="action-sub">Ready to build program</div></div>
-                <button class="action-btn primary" onclick="showToast('Opening Tom R. program builder')">Build program</button>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="detail-card">
+              <div class="detail-card-title">Recent activity</div>
+              <div id="activityFeed">
+                <div class="empty-state" style="padding:20px">
+                  <div style="font-size:13px;color:var(--muted)">No recent activity yet.</div>
+                </div>
               </div>
-              <div class="action-item">
-                <div><div class="action-label">Jamie L. — Questionnaire done</div><div class="action-sub">Awaiting RPE10 test</div></div>
-                <button class="action-btn" onclick="showToast('Magic link copied')">Send link</button>
-              </div>
-              <div class="action-item">
-                <div><div class="action-label">Sarah K. — Clip to review</div><div class="action-sub">Deadlift — Week 3 Day 1</div></div>
-                <button class="action-btn" onclick="showToast('Opening clip')">Review</button>
-              </div>
-              <div class="action-item">
-                <div><div class="action-label">Dave M. — Week 4 due Friday</div><div class="action-sub">Program not yet published</div></div>
-                <button class="action-btn primary" onclick="window.open('program-builder.html')">Build now</button>
+            </div>
+            <div class="detail-card">
+              <div class="detail-card-title">Action items</div>
+              <div id="actionItems">
+                <div class="empty-state" style="padding:20px">
+                  <div style="font-size:13px;color:var(--muted)">You're all caught up!</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
       </div>
-    </div>
 
-    <!-- CLIENTS VIEW -->
-    <div class="view" id="view-clients">
-      <div class="clients-toolbar">
-        <div class="search-wrap">
-          <span class="search-icon">🔍</span>
-          <input class="search-input" placeholder="Search clients..." oninput="searchClients(this.value)">
-        </div>
-        <button class="filter-btn active" id="filter-all" onclick="filterClients('all',this)">All (8)</button>
-        <button class="filter-btn" id="filter-active" onclick="filterClients('active',this)">Active</button>
-        <button class="filter-btn" id="filter-new" onclick="filterClients('new',this)">New (2)</button>
-        <button class="filter-btn" id="filter-precomp" onclick="filterClients('precomp',this)">Pre-comp</button>
-      </div>
-      <div class="client-row header">
-        <div></div>
-        <div class="cr-hdr">Client</div>
-        <div class="cr-hdr">Program</div>
-        <div class="cr-hdr">Status</div>
-        <div class="cr-hdr" style="text-align:center">Week</div>
-        <div class="cr-hdr" style="text-align:center">Last RPE</div>
-        <div class="cr-hdr">Joined</div>
-        <div></div>
-      </div>
-      <div class="clients-list" id="clientsList"></div>
-    </div>
-
-    <!-- CLIENT DETAIL VIEW -->
-    <div class="view" id="view-detail">
-      <div class="detail-header">
-        <div class="detail-back" onclick="switchView('clients',null)">← Back</div>
-        <div class="detail-name" id="detailName">Select a client</div>
-        <div class="detail-status"><span class="status-pill sp-active" id="detailStatus">Active</span></div>
-        <div class="detail-actions">
-          <button class="detail-btn detail-btn-ghost" onclick="showToast('Sending message...')">Message</button>
-          <button class="detail-btn detail-btn-ghost" onclick="showToast('Magic link copied ✓')">Copy login link</button>
-          <button class="detail-btn detail-btn-primary" onclick="window.open('program-builder.html')">Open program builder</button>
+      <!-- CLIENTS VIEW -->
+      <div class="view" id="view-clients">
+        <div style="padding:24px">
+          <div class="view-title">All Clients</div>
+          <div class="view-sub">Click a client to view their details and take action.</div>
+          <div class="client-filters">
+            <button class="filter-btn active" onclick="filterClients('all',this)">All</button>
+            <button class="filter-btn" onclick="filterClients('new',this)">New</button>
+            <button class="filter-btn" onclick="filterClients('active',this)">Active</button>
+            <button class="filter-btn" onclick="filterClients('complete',this)">Complete</button>
+            <button class="filter-btn" onclick="filterClients('pre_comp',this)">Athletes</button>
+          </div>
+          <input class="search-bar" type="text" placeholder="Search by name or email..." oninput="searchClients(this.value)">
+          <div id="clientsTableWrap"></div>
         </div>
       </div>
-      <div class="detail-scroll">
-        <div class="detail-grid">
-          <div class="detail-main" id="detailMain"></div>
-          <div class="detail-side" id="detailSide"></div>
+
+      <!-- NEEDS PROGRAM VIEW -->
+      <div class="view" id="view-needs-program">
+        <div style="padding:24px">
+          <div class="view-title">Build Programs</div>
+          <div class="view-sub">Clients who have completed RPE testing and are waiting for their program.</div>
+          <div id="needsProgramList"></div>
         </div>
       </div>
-    </div>
 
+      <!-- ATHLETE REVIEW VIEW -->
+      <div class="view" id="view-athlete-review">
+        <div style="padding:24px">
+          <div class="view-title">Athlete Applications</div>
+          <div class="view-sub">Pre-comp athletes waiting for your review and acceptance.</div>
+          <div id="athleteReviewList"></div>
+        </div>
+      </div>
+
+      <!-- NEW ENQUIRIES VIEW -->
+      <div class="view" id="view-new-enquiries">
+        <div style="padding:24px">
+          <div class="view-title">New Enquiries</div>
+          <div class="view-sub">Recent contact form submissions and new signups.</div>
+          <div id="enquiriesList"></div>
+        </div>
+      </div>
+
+      <!-- CLIENT DETAIL VIEW -->
+      <div class="view" id="view-client-detail">
+        <div style="padding:24px">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+            <button onclick="switchView('clients', document.querySelector('.nav-btn[onclick*=clients]'))" style="padding:6px 14px;border-radius:4px;border:1px solid var(--border);background:var(--white);font-family:var(--font-b);font-size:13px;cursor:pointer">← Back</button>
+            <div>
+              <div class="view-title" id="detailClientName" style="margin-bottom:0">Client</div>
+              <div style="font-size:13px;color:var(--muted)" id="detailClientSub"></div>
+            </div>
+          </div>
+
+          <div class="detail-layout">
+            <!-- LEFT COLUMN -->
+            <div>
+              <!-- Profile -->
+              <div class="detail-card">
+                <div class="detail-card-title">Profile</div>
+                <div class="detail-grid" id="detailProfile"></div>
+              </div>
+
+              <!-- Questionnaire -->
+              <div class="detail-card" id="detailQuestionnaireCard" style="display:none">
+                <div class="detail-card-title">Questionnaire Answers</div>
+                <div id="detailQuestionnaire"></div>
+              </div>
+
+              <!-- RPE Results -->
+              <div class="detail-card" id="detailRpeCard" style="display:none">
+                <div class="detail-card-title">RPE Testing Results</div>
+                <div class="rpe-grid" id="detailRpe"></div>
+              </div>
+
+              <!-- Program Status -->
+              <div class="detail-card">
+                <div class="detail-card-title">Program</div>
+                <div id="detailProgramStatus"></div>
+              </div>
+
+              <!-- Messages -->
+              <div class="detail-card">
+                <div class="detail-card-title">Messages</div>
+                <div id="detailMessages" style="max-height:200px;overflow-y:auto;margin-bottom:12px"></div>
+                <div style="display:flex;gap:8px">
+                  <input type="text" id="detailMsgInput" placeholder="Send a message to client..." class="search-bar" style="margin-bottom:0;flex:1">
+                  <button class="act-btn act-btn-iron" style="padding:10px 16px;width:auto" onclick="sendDetailMessage()">Send →</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div>
+              <!-- Actions -->
+              <div class="detail-card">
+                <div class="detail-card-title">Actions</div>
+                <div class="action-btns">
+                  <button class="act-btn act-btn-iron" onclick="openProgramBuilder()">🏋️ Build / edit program</button>
+                  <button class="act-btn act-btn-ghost" onclick="viewClientPortal()">👤 View client portal</button>
+                </div>
+              </div>
+
+              <!-- Program ready email -->
+              <div class="email-panel">
+                <div class="email-panel-title" style="color:var(--rust)">📧 Program Ready Email</div>
+                <div class="email-panel-sub">Send once you've published the client's program.</div>
+                <div class="form-group">
+                  <label class="form-label">VIP Access Code</label>
+                  <input type="text" id="vipCodeInput" value="WADESTRONG" class="form-input" style="letter-spacing:2px;font-weight:600">
+                </div>
+                <button class="act-btn act-btn-rust" onclick="sendProgramReadyEmail()">✉️ Send program ready email</button>
+                <div class="email-success" id="programEmailSuccess">✓ Email sent!</div>
+              </div>
+
+              <!-- Athlete panel (pre_comp only) -->
+              <div class="athlete-panel" id="athletePanel">
+                <div class="athlete-panel-title">🥇 Athlete Acceptance</div>
+                <div class="email-panel-sub" style="color:#1a4a2a;margin-bottom:10px">Review this athlete's application and accept or decline.</div>
+                <textarea class="email-note-input" id="athleteNoteInput" placeholder="Add a personal note from Wade (optional)..."></textarea>
+                <button class="act-btn act-btn-green" onclick="sendAthleteAccept()" style="margin-bottom:6px">✉️ Send acceptance email</button>
+                <button class="act-btn act-btn-red" onclick="sendAthleteDecline()">✉️ Send decline email</button>
+                <div class="email-success" id="athleteEmailSuccess">✓ Email sent!</div>
+              </div>
+
+              <!-- Status update -->
+              <div class="detail-card">
+                <div class="detail-card-title">Update Status</div>
+                <select class="form-select" id="statusSelect" onchange="updateClientStatus(this.value)" style="margin-bottom:0">
+                  <option value="new">New</option>
+                  <option value="active">Active</option>
+                  <option value="complete">Complete</option>
+                  <option value="paused">Paused</option>
+                  <option value="declined">Declined</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end main -->
+  </div><!-- end body -->
+</div><!-- end app -->
+
+<!-- ADD CLIENT MODAL -->
+<div class="modal-overlay" id="addClientModal">
+  <div class="modal">
+    <div class="modal-title">Add Client Manually</div>
+    <div class="form-group"><label class="form-label">First name</label><input class="form-input" id="newFirst" placeholder="e.g. Chris"></div>
+    <div class="form-group"><label class="form-label">Last name</label><input class="form-input" id="newLast" placeholder="e.g. Thompson"></div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="newEmail" type="email" placeholder="chris@email.com"></div>
+    <div class="form-group"><label class="form-label">Program type</label>
+      <select class="form-select" id="newProgram">
+        <option value="get_strong">Get Strong</option>
+        <option value="pre_comp">Pre-Comp Build Up</option>
+        <option value="consult">Consultation</option>
+        <option value="custom">Custom</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">Phone (optional)</label><input class="form-input" id="newPhone" placeholder="+61..."></div>
+    <div class="form-group"><label class="form-label">Location (optional)</label><input class="form-input" id="newLocation" placeholder="e.g. Brisbane, QLD"></div>
+    <div class="modal-btns">
+      <button class="modal-btn modal-btn-rust" onclick="saveNewClient()">Add client</button>
+      <button class="modal-btn modal-btn-ghost" onclick="closeAddClient()">Cancel</button>
+    </div>
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<script src="supabase-config.js"></script>
 <script>
-const clients = [];
+// ── AUTH ──────────────────────────────────────────────────────
+const ADMIN_PW = 'StrongLikeDonkeyKong2026!';
 
-let filteredClients = [...clients];
+function checkLogin() {
+  const pw = document.getElementById('adminPw').value;
+  if (pw === ADMIN_PW) {
+    document.getElementById('loginGate').classList.add('hidden');
+    document.getElementById('app').classList.add('visible');
+    sessionStorage.setItem('admin_auth', 'true');
+    init();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('adminPw').style.borderColor = '#f09595';
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('admin_auth');
+  location.reload();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('dashDate').textContent = new Date().toLocaleDateString('en-AU', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  if (sessionStorage.getItem('admin_auth') === 'true') {
+    document.getElementById('loginGate').classList.add('hidden');
+    document.getElementById('app').classList.add('visible');
+    init();
+  }
+  document.getElementById('adminPw').addEventListener('keydown', e => { if(e.key==='Enter') checkLogin(); });
+});
+
+// ── DATA ──────────────────────────────────────────────────────
+let allClients = [];
+let allQuestionnaires = [];
+let allRpeResults = [];
+let currentClient = null;
 let currentFilter = 'all';
+let currentSearch = '';
 
-// ── LOGIN ──
-function adminLogin() {
-  const email = document.getElementById('adminEmail').value;
-  const pass = document.getElementById('adminPass').value;
-  if(!email || !pass){ showToast('Enter email and password'); return; }
-  document.getElementById('loginScreen').classList.add('hidden');
-  document.getElementById('mainTopbar').style.display='flex';
-  document.getElementById('mainApp').style.display='flex';
-}
-function adminLogout(){
-  document.getElementById('loginScreen').classList.remove('hidden');
-  document.getElementById('mainTopbar').style.display='none';
-  document.getElementById('mainApp').style.display='none';
-}
-// auto-login demo
-setTimeout(()=>{
-  document.getElementById('loginScreen').classList.add('hidden');
-  document.getElementById('mainTopbar').style.display='flex';
-  document.getElementById('mainApp').style.display='flex';
+async function init() {
+  await loadAllData();
+  renderDashboard();
   renderClientsList();
-},300);
-
-// ── VIEWS ──
-function switchView(id, navEl) {
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.getElementById('view-'+id).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  if(navEl) navEl.classList.add('active');
-  if(id==='clients') renderClientsList();
+  updateBadges();
 }
 
-// ── CLIENTS LIST ──
-function renderClientsList() {
-  const list = document.getElementById('clientsList');
-  list.innerHTML = filteredClients.map(c=>{
-    const statusPill = {
-      active:'<span class="status-pill sp-active">Active</span>',
-      pending:'<span class="status-pill sp-pending">Pending</span>',
-      new:'<span class="status-pill sp-new">New</span>',
-      complete:'<span class="status-pill sp-complete">Complete</span>',
-    }[c.status]||'';
-    const rpeColour = {good:'rpe-good',warn:'rpe-warn',new:'rpe-warn'}[c.rpeStatus]||'';
-    const progLabel = c.type==='precomp'?'Pre-Comp':'Get Strong';
-    return `<div class="client-row" onclick="openClient(${c.id})">
-      <div class="cr-avatar" style="background:${c.type==='precomp'?'var(--rust)':'var(--iron)'}">${c.initials}</div>
-      <div><div class="cr-name">${c.name}</div><div class="cr-meta">${c.age}y · ${c.location}</div></div>
-      <div><div class="cr-prog">${progLabel}</div><div class="cr-prog-sub">${c.totalWeeks} weeks</div></div>
-      <div>${statusPill}</div>
-      <div><div class="cr-week">${c.week>0?'W'+c.week:'—'}</div><div class="cr-week-sub">${c.week>0?'of '+c.totalWeeks:'awaiting'}</div></div>
-      <div class="cr-rpe ${rpeColour}">${c.lastRpe}</div>
-      <div style="font-size:12px;color:var(--muted)">${c.joined}</div>
-      <div class="cr-actions" onclick="event.stopPropagation()">
-        <button class="cr-btn" title="Message" onclick="showToast('Message sent')">💬</button>
-      </div>
-    </div>`;
-  }).join('');
+async function refreshAll() {
+  showToast('Refreshing...');
+  await loadAllData();
+  renderDashboard();
+  renderClientsList();
+  updateBadges();
+  showToast('Refreshed ✓');
 }
 
+async function loadAllData() {
+  try {
+    // Load clients
+    const clients = await db.select('clients', {}, { order: 'created_at.desc' });
+    allClients = clients || [];
+
+    // Load questionnaire responses
+    const q = await db.select('questionnaire_responses', {}, { order: 'created_at.desc' });
+    allQuestionnaires = q || [];
+
+    // Load RPE results
+    const rpe = await db.select('rpe_results', {}, { order: 'created_at.desc' });
+    allRpeResults = rpe || [];
+
+  } catch(err) {
+    console.error('Load error:', err);
+    showToast('Error loading data — check connection');
+  }
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────
+function renderDashboard() {
+  const active = allClients.filter(c => c.status === 'active').length;
+  const thisMonth = allClients.filter(c => {
+    const d = new Date(c.created_at);
+    const now = new Date();
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  }).length;
+  const needsProgram = allClients.filter(c => {
+    const hasRpe = allRpeResults.some(r => r.client_id === c.id);
+    return hasRpe && c.status === 'new';
+  }).length;
+  const athletes = allClients.filter(c => c.program_type === 'pre_comp' && c.status === 'new').length;
+
+  document.getElementById('statActive').textContent = active;
+  document.getElementById('statNew').textContent = thisMonth;
+  document.getElementById('statNeedsProgram').textContent = needsProgram;
+  document.getElementById('statAthletes').textContent = athletes;
+
+  // Activity feed
+  const feed = document.getElementById('activityFeed');
+  const recent = [...allClients].slice(0, 5);
+  if (recent.length) {
+    feed.innerHTML = recent.map(c => {
+      const name = [c.first_name, c.last_name].filter(Boolean).join(' ') || c.email;
+      const prog = c.program_type === 'pre_comp' ? 'Pre-Comp' : 'Get Strong';
+      const date = new Date(c.created_at).toLocaleDateString('en-AU', { day:'numeric', month:'short' });
+      return `<div class="activity-item">
+        <div class="activity-dot dot-${c.status === 'active' ? 'green' : c.program_type === 'pre_comp' ? 'rust' : 'amber'}"></div>
+        <div class="activity-text"><strong>${name}</strong> signed up for ${prog}</div>
+        <div class="activity-time">${date}</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Action items
+  const actions = document.getElementById('actionItems');
+  const actionList = [];
+  allClients.forEach(c => {
+    const name = [c.first_name, c.last_name].filter(Boolean).join(' ') || c.email;
+    const hasRpe = allRpeResults.some(r => r.client_id === c.id);
+    if (hasRpe && c.status === 'new') {
+      actionList.push(`<div class="activity-item"><div class="activity-dot dot-rust"></div><div class="activity-text"><strong>${name}</strong> — RPE submitted, build program</div><button onclick="openClientDetail('${c.id}')" style="font-size:11px;padding:3px 8px;border-radius:3px;border:none;background:var(--rust);color:#fff;cursor:pointer;white-space:nowrap">Build →</button></div>`);
+    }
+    if (c.program_type === 'pre_comp' && c.status === 'new') {
+      actionList.push(`<div class="activity-item"><div class="activity-dot dot-amber"></div><div class="activity-text"><strong>${name}</strong> — athlete application to review</div><button onclick="openClientDetail('${c.id}')" style="font-size:11px;padding:3px 8px;border-radius:3px;border:none;background:var(--amber);color:#fff;cursor:pointer;white-space:nowrap">Review →</button></div>`);
+    }
+  });
+  actions.innerHTML = actionList.length ? actionList.join('') : '<div style="text-align:center;padding:20px;font-size:13px;color:var(--muted)">You\'re all caught up! 🎉</div>';
+}
+
+function updateBadges() {
+  document.getElementById('clientBadge').textContent = allClients.length;
+  const needsProgram = allClients.filter(c => {
+    const hasRpe = allRpeResults.some(r => r.client_id === c.id);
+    return hasRpe && c.status === 'new';
+  }).length;
+  document.getElementById('needsProgramBadge').textContent = needsProgram;
+  document.getElementById('athleteBadge').textContent = allClients.filter(c => c.program_type === 'pre_comp' && c.status === 'new').length;
+  document.getElementById('enquiryBadge').textContent = allClients.filter(c => c.status === 'new').length;
+}
+
+// ── CLIENTS LIST ──────────────────────────────────────────────
 function filterClients(type, el) {
   currentFilter = type;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  if(el) el.classList.add('active');
-  if(type==='all') filteredClients=[...clients];
-  else if(type==='active') filteredClients=clients.filter(c=>c.status==='active');
-  else if(type==='new') filteredClients=clients.filter(c=>c.status==='new'||c.status==='pending');
-  else if(type==='precomp') filteredClients=clients.filter(c=>c.type==='precomp');
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
   renderClientsList();
 }
 
 function searchClients(q) {
-  const s = q.toLowerCase();
-  filteredClients = clients.filter(c=>c.name.toLowerCase().includes(s)||c.location.toLowerCase().includes(s)||c.program.toLowerCase().includes(s));
+  currentSearch = q.toLowerCase();
   renderClientsList();
 }
 
-// ── CLIENT DETAIL ──
-function openClient(id) {
-  const c = clients.find(x=>x.id===id);
-  if(!c) return;
-  switchView('detail',null);
-  document.getElementById('detailName').textContent = c.name;
-  document.getElementById('detailStatus').textContent = c.status.charAt(0).toUpperCase()+c.status.slice(1);
-  document.getElementById('detailStatus').className = 'status-pill sp-'+c.status;
+function getFilteredClients() {
+  let clients = [...allClients];
+  if (currentFilter === 'pre_comp') clients = clients.filter(c => c.program_type === 'pre_comp');
+  else if (currentFilter !== 'all') clients = clients.filter(c => c.status === currentFilter);
+  if (currentSearch) clients = clients.filter(c => {
+    const name = [c.first_name, c.last_name].filter(Boolean).join(' ').toLowerCase();
+    return name.includes(currentSearch) || (c.email || '').toLowerCase().includes(currentSearch);
+  });
+  return clients;
+}
 
-  // Build main col
-  const rpe10Rows = Object.entries(c.rpe10).map(([k,v])=>`
-    <div class="rpe-result-row"><div class="rr-name">${k.charAt(0).toUpperCase()+k.slice(1)}</div><div class="rr-weight">${v}</div></div>`).join('') || '<div style="font-size:13px;color:var(--muted)">RPE10 testing not yet completed</div>';
+function renderClientsList() {
+  const wrap = document.getElementById('clientsTableWrap');
+  const clients = getFilteredClients();
 
-  document.getElementById('detailMain').innerHTML = `
-    <div class="info-card">
-      <div class="ic-header"><div class="ic-title">Profile</div></div>
-      <div class="ic-body">
-        <div class="info-grid">
-          <div class="info-item"><div class="info-label">Age</div><div class="info-val">${c.age}</div></div>
-          <div class="info-item"><div class="info-label">Location</div><div class="info-val">${c.location}</div></div>
-          <div class="info-item"><div class="info-label">Weight</div><div class="info-val">${c.weight}</div></div>
-          <div class="info-item"><div class="info-label">Height</div><div class="info-val">${c.height}</div></div>
-          <div class="info-item"><div class="info-label">Occupation</div><div class="info-val">${c.occupation}</div></div>
-          <div class="info-item"><div class="info-label">Training days/wk</div><div class="info-val">${c.trainingDays}</div></div>
-          <div class="info-item"><div class="info-label">Gym type</div><div class="info-val">${c.gymType}</div></div>
-          <div class="info-item"><div class="info-label">Sleep</div><div class="info-val">${c.sleep}</div></div>
-          <div class="info-item"><div class="info-label">Stress level</div><div class="info-val">${c.stress}/10</div></div>
-          <div class="info-item"><div class="info-label">Injuries</div><div class="info-val">${c.injuries}</div></div>
-        </div>
+  if (!clients.length) {
+    wrap.innerHTML = `<div class="empty-state"><div class="empty-icon">👥</div><div class="empty-title">No clients yet</div><div class="empty-sub">Clients will appear here automatically when they sign up, or add one manually using the button above.</div></div>`;
+    return;
+  }
+
+  wrap.innerHTML = `<table class="client-table">
+    <thead><tr>
+      <th>Client</th><th>Program</th><th>Status</th><th>Program</th><th>Joined</th>
+    </tr></thead>
+    <tbody>
+      ${clients.map(c => {
+        const name = [c.first_name, c.last_name].filter(Boolean).join(' ') || '—';
+        const initials = [(c.first_name||'')[0], (c.last_name||'')[0]].filter(Boolean).join('').toUpperCase() || '?';
+        const prog = c.program_type === 'pre_comp' ? 'Pre-Comp' : c.program_type === 'get_strong' ? 'Get Strong' : c.program_type || '—';
+        const joined = new Date(c.created_at).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
+        const statusClass = `status-${c.status || 'new'}`;
+        const statusLabel = c.status || 'new';
+        const hasRpe = allRpeResults.some(r => r.client_id === c.id);
+        const progDot = hasRpe ? 'dot-green' : 'dot-none';
+        const progLabel = hasRpe ? 'RPE done' : 'Awaiting RPE';
+        return `<tr onclick="openClientDetail('${c.id}')">
+          <td><div class="client-name-cell"><div class="client-avatar-sm">${initials}</div><div><div class="client-name-val">${name}</div><div class="client-email-val">${c.email || ''}</div></div></div></td>
+          <td>${prog}</td>
+          <td><span class="status ${statusClass}">${statusLabel}</span></td>
+          <td><div class="prog-status"><div class="prog-dot ${progDot}"></div>${progLabel}</div></td>
+          <td>${joined}</td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  </table>`;
+
+  // Also render needs-program and athlete lists
+  renderNeedsProgramList();
+  renderAthleteList();
+}
+
+function renderNeedsProgramList() {
+  const el = document.getElementById('needsProgramList');
+  const clients = allClients.filter(c => {
+    const hasRpe = allRpeResults.some(r => r.client_id === c.id);
+    return hasRpe && c.status === 'new';
+  });
+  if (!clients.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">🏋️</div><div class="empty-title">All caught up!</div><div class="empty-sub">No clients waiting for a program right now.</div></div>';
+    return;
+  }
+  el.innerHTML = clients.map(c => {
+    const name = [c.first_name, c.last_name].filter(Boolean).join(' ') || c.email;
+    const rpe = allRpeResults.find(r => r.client_id === c.id);
+    return `<div class="detail-card" style="cursor:pointer" onclick="openClientDetail('${c.id}')">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div><div style="font-size:15px;font-weight:700">${name}</div><div style="font-size:13px;color:var(--muted)">${c.email} · ${c.program_type === 'pre_comp' ? 'Pre-Comp' : 'Get Strong'}</div></div>
+        <button class="act-btn act-btn-rust" style="width:auto;padding:8px 16px" onclick="event.stopPropagation();openBuilderForClient('${c.id}')">Build program →</button>
       </div>
-    </div>
-    <div class="info-card">
-      <div class="ic-header"><div class="ic-title">RPE 10 Maxes</div><div class="ic-action" onclick="showToast('Viewing full RPE data')">View full</div></div>
-      <div class="ic-body"><div class="rpe-results">${rpe10Rows}</div></div>
-    </div>
-    ${c.lastFeedback?`<div class="info-card">
-      <div class="ic-header"><div class="ic-title">Last session feedback</div></div>
-      <div class="ic-body"><div style="font-size:13px;color:var(--muted);line-height:1.6;font-style:italic">"${c.lastFeedback}"</div></div>
-    </div>`:''}
-    <div class="info-card">
-      <div class="ic-header"><div class="ic-title">Program</div><div class="ic-action" onclick="window.open('program-builder.html')">Open builder →</div></div>
-      <div class="ic-body">
-        <div class="info-grid">
-          <div class="info-item"><div class="info-label">Program</div><div class="info-val">${c.program}</div></div>
-          <div class="info-item"><div class="info-label">Progress</div><div class="info-val">${c.week>0?`Week ${c.week} of ${c.totalWeeks}`:'Not started'}</div></div>
-        </div>
-        <div style="margin-top:12px">
-          <button style="width:100%;padding:10px;background:var(--rust);color:var(--white);border:none;border-radius:6px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer" onclick="window.open('program-builder.html')">
-            ${c.week>0?'Continue building program':'Build program'}
-          </button>
-        </div>
-      </div>
+      ${rpe ? `<div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap">
+        ${rpe.deadlift_1rm ? `<span style="font-size:12px;background:var(--chalk);padding:3px 10px;border-radius:4px">DL: ${rpe.deadlift_1rm}kg</span>` : ''}
+        ${rpe.squat_raw_1rm ? `<span style="font-size:12px;background:var(--chalk);padding:3px 10px;border-radius:4px">SQ: ${rpe.squat_raw_1rm}kg</span>` : ''}
+        ${rpe.bench_1rm ? `<span style="font-size:12px;background:var(--chalk);padding:3px 10px;border-radius:4px">BP: ${rpe.bench_1rm}kg</span>` : ''}
+        ${rpe.press_1rm ? `<span style="font-size:12px;background:var(--chalk);padding:3px 10px;border-radius:4px">OHP: ${rpe.press_1rm}kg</span>` : ''}
+      </div>` : ''}
     </div>`;
+  }).join('');
+}
 
-  // Build side col
-  const msgThread = c.messages.map(m=>`
-    <div>
-      <div class="msg-bubble ${m.from==='wade'?'msg-wade':'msg-client'}">${m.text}</div>
-      <div class="msg-meta">${m.from==='wade'?'You · ':'Client · '}${m.time}</div>
-    </div>`).join('') || '<div style="font-size:13px;color:var(--muted)">No messages yet</div>';
-
-  document.getElementById('detailSide').innerHTML = `
-    <div class="info-card">
-      <div class="ic-header"><div class="ic-title">Client portal access</div></div>
-      <div class="ic-body">
-        <div class="magic-link-box">
-          <div class="ml-label">Magic login link</div>
-          <div class="ml-link">${c.magicLink}</div>
-          <div class="ml-actions">
-            <button class="ml-btn ml-copy" onclick="showToast('Link copied to clipboard ✓')">Copy link</button>
-            <button class="ml-btn ml-regen" onclick="showToast('New link generated')">Regenerate</button>
-          </div>
-          <div class="ml-expiry">Expires in 7 days · Send via WhatsApp or email</div>
-        </div>
-        <div style="font-size:12px;color:var(--muted);line-height:1.5">Paste this link into a WhatsApp message or email. The client clicks it to access their portal — no password needed.</div>
-      </div>
-    </div>
-    <div class="info-card">
-      <div class="ic-header"><div class="ic-title">Messages</div></div>
-      <div class="ic-body">
-        <div class="msg-thread">${msgThread}</div>
-        <div class="msg-input-row">
-          <input class="msg-input" id="detailMsgInput_${c.id}" placeholder="Message ${c.name.split(' ')[0]}...">
-          <button class="msg-send" onclick="sendDetailMsg(${c.id})">Send</button>
+function renderAthleteList() {
+  const el = document.getElementById('athleteReviewList');
+  const athletes = allClients.filter(c => c.program_type === 'pre_comp' && c.status === 'new');
+  if (!athletes.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">🥇</div><div class="empty-title">No pending applications</div><div class="empty-sub">Athlete applications will appear here for you to review.</div></div>';
+    return;
+  }
+  el.innerHTML = athletes.map(c => {
+    const name = [c.first_name, c.last_name].filter(Boolean).join(' ') || c.email;
+    const q = allQuestionnaires.find(q => q.client_id === c.id);
+    return `<div class="detail-card" style="cursor:pointer" onclick="openClientDetail('${c.id}')">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div><div style="font-size:15px;font-weight:700">${name}</div><div style="font-size:13px;color:var(--muted)">${c.email}</div></div>
+        <div style="display:flex;gap:8px">
+          <button class="act-btn act-btn-green" style="width:auto;padding:8px 14px" onclick="event.stopPropagation();quickAccept('${c.id}','${c.email}','${(c.first_name||'').replace(/'/g,"\\'")}')">✓ Accept</button>
+          <button class="act-btn act-btn-red" style="width:auto;padding:8px 14px" onclick="event.stopPropagation();quickDecline('${c.id}','${c.email}','${(c.first_name||'').replace(/'/g,"\\'")}')">✗ Decline</button>
         </div>
       </div>
+      ${q ? `<div style="margin-top:10px;font-size:13px;color:var(--muted);line-height:1.6">
+        ${q.comp_name ? `Comp: <strong>${q.comp_name}</strong>` : ''} 
+        ${q.comp_date ? ` · ${new Date(q.comp_date).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'})}` : ''}
+        ${q.comp_weight_class ? ` · ${q.comp_weight_class}` : ''}
+      </div>` : ''}
     </div>`;
+  }).join('');
 }
 
-function sendDetailMsg(clientId) {
-  const input = document.getElementById('detailMsgInput_'+clientId);
-  if(!input.value.trim()) return;
-  const c = clients.find(x=>x.id===clientId);
-  c.messages.push({from:'wade',text:input.value.trim(),time:'Just now'});
-  input.value='';
-  openClient(clientId);
-  showToast('Message sent to client portal ✓');
+// ── CLIENT DETAIL ─────────────────────────────────────────────
+function openClientDetail(id) {
+  currentClient = allClients.find(c => c.id === id);
+  if (!currentClient) return;
+  switchView('client-detail', null);
+  renderClientDetail();
 }
 
-function openAddClientModal() { showToast('Add client — coming in full build'); }
+function renderClientDetail() {
+  const c = currentClient;
+  const name = [c.first_name, c.last_name].filter(Boolean).join(' ') || c.email;
+  const prog = c.program_type === 'pre_comp' ? 'Pre-Comp Build Up' : c.program_type === 'get_strong' ? 'Get Strong' : c.program_type || '';
+  const joined = new Date(c.created_at).toLocaleDateString('en-AU', { day:'numeric', month:'long', year:'numeric' });
 
-// ── TOAST ──
-async function sendAthleteAcceptEmail() {
-  const client = getSelectedClient();
-  if (!client) { showToast('No client selected'); return; }
-  const note = document.getElementById('athleteAcceptNote')?.value || '';
-  const firstName = client.first_name || client.name?.split(' ')[0] || 'there';
+  document.getElementById('detailClientName').textContent = name;
+  document.getElementById('detailClientSub').textContent = `${prog} · Joined ${joined} · ${c.email}`;
 
+  // Profile grid
+  document.getElementById('detailProfile').innerHTML = [
+    { label:'Email', val:c.email || '—' },
+    { label:'Program', val:prog || '—' },
+    { label:'Status', val:`<span class="status status-${c.status||'new'}">${c.status||'new'}</span>` },
+    { label:'Phone', val:c.phone || '—' },
+    { label:'Location', val:c.location || '—' },
+    { label:'Age', val:c.age || '—' },
+    { label:'Height', val:c.height || '—' },
+    { label:'Weight', val:c.weight || '—' },
+    { label:'Joined', val:joined },
+    { label:'Week', val:c.current_week ? `${c.current_week} of ${c.total_weeks||6}` : '—' },
+  ].map(item => `<div class="detail-item"><div class="detail-label">${item.label}</div><div class="detail-val">${item.val}</div></div>`).join('');
+
+  // Status select
+  document.getElementById('statusSelect').value = c.status || 'new';
+
+  // Show athlete panel for pre_comp
+  const athletePanel = document.getElementById('athletePanel');
+  athletePanel.style.display = c.program_type === 'pre_comp' ? 'block' : 'none';
+
+  // Questionnaire
+  const q = allQuestionnaires.find(q => q.client_id === c.id);
+  const qCard = document.getElementById('detailQuestionnaireCard');
+  const qContent = document.getElementById('detailQuestionnaire');
+  if (q) {
+    qCard.style.display = 'block';
+    const fields = [
+      { label:'Gym type', val: q.raw_data?.gymType || '—' },
+      { label:'Equipment', val: Array.isArray(q.raw_data?.equipment) ? q.raw_data.equipment.join(', ') : '—' },
+      { label:'Training days/week', val: q.raw_data?.trainingDays || '—' },
+      { label:'Training age', val: q.training_age || '—' },
+      { label:'Goals', val: Array.isArray(q.goals) ? q.goals.join(', ') : q.goals || '—' },
+      { label:'Injuries', val: q.injuries || 'None reported' },
+      { label:'Gym setup', val: q.gym_setup || '—' },
+      { label:'Comp name', val: q.comp_name || '—' },
+      { label:'Comp date', val: q.comp_date ? new Date(q.comp_date).toLocaleDateString('en-AU') : '—' },
+      { label:'Weight class', val: q.comp_weight_class || '—' },
+      { label:'Notes', val: q.anything_else || '—' },
+    ].filter(f => f.val && f.val !== '—' && f.val !== 'None reported' || f.label === 'Injuries');
+    qContent.innerHTML = fields.map(f => `<div class="q-answer"><div class="q-label">${f.label}</div><div class="q-val">${f.val}</div></div>`).join('');
+  } else {
+    qCard.style.display = 'none';
+  }
+
+  // RPE Results
+  const rpe = allRpeResults.find(r => r.client_id === c.id);
+  const rpeCard = document.getElementById('detailRpeCard');
+  const rpeContent = document.getElementById('detailRpe');
+  if (rpe) {
+    rpeCard.style.display = 'block';
+    rpeContent.innerHTML = [
+      { name:'Deadlift', r1: rpe.deadlift_1rm, r3: rpe.deadlift_3rm, r5: rpe.deadlift_5rm },
+      { name:'Squat (Raw)', r1: rpe.squat_raw_1rm, r3: rpe.squat_raw_3rm, r5: rpe.squat_raw_5rm },
+      { name:'Bench Press', r1: rpe.bench_1rm, r3: rpe.bench_3rm, r5: rpe.bench_5rm },
+      { name:'Push Press / OHP', r1: rpe.press_1rm, r3: rpe.press_3rm, r5: rpe.press_5rm },
+    ].map(lift => `<div class="rpe-lift">
+      <div class="rpe-lift-name">${lift.name}</div>
+      ${lift.r1 ? `<div class="rpe-row"><span class="rpe-label">1RM</span><span class="rpe-val">${lift.r1}kg</span></div>` : ''}
+      ${lift.r3 ? `<div class="rpe-row"><span class="rpe-label">3RM</span><span class="rpe-val">${lift.r3}kg</span></div>` : ''}
+      ${lift.r5 ? `<div class="rpe-row"><span class="rpe-label">5RM</span><span class="rpe-val">${lift.r5}kg</span></div>` : ''}
+    </div>`).join('');
+  } else {
+    rpeCard.style.display = 'none';
+  }
+
+  // Program status
+  const progStatus = document.getElementById('detailProgramStatus');
+  if (rpe) {
+    progStatus.innerHTML = `<div class="program-status-banner psb-draft">
+      <strong>RPE results received</strong> — ready to build program.<br>
+      <small>Deadlift: ${rpe.deadlift_1rm||'—'}kg · Squat: ${rpe.squat_raw_1rm||'—'}kg · Bench: ${rpe.bench_1rm||'—'}kg · OHP: ${rpe.press_1rm||'—'}kg</small>
+    </div>
+    <button class="act-btn act-btn-rust" onclick="openBuilderForClient('${c.id}')" style="margin-top:8px">🏋️ Build program now →</button>`;
+  } else {
+    progStatus.innerHTML = `<div class="program-status-banner psb-none">Waiting for RPE testing results.</div>`;
+  }
+
+  // Messages
+  loadClientMessages(c.id);
+}
+
+async function loadClientMessages(clientId) {
+  const el = document.getElementById('detailMessages');
   try {
-    const res = await fetch('/.netlify/functions/send-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        type: 'athlete_accepted',
-        to: client.email,
-        data: { firstName, note }
-      })
-    });
-    if (res.ok) {
-      await updateClientStatus(client.id, 'active');
-      document.getElementById('athleteEmailConfirm').style.display = 'block';
-      document.getElementById('athleteEmailConfirm').textContent = '✓ Acceptance email sent!';
-      showToast(`Acceptance email sent to ${client.email} ✓`);
-      setTimeout(() => document.getElementById('athleteEmailConfirm').style.display = 'none', 4000);
+    const msgs = await db.select('messages', { client_id: clientId }, { order: 'created_at.asc', limit: 20 });
+    if (!msgs || !msgs.length) {
+      el.innerHTML = '<div style="text-align:center;padding:16px;font-size:13px;color:var(--muted)">No messages yet.</div>';
+      return;
     }
+    el.innerHTML = msgs.map(m => {
+      const time = new Date(m.created_at).toLocaleString('en-AU', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+      const isWade = m.from_role === 'wade';
+      return `<div style="margin-bottom:10px;text-align:${isWade?'right':'left'}">
+        <div style="display:inline-block;max-width:80%;background:${isWade?'var(--iron)':'var(--chalk)'};color:${isWade?'#fff':'var(--iron)'};padding:8px 12px;border-radius:8px;font-size:13px;line-height:1.5">${m.content}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">${isWade?'Wade':'Client'} · ${time}</div>
+      </div>`;
+    }).join('');
+    el.scrollTop = el.scrollHeight;
   } catch(err) {
-    showToast('Email failed — check Resend is configured');
-    console.error(err);
+    el.innerHTML = '<div style="font-size:13px;color:var(--muted)">Could not load messages.</div>';
   }
 }
 
-async function sendAthleteDeclineEmail() {
-  const client = getSelectedClient();
-  if (!client) { showToast('No client selected'); return; }
-  const firstName = client.first_name || client.name?.split(' ')[0] || 'there';
-
-  if (!confirm(`Send decline email to ${client.email}?`)) return;
-
+async function sendDetailMessage() {
+  if (!currentClient) return;
+  const input = document.getElementById('detailMsgInput');
+  const text = input.value.trim();
+  if (!text) return;
   try {
-    const res = await fetch('/.netlify/functions/send-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        type: 'athlete_declined',
-        to: client.email,
-        data: { firstName }
-      })
+    await db.insert('messages', {
+      client_id: currentClient.id,
+      from_role: 'wade',
+      message_type: 'text',
+      content: text,
+      read: false
     });
-    if (res.ok) {
-      await updateClientStatus(client.id, 'declined');
-      document.getElementById('athleteEmailConfirm').style.display = 'block';
-      document.getElementById('athleteEmailConfirm').textContent = '✓ Decline email sent';
-      document.getElementById('athleteEmailConfirm').style.background = '#fce8e8';
-      document.getElementById('athleteEmailConfirm').style.color = '#c03020';
-      showToast(`Decline email sent to ${client.email}`);
-      setTimeout(() => document.getElementById('athleteEmailConfirm').style.display = 'none', 4000);
-    }
+    input.value = '';
+    loadClientMessages(currentClient.id);
+    showToast('Message sent ✓');
   } catch(err) {
-    showToast('Email failed — check Resend is configured');
-    console.error(err);
+    showToast('Failed to send message');
   }
 }
 
-function showAthletePanel(client) {
-  const panel = document.getElementById('athleteAcceptPanel');
-  if (panel) {
-    panel.style.display = client?.program_type === 'pre_comp' ? 'block' : 'none';
-  }
-}
-
+// ── ACTIONS ───────────────────────────────────────────────────
 function openProgramBuilder() {
-  const client = getSelectedClient();
-  if (!client) { showToast('No client selected'); return; }
-  window.location.href = `program-builder.html?client=${encodeURIComponent(client.email)}`;
+  if (!currentClient) return;
+  window.location.href = `program-builder.html?client=${encodeURIComponent(currentClient.email)}`;
+}
+
+function openBuilderForClient(id) {
+  const c = allClients.find(c => c.id === id);
+  if (!c) return;
+  window.location.href = `program-builder.html?client=${encodeURIComponent(c.email)}`;
+}
+
+function viewClientPortal() {
+  if (!currentClient) return;
+  window.open(`client-portal.html?email=${encodeURIComponent(currentClient.email)}`, '_blank');
+}
+
+async function updateClientStatus(status) {
+  if (!currentClient) return;
+  try {
+    await db.update('clients', currentClient.id, { status });
+    currentClient.status = status;
+    const idx = allClients.findIndex(c => c.id === currentClient.id);
+    if (idx > -1) allClients[idx].status = status;
+    showToast(`Status updated to ${status} ✓`);
+    renderDashboard();
+    updateBadges();
+  } catch(err) {
+    showToast('Failed to update status');
+  }
 }
 
 async function sendProgramReadyEmail() {
-  const client = getSelectedClient();
-  if (!client) { showToast('No client selected'); return; }
-
-  const vipCode = document.getElementById('vipCodeInput')?.value || 'WADESTRONG';
-  const btn = event.target;
-  btn.textContent = 'Sending...';
-  btn.disabled = true;
-
+  if (!currentClient) return;
+  const vipCode = document.getElementById('vipCodeInput').value || 'WADESTRONG';
+  const firstName = currentClient.first_name || 'there';
   try {
-    const res = await fetch('/.netlify/functions/send-email', {
+    const res = await fetch('https://wade-send-email.nameless-wind-f1be.workers.dev', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         type: 'program_ready',
-        to: client.email,
-        data: {
-          firstName: client.first_name || client.name?.split(' ')[0] || 'there',
-          portalLink: 'https://wadestrong.com.au/client-portal.html',
-          vipCode: vipCode
-        }
+        to: currentClient.email,
+        data: { firstName, portalLink: `https://wadestrong.com.au/client-portal.html?email=${encodeURIComponent(currentClient.email)}`, vipCode }
       })
     });
-
     if (res.ok) {
-      document.getElementById('emailSentConfirm').style.display = 'block';
-      btn.textContent = '✓ Sent';
-      btn.style.background = '#2c7a4b';
-      showToast(`Program ready email sent to ${client.email} ✓`);
-
-      // Update client status to active in Supabase
-      await updateClientStatus(client.id, 'active');
-
-      setTimeout(() => {
-        document.getElementById('emailSentConfirm').style.display = 'none';
-        btn.textContent = '✉️ Send "Program Ready" to client';
-        btn.style.background = 'var(--rust)';
-        btn.disabled = false;
-      }, 4000);
-    } else {
-      throw new Error('Send failed');
+      document.getElementById('programEmailSuccess').style.display = 'block';
+      await updateClientStatus('active');
+      showToast(`Program ready email sent to ${currentClient.email} ✓`);
+      setTimeout(() => document.getElementById('programEmailSuccess').style.display = 'none', 4000);
     }
-  } catch(err) {
-    showToast('Email failed — check Resend is configured');
-    btn.textContent = '✉️ Send "Program Ready" to client';
-    btn.disabled = false;
-    console.error(err);
-  }
+  } catch(err) { showToast('Email failed — check Resend is configured'); }
 }
 
-function getSelectedClient() {
-  const activeRow = document.querySelector('.client-row.active');
-  if (!activeRow) return null;
-  const clientId = activeRow.dataset.clientId;
-  return allClients?.find(c => c.id === clientId) || null;
+async function sendAthleteAccept() {
+  if (!currentClient) return;
+  const note = document.getElementById('athleteNoteInput').value;
+  const firstName = currentClient.first_name || 'there';
+  try {
+    const res = await fetch('https://wade-send-email.nameless-wind-f1be.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'athlete_accepted', to: currentClient.email, data: { firstName, note } })
+    });
+    if (res.ok) {
+      document.getElementById('athleteEmailSuccess').textContent = '✓ Acceptance email sent!';
+      document.getElementById('athleteEmailSuccess').style.display = 'block';
+      await updateClientStatus('active');
+      showToast(`Acceptance email sent ✓`);
+      setTimeout(() => document.getElementById('athleteEmailSuccess').style.display = 'none', 4000);
+    }
+  } catch(err) { showToast('Email failed'); }
 }
 
+async function sendAthleteDecline() {
+  if (!currentClient) return;
+  if (!confirm(`Send decline email to ${currentClient.email}?`)) return;
+  const firstName = currentClient.first_name || 'there';
+  try {
+    const res = await fetch('https://wade-send-email.nameless-wind-f1be.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'athlete_declined', to: currentClient.email, data: { firstName } })
+    });
+    if (res.ok) {
+      document.getElementById('athleteEmailSuccess').textContent = '✓ Decline email sent';
+      document.getElementById('athleteEmailSuccess').style.color = '#c03020';
+      document.getElementById('athleteEmailSuccess').style.display = 'block';
+      await updateClientStatus('declined');
+      showToast('Decline email sent');
+      setTimeout(() => document.getElementById('athleteEmailSuccess').style.display = 'none', 4000);
+    }
+  } catch(err) { showToast('Email failed'); }
+}
+
+async function quickAccept(id, email, firstName) {
+  try {
+    const res = await fetch('https://wade-send-email.nameless-wind-f1be.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'athlete_accepted', to: email, data: { firstName, note: '' } })
+    });
+    if (res.ok) {
+      await db.update('clients', id, { status: 'active' });
+      const idx = allClients.findIndex(c => c.id === id);
+      if (idx > -1) allClients[idx].status = 'active';
+      renderAthleteList();
+      updateBadges();
+      showToast(`Acceptance email sent to ${email} ✓`);
+    }
+  } catch(err) { showToast('Failed'); }
+}
+
+async function quickDecline(id, email, firstName) {
+  if (!confirm(`Decline ${firstName || email}?`)) return;
+  try {
+    const res = await fetch('https://wade-send-email.nameless-wind-f1be.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'athlete_declined', to: email, data: { firstName } })
+    });
+    if (res.ok) {
+      await db.update('clients', id, { status: 'declined' });
+      const idx = allClients.findIndex(c => c.id === id);
+      if (idx > -1) allClients[idx].status = 'declined';
+      renderAthleteList();
+      updateBadges();
+      showToast('Decline email sent');
+    }
+  } catch(err) { showToast('Failed'); }
+}
+
+// ── ADD CLIENT ────────────────────────────────────────────────
+function openAddClient() { document.getElementById('addClientModal').classList.add('open'); }
+function closeAddClient() { document.getElementById('addClientModal').classList.remove('open'); }
+
+async function saveNewClient() {
+  const first = document.getElementById('newFirst').value.trim();
+  const last = document.getElementById('newLast').value.trim();
+  const email = document.getElementById('newEmail').value.trim();
+  const program = document.getElementById('newProgram').value;
+  const phone = document.getElementById('newPhone').value.trim();
+  const location = document.getElementById('newLocation').value.trim();
+
+  if (!email) { showToast('Email is required'); return; }
+
+  try {
+    const result = await db.upsert('clients', {
+      email, first_name: first, last_name: last,
+      program_type: program, status: 'new',
+      phone: phone || null, location: location || null
+    });
+    if (result) {
+      allClients.unshift(result[0] || { email, first_name: first, last_name: last, program_type: program, status: 'new', created_at: new Date().toISOString() });
+      closeAddClient();
+      renderClientsList();
+      renderDashboard();
+      updateBadges();
+      showToast(`${first || email} added ✓`);
+    }
+  } catch(err) { showToast('Failed to add client'); }
+}
+
+// ── VIEW SWITCHING ────────────────────────────────────────────
+function switchView(id, navEl) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const view = document.getElementById('view-'+id);
+  if (view) view.classList.add('active');
+  if (navEl) navEl.classList.add('active');
+  document.querySelector('.main').scrollTop = 0;
+}
+
+// ── TOAST ──────────────────────────────────────────────────────
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2800);
+  setTimeout(() => t.classList.remove('show'), 2800);
 }
 </script>
 </body>

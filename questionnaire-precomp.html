@@ -171,7 +171,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 4
       <div class="field"><label>First name</label><input type="text" placeholder="John" id="firstName"></div>
       <div class="field"><label>Last name</label><input type="text" placeholder="Smith" id="lastName"></div>
     </div>
-    <div class="field"><label>Email address</label><input type="email" placeholder="john@email.com"></div>
+    <div class="field"><label>Email address</label><input type="email" placeholder="john@email.com" id="email"></div>
     <div class="grid-3">
       <div class="field"><label>Age</label><input type="number" placeholder="35" min="16" max="80"></div>
       <div class="field"><label>Height</label><input type="text" placeholder="180cm"></div>
@@ -632,12 +632,116 @@ function toggleInjuries(show) {
   document.getElementById('injuryDetail').style.display = show ? 'block' : 'none';
 }
 
-function submitForm() {
+async function submitForm() {
   document.getElementById('step-7').style.display='none';
   document.getElementById('successScreen').style.display='block';
   document.getElementById('progressFill').style.width='100%';
   document.getElementById('progressLabel').textContent='Completed — submitted to Wade';
   window.scrollTo({top:0,behavior:'smooth'});
+
+  // Gather all form data
+  const firstName = document.getElementById('firstName')?.value?.trim() || '';
+  const lastName = document.getElementById('lastName')?.value?.trim() || '';
+  const email = document.getElementById('email')?.value?.trim() || '';
+  const compName = document.getElementById('compName')?.value?.trim() || '';
+  const compDate = document.getElementById('compDate')?.value || '';
+  const compLocation = document.getElementById('compLocation')?.value?.trim() || '';
+  const weightClass = document.getElementById('weightClass')?.value?.trim() || document.querySelector('input[name="weightClass"]:checked')?.value || '';
+  const gymType = document.querySelector('input[name="gymType"]:checked')?.value || '';
+  const trainingDays = document.querySelector('input[name="trainingDays"]:checked')?.value || '';
+  const sessionLength = document.querySelector('input[name="sessionLength"]:checked')?.value || '';
+  const compLevel = document.querySelector('input[name="compLevel"]:checked')?.value || '';
+  const timeToComp = document.querySelector('input[name="timeToComp"]:checked')?.value || '';
+  const events = [...document.querySelectorAll('input[name="events"]:checked')].map(el => el.value);
+  const strongEvents = [...document.querySelectorAll('input[name="strongEvents"]:checked')].map(el => el.value);
+  const weakEvents = [...document.querySelectorAll('input[name="weakEvents"]:checked')].map(el => el.value);
+  const equipment = [...document.querySelectorAll('input[name="equipment"]:checked')].map(el => el.value);
+  const injuries = document.getElementById('injuries')?.value?.trim() || '';
+
+  const formData = {
+    firstName, lastName, email, compName, compDate, compLocation,
+    weightClass, gymType, trainingDays, sessionLength, compLevel,
+    timeToComp, events, strongEvents, weakEvents, equipment, injuries
+  };
+
+  // Save to Supabase
+  try {
+    if (typeof db !== 'undefined' && email) {
+      await db.upsert('clients', {
+        email, first_name: firstName, last_name: lastName,
+        program_type: 'pre_comp', status: 'new',
+        comp_name: compName || null,
+        comp_date: compDate || null,
+        comp_location: compLocation || null,
+        weight_class: weightClass || null,
+      });
+      const clients = await db.select('clients', { email });
+      const clientId = clients && clients[0] ? clients[0].id : null;
+      if (clientId) {
+        await db.insert('questionnaire_responses', {
+          client_id: clientId, email,
+          program_type: 'pre_comp',
+          comp_name: compName,
+          comp_date: compDate || null,
+          comp_weight_class: weightClass,
+          comp_events: events,
+          days_per_week: trainingDays ? parseInt(trainingDays) : null,
+          session_length: sessionLength,
+          injuries: injuries,
+          raw_data: formData
+        });
+      }
+    }
+  } catch(err) { console.error('Supabase save error:', err); }
+
+  // Fire Slack to Wade
+  try {
+    await fetch('https://wade-slack-notifications.nameless-wind-f1be.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'athlete_questionnaire',
+        data: {
+          name: firstName + ' ' + lastName,
+          email, compName, compDate,
+          weightClass, events, compLevel, timeToComp
+        }
+      })
+    });
+  } catch(err) { console.error('Slack error:', err); }
+
+  // Email Wade — athlete application alert
+  try {
+    await fetch('https://wade-send-email.nameless-wind-f1be.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'wade_athlete_alert',
+        to: 'info@wadestrong.com.au',
+        data: {
+          clientName: firstName + ' ' + lastName,
+          clientEmail: email,
+          compName, compDate, weightClass, compLevel, timeToComp,
+          events: events.join(', '),
+          strongEvents: strongEvents.join(', '),
+          weakEvents: weakEvents.join(', ')
+        }
+      })
+    });
+  } catch(err) { console.error('Wade email error:', err); }
+
+  // Send confirmation email to athlete
+  try {
+    await fetch('https://wade-send-email.nameless-wind-f1be.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'athlete_application_received',
+        to: email,
+        data: { firstName, compName }
+      })
+    });
+  } catch(err) { console.error('Athlete email error:', err); }
 }
 </script>
 </body>

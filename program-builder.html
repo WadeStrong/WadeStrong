@@ -584,7 +584,70 @@ async function loadClientForBuilder() {
         switchDay(1);
       }
     } else {
-      showToast(`${name} loaded — awaiting RPE testing`);
+      // No RPE yet — check for estimates in questionnaire raw_data
+      const rawData = q.raw_data || {};
+      const estimates = rawData.estimatedLifts || {};
+      const hasEstimates = estimates.deadlift || estimates.squat || estimates.bench || estimates.ohp;
+      
+      if (hasEstimates) {
+        // Use estimates to build a program
+        window.CLIENT_MAXES = {
+          deadlift: estimates.deadlift || 0,
+          squat: estimates.squat || 0,
+          'bench press': estimates.bench || 0,
+          'overhead press': estimates.ohp || 0,
+          'push press': estimates.ohp || 0,
+          'axle deadlift': estimates.deadlift || 0,
+          'log press': estimates.ohp || 0,
+        };
+        
+        const gymType = q.gym_type || q.gym_setup || 'commercial';
+        const trainingDays = parseInt(q.training_days_per_week || q.days_per_week) || 3;
+        const sessionLength = parseInt(q.session_length_minutes || q.session_length) || 60;
+        const equipment = Array.isArray(q.equipment) ? q.equipment : [];
+        
+        if (typeof generateAnyProgram === 'function' || typeof generateProgram === 'function') {
+          const fn = typeof generateAnyProgram === 'function' ? generateAnyProgram : generateProgram;
+          const generated = fn({
+            programType: c.program_type,
+            gymType, equipment, trainingDays, sessionLength,
+            questionnaire: q,
+            rpe: { deadlift_1rm: estimates.deadlift || 0, squat_raw_1rm: estimates.squat || 0, bench_1rm: estimates.bench || 0, press_1rm: estimates.ohp || 0 }
+          });
+          Object.assign(sessionData, generated);
+          const genWeekNums = Object.keys(generated).map(Number).sort((a,b)=>a-b);
+          if (genWeekNums.length > 0) {
+            weeks.length = 0;
+            const weekTypes = ['build','build','build','peak','peak','deload'];
+            genWeekNums.forEach((n, i) => weeks.push({num:n, type: weekTypes[i] || 'build', label:`Week ${n}`}));
+          }
+          renderWeeks();
+          switchWeek(1);
+          switchDay(1);
+          
+          // Show estimate banner
+          const banner = document.createElement('div');
+          banner.style.cssText = 'background:#fef3d8;border:1px solid rgba(122,80,16,0.2);border-radius:8px;padding:12px 16px;margin:12px 20px;font-size:13px;color:#7a5010;display:flex;align-items:center;justify-content:space-between;gap:12px';
+          banner.innerHTML = `<div><strong>⚠ Using estimated lift numbers</strong> — Based on questionnaire. Weights will update automatically once ${name} completes RPE testing.</div><button onclick="this.parentElement.remove()" style="background:transparent;border:none;font-size:18px;color:#7a5010;cursor:pointer;flex-shrink:0">×</button>`;
+          const toolbar = document.querySelector('.canvas-header');
+          if (toolbar) toolbar.insertAdjacentElement('afterend', banner);
+          
+          showToast(`Program built from estimates for ${name} — RPE testing will refine weights`);
+        }
+      } else {
+        // No RPE, no estimates — show empty builder with guidance
+        const banner = document.createElement('div');
+        banner.style.cssText = 'background:#e8f0fa;border:1px solid rgba(68,136,204,0.2);border-radius:8px;padding:12px 16px;margin:12px 20px;font-size:13px;color:#1a56c4';
+        banner.innerHTML = `<strong>ℹ Awaiting client data</strong> — ${name} hasn't completed their questionnaire or RPE testing yet. You can still build manually using the exercise library →`;
+        const toolbar = document.querySelector('.canvas-header');
+        if (toolbar) toolbar.insertAdjacentElement('afterend', banner);
+        weeks.length = 0;
+        ['build','build','build','peak','peak','deload'].forEach((type, i) => weeks.push({num:i+1, type, label:`Week ${i+1}`}));
+        renderWeeks();
+        switchWeek(1);
+        switchDay(1);
+        showToast(`${name} loaded — build manually or wait for questionnaire`);
+      }
     }
   } catch(err) {
     console.error('Load client error:', err);

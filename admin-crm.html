@@ -411,18 +411,24 @@ html,body{height:100%;overflow:hidden;font-family:var(--font-b);background:var(-
               <!-- Voice note for client -->
               <div class="email-panel" style="border-color:var(--rust)">
                 <div class="email-panel-title" style="color:var(--iron)">🎤 Welcome Voice Note</div>
-                <div class="email-panel-sub">Record a personal welcome message for the client — it will appear in their messages tab when they open the portal.</div>
+                <div class="email-panel-sub">Record a personal welcome for the client — it will appear in their Messages tab in the portal.</div>
                 <div id="voiceNoteRecorder">
-                  <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
-                    <button id="voiceRecordBtn" class="act-btn act-btn-iron" onclick="toggleVoiceRecord()" style="width:auto;padding:8px 16px">🎤 Start recording</button>
-                    <div id="voiceTimer" style="font-size:13px;color:var(--muted);display:none">⏺ <span id="voiceSeconds">0</span>s</div>
-                  </div>
-                  <div id="voicePreview" style="display:none;margin-bottom:10px">
-                    <audio id="voicePlayback" controls style="width:100%;height:36px"></audio>
-                    <div style="display:flex;gap:8px;margin-top:8px">
-                      <button onclick="clearVoiceNote()" class="act-btn act-btn-ghost" style="padding:6px 12px;font-size:12px">✗ Discard</button>
-                      <div style="font-size:12px;color:var(--green);align-self:center;font-weight:600">✓ Voice note ready</div>
+                  <!-- Step 1: Record -->
+                  <div id="voiceStep1">
+                    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+                      <button id="voiceRecordBtn" class="act-btn act-btn-iron" onclick="toggleVoiceRecord()" style="width:auto;padding:8px 16px">🎤 Start recording</button>
+                      <div id="voiceTimer" style="font-size:13px;color:#c03020;display:none;font-weight:600">⏺ <span id="voiceSeconds">0</span>s</div>
                     </div>
+                    <div style="font-size:11px;color:var(--muted)">Max 2 minutes. Requires microphone permission.</div>
+                  </div>
+                  <!-- Step 2: Review + Send -->
+                  <div id="voiceStep2" style="display:none">
+                    <audio id="voicePlayback" controls style="width:100%;height:36px;margin-bottom:10px"></audio>
+                    <div style="display:flex;gap:8px;flex-direction:column">
+                      <button class="act-btn act-btn-green" onclick="sendVoiceNoteNow()" id="voiceSendBtn">📨 Send voice note to client portal</button>
+                      <button onclick="clearVoiceNote()" class="act-btn act-btn-ghost" style="font-size:12px">✗ Discard and re-record</button>
+                    </div>
+                    <div class="email-success" id="voiceSentSuccess" style="margin-top:8px">✓ Voice note sent to client portal!</div>
                   </div>
                 </div>
               </div>
@@ -911,19 +917,26 @@ async function toggleVoiceRecord() {
 async function startVoiceRecord() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder = new MediaRecorder(stream);
+    // Try formats in order of compatibility
+    const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' :
+                     MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' :
+                     MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : '';
+    mediaRecorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
     audioChunks = [];
     recSecs = 0;
-    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
     mediaRecorder.onstop = () => {
-      voiceBlob = new Blob(audioChunks, { type: 'audio/webm' });
+      voiceBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
       stream.getTracks().forEach(t => t.stop());
       const url = URL.createObjectURL(voiceBlob);
       document.getElementById('voicePlayback').src = url;
-      document.getElementById('voicePreview').style.display = 'block';
       document.getElementById('voiceTimer').style.display = 'none';
+      // Show step 2 (review + send)
+      document.getElementById('voiceStep2').style.display = 'block';
+      document.getElementById('voiceStep1').style.display = 'none';
+      document.getElementById('voiceSentSuccess').style.display = 'none';
     };
-    mediaRecorder.start();
+    mediaRecorder.start(100); // collect data every 100ms
     isRecording = true;
     const btn = document.getElementById('voiceRecordBtn');
     btn.textContent = '⏹ Stop recording';
@@ -935,7 +948,8 @@ async function startVoiceRecord() {
       if (recSecs >= 120) stopVoiceRecord();
     }, 1000);
   } catch(err) {
-    showToast('Microphone access denied');
+    console.error('Mic error:', err);
+    showToast('Microphone access denied — check browser settings');
   }
 }
 
@@ -943,36 +957,78 @@ function stopVoiceRecord() {
   if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
   isRecording = false;
   clearInterval(recInterval);
-  const btn = document.getElementById('voiceRecordBtn');
-  btn.textContent = '🎤 Re-record';
-  btn.style.background = 'var(--iron)';
 }
 
 function clearVoiceNote() {
   voiceBlob = null;
   audioChunks = [];
-  document.getElementById('voicePreview').style.display = 'none';
-  document.getElementById('voiceRecordBtn').textContent = '🎤 Start recording';
+  recSecs = 0;
+  document.getElementById('voiceStep2').style.display = 'none';
+  document.getElementById('voiceStep1').style.display = 'block';
+  const btn = document.getElementById('voiceRecordBtn');
+  btn.textContent = '🎤 Start recording';
+  btn.style.background = 'var(--iron)';
+}
+
+async function sendVoiceNoteNow() {
+  if (!voiceBlob || !currentClient) { showToast('No client selected or no recording'); return; }
+  const btn = document.getElementById('voiceSendBtn');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  try {
+    await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(voiceBlob);
+      reader.onloadend = async () => {
+        try {
+          await db.insert('messages', {
+            client_id: currentClient.id,
+            from_role: 'wade',
+            message_type: 'voice',
+            content: reader.result,
+            read: false
+          });
+          resolve();
+        } catch(e) { reject(e); }
+      };
+      reader.onerror = reject;
+    });
+    document.getElementById('voiceSentSuccess').style.display = 'block';
+    btn.textContent = '✓ Sent!';
+    showToast('Voice note sent to client portal ✓');
+    setTimeout(() => {
+      btn.textContent = '📨 Send voice note to client portal';
+      btn.disabled = false;
+    }, 3000);
+  } catch(err) {
+    console.error('Voice note save error:', err);
+    showToast('Failed to send voice note — check connection');
+    btn.textContent = '📨 Send voice note to client portal';
+    btn.disabled = false;
+  }
 }
 
 async function sendVoiceNoteToPortal(clientId) {
+  // Called automatically when sending program ready email
   if (!voiceBlob) return;
   try {
-    // Convert blob to base64
-    const reader = new FileReader();
-    reader.readAsDataURL(voiceBlob);
-    reader.onloadend = async () => {
-      const base64 = reader.result;
-      // Save as message in Supabase
-      await db.insert('messages', {
-        client_id: clientId,
-        from_role: 'wade',
-        message_type: 'voice',
-        content: base64,
-        read: false
-      });
-      showToast('Voice note saved to client portal ✓');
-    };
+    await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(voiceBlob);
+      reader.onloadend = async () => {
+        try {
+          await db.insert('messages', {
+            client_id: clientId,
+            from_role: 'wade',
+            message_type: 'voice',
+            content: reader.result,
+            read: false
+          });
+          resolve();
+        } catch(e) { reject(e); }
+      };
+      reader.onerror = reject;
+    });
   } catch(err) {
     console.error('Voice note save error:', err);
   }

@@ -559,7 +559,8 @@ async function loadClientForBuilder() {
       
       if (typeof generateProgram === 'function' && rpe && rpe.length) {
         const q = questionnaire || {};
-        const generatedProgram = generateProgram({
+        const generatedProgram = (typeof generateAnyProgram === 'function' ? generateAnyProgram : generateProgram)({
+          programType: c.program_type,
           gymType: q.raw_data?.gymType || q.gym_setup || 'commercial',
           equipment: q.raw_data?.equipment || [],
           trainingDays: parseInt(q.days_per_week || q.raw_data?.trainingDays) || 3,

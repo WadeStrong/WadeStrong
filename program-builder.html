@@ -260,8 +260,8 @@ body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);disp
     <div class="client-pill" onclick="openClientModal()">
       <div class="client-avatar" id="clientAvatar">DM</div>
       <div>
-        <div class="client-name" id="clientNameDisplay">Dave Mitchell</div>
-        <div class="client-prog" id="clientProgDisplay">Get Strong — Week 3 of 6</div>
+        <div class="client-name" id="clientNameDisplay">Loading...</div>
+        <div class="client-prog" id="clientProgDisplay">—</div>
       </div>
     </div>
   </div>
@@ -329,7 +329,7 @@ body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);disp
   <!-- MAIN CANVAS -->
   <div class="canvas">
     <div class="canvas-header">
-      <div class="canvas-title" id="canvasTitle">WEEK 3 — BUILD</div>
+      <div class="canvas-title" id="canvasTitle">WEEK 1 — BUILD</div>
       <div class="canvas-header-right">
         <select class="week-type-select" onchange="updateWeekType(this.value)">
           <option value="build">Build</option>
@@ -374,7 +374,7 @@ body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);disp
       <div class="prog-panel-header" onclick="toggleProgPanel()">
         <div class="prog-panel-title">
           <span style="color:var(--amber)">&#9650;</span>
-          Progression suggestions — Week 3
+          Progression suggestions — Week <span id="progWeekNum">1</span>
           <span style="font-size:11px;font-weight:400;color:var(--muted)">Based on last week's RPE feedback</span>
         </div>
         <div class="prog-panel-toggle" id="progToggle">&#x25BC; Hide</div>
@@ -402,52 +402,15 @@ body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);disp
         <button class="ex-add-custom" onclick="openAddExerciseModal()">+ Add custom exercise</button>
       </div>
 
-      <!-- Client data panel -->
+      <!-- Client data panel — populated from Supabase -->
       <div class="rp-panel" id="rp-client">
-        <div class="data-section">
-          <div class="data-title">RPE 10 maxes</div>
-          <div class="data-row"><div class="data-label">Deadlift</div><div class="data-val">220kg</div></div>
-          <div class="data-row"><div class="data-label">Squat</div><div class="data-val">180kg</div></div>
-          <div class="data-row"><div class="data-label">Bench press</div><div class="data-val">130kg</div></div>
-          <div class="data-row"><div class="data-label">Overhead press</div><div class="data-val">90kg</div></div>
-        </div>
-        <div class="data-section">
-          <div class="data-title">Last week's RPE feedback</div>
-          <div class="data-row">
-            <div class="data-label">Deadlift 4×4 @180kg</div>
-            <div class="data-val"><span class="rpe-indicator"><span class="rpe-dot green"></span>RPE 7</span></div>
-          </div>
-          <div class="data-row">
-            <div class="data-label">Squat 4×5 @140kg</div>
-            <div class="data-val"><span class="rpe-indicator"><span class="rpe-dot amber"></span>RPE 9</span></div>
-          </div>
-          <div class="data-row">
-            <div class="data-label">Bench 4×6 @100kg</div>
-            <div class="data-val"><span class="rpe-indicator"><span class="rpe-dot green"></span>RPE 7</span></div>
-          </div>
-          <div class="data-row">
-            <div class="data-label">OHP 3×8 @65kg</div>
-            <div class="data-val"><span class="rpe-indicator"><span class="rpe-dot red"></span>RPE 10</span></div>
-          </div>
-        </div>
-        <div class="data-section">
-          <div class="data-title">Client notes</div>
-          <div style="font-size:13px;color:var(--muted);line-height:1.6">"Squat felt heavy this week — knees tracking weird. OHP was a grind on last set, dropped the bar on rep 7."</div>
-        </div>
-        <div class="data-section">
-          <div class="data-title">Profile</div>
-          <div class="data-row"><div class="data-label">Training age</div><div class="data-val">3–5 years</div></div>
-          <div class="data-row"><div class="data-label">Gym type</div><div class="data-val">Commercial</div></div>
-          <div class="data-row"><div class="data-label">Session length</div><div class="data-val">90 min</div></div>
-          <div class="data-row"><div class="data-label">Sleep</div><div class="data-val">6–7hrs</div></div>
-          <div class="data-row"><div class="data-label">Stress level</div><div class="data-val">6/10</div></div>
-        </div>
+        <div style="text-align:center;padding:20px;font-size:13px;color:var(--muted)">Loading client data...</div>
       </div>
 
       <!-- Notes panel -->
       <div class="rp-panel" id="rp-notes">
         <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">Program notes (Wade only)</div>
-        <textarea class="notes-textarea" placeholder="Internal notes about this client's program — not visible to client...">Week 3 plan: Push DL intensity, back off squat slightly after RPE 9 last week. OHP — drop weight 5kg, keep same rep scheme. Consider adding tempo squats as accessory to address knee tracking issue.</textarea>
+        <textarea class="notes-textarea" id="progNotes" placeholder="Internal notes about this client's program — not visible to client..."></textarea>
         <button class="note-save-btn" onclick="saveDraft(); showToast('Notes saved ✓')">Save notes</button>
 
         <div style="margin-top:20px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">Message client</div>
@@ -809,6 +772,7 @@ async function sendMessageToClient(msg) {
 
 document.addEventListener('DOMContentLoaded', () => { loadClientForBuilder(); });
 
+// Weeks built dynamically — start with 6 weeks default, overridden by program data
 const weeks = [
   {num:1,type:'build',label:'Week 1'},{num:2,type:'build',label:'Week 2'},
   {num:3,type:'build',label:'Week 3'},{num:4,type:'peak',label:'Week 4'},
@@ -908,35 +872,11 @@ const exerciseLibrary = {
   ],
 };
 
-// Session data per day (demo)
-const sessionData = {
-  1: {
-    blocks: [
-      {
-        id:'b1', type:'main', title:'Main pull', rest:240,
-        exercises:[
-          {id:'e1',name:'Deadlift',sets:'4',reps:'4',weight:'190',rpe:'8',note:''},
-          {id:'e2',name:'Romanian deadlift',sets:'3',reps:'8',weight:'140',rpe:'7',note:''},
-        ]
-      },
-      {
-        id:'b2', type:'accessory', title:'Lower accessories', rest:90,
-        exercises:[
-          {id:'e3',name:'Bulgarian split squat',sets:'3',reps:'10',weight:'30',rpe:'8',note:'Per leg, DB'},
-          {id:'e4',name:'Leg curl',sets:'3',reps:'12',weight:'45',rpe:'7',note:''},
-          {id:'e5',name:'Cable crunch',sets:'3',reps:'15',weight:'35',rpe:'7',note:''},
-        ]
-      }
-    ]
-  }
-};
+// Session data — populated from Supabase or auto-generated
+const sessionData = {};
 
-const progSuggestions = [
-  {ex:'Deadlift',detail:'Last week: 4×4 @180kg (RPE 7) → suggest 4×4 @190kg',action:'accept'},
-  {ex:'Squat',detail:'Last week: 4×5 @140kg (RPE 9) → suggest 4×5 @140kg (hold weight)',action:'hold'},
-  {ex:'Bench press',detail:'Last week: 4×6 @100kg (RPE 7) → suggest 4×6 @105kg',action:'accept'},
-  {ex:'OHP',detail:'Last week: 3×8 @65kg (RPE 10) → suggest 3×8 @60kg (drop 5kg)',action:'drop'},
-];
+// Progression suggestions — populated from session logs
+const progSuggestions = [];
 
 // ── RENDER WEEKS ──
 function renderWeeks() {
@@ -953,10 +893,15 @@ function renderWeeks() {
 function switchWeek(n) {
   currentWeek = n;
   const w = weeks.find(x=>x.num===n);
+  if (!w) return;
   document.getElementById('canvasTitle').textContent = `WEEK ${n} — ${w.type.toUpperCase()}`;
   document.querySelector('.week-type-select').value = w.type;
+  currentDay = 1;
   renderWeeks();
-  showToast(`Switched to Week ${n}`);
+  renderDays();
+  renderBlocks();
+  const wn = document.getElementById('progWeekNum');
+  if (wn) wn.textContent = n;
 }
 
 function addWeek() {
@@ -985,8 +930,13 @@ function renderDays() {
 function switchDay(id) {
   currentDay = id;
   const d = days.find(x=>x.id===id);
-  document.getElementById('sessionNameInput').value = d.session || '';
+  if (!d) return;
+  // Check if generated session has a name
+  const weekSessions = sessionData[currentWeek];
+  const genSession = Array.isArray(weekSessions) ? weekSessions[id - 1] : null;
+  document.getElementById('sessionNameInput').value = genSession?.name || d.session || '';
   document.getElementById('restDayToggle').checked = d.rest;
+  document.getElementById('activeRestToggle').checked = d.activeRest || false;
   document.getElementById('sessionCanvas').style.opacity = d.rest ? '0.4' : '1';
   renderDays();
   renderBlocks();
@@ -1034,9 +984,23 @@ function toggleActiveRest(on) {
 // ── RENDER BLOCKS ──
 function renderBlocks() {
   const area = document.getElementById('blocksArea');
-  const data = sessionData[currentDay];
-  if(!data || !data.blocks.length) { area.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);font-size:14px">No blocks yet — add one below</div>'; return; }
-  area.innerHTML = data.blocks.map(b=>renderBlock(b)).join('');
+  if (!area) return;
+  const weekData = sessionData[currentWeek];
+  // sessionData can be keyed by week number (from generator) or day number (legacy)
+  let dayData = null;
+  if (weekData && Array.isArray(weekData)) {
+    // Generated format: sessionData[week] = [session, session, ...]
+    const session = weekData[currentDay - 1];
+    dayData = session ? { blocks: session.blocks || [] } : null;
+  } else {
+    // Legacy format: sessionData[day] = { blocks: [] }
+    dayData = sessionData[currentDay];
+  }
+  if (!dayData || !dayData.blocks || !dayData.blocks.length) {
+    area.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);font-size:14px">No exercises yet — add a block below or use the exercise library →</div>';
+    return;
+  }
+  area.innerHTML = dayData.blocks.map(b=>renderBlock(b)).join('');
   setupBlockDrag();
 }
 
@@ -1108,7 +1072,9 @@ function calcPct(weight, exName, rpe) {
 
 // ── BLOCK OPERATIONS ──
 function addBlock(type) {
+  // Always use day-based format for editing
   if(!sessionData[currentDay]) sessionData[currentDay]={blocks:[]};
+  if(!sessionData[currentDay].blocks) sessionData[currentDay].blocks=[];
   const id = 'b'+(Date.now());
   const titles = {main:'Main lift',accessory:'Accessories',superset:'Superset',conditioning:'Conditioning',warmup:'Warm-up'};
   const rests = {main:240,accessory:90,superset:60,conditioning:45,warmup:60};
@@ -1134,8 +1100,16 @@ function updateBlockRest(id,val) {
 }
 
 function getBlock(id) {
+  // Check day-based first
   const d = sessionData[currentDay];
-  return d && d.blocks.find(b=>b.id===id);
+  if (d && d.blocks) return d.blocks.find(b=>b.id===id);
+  // Check week-based
+  const w = sessionData[currentWeek];
+  if (w && Array.isArray(w)) {
+    const session = w[currentDay - 1];
+    if (session && session.blocks) return session.blocks.find(b=>b.id===id);
+  }
+  return null;
 }
 
 // ── EXERCISE OPERATIONS ──
@@ -1270,9 +1244,14 @@ function addCustomExercise() {
 
 // ── PROGRESSION SUGGESTIONS ──
 function renderProgSuggestions() {
+  const el = document.getElementById('progSuggestions');
+  if (!progSuggestions.length) {
+    el.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:8px">No progression data yet — available after first week is logged.</div>';
+    return;
+  }
   const colours = {accept:'var(--green)',hold:'var(--amber)',drop:'#c03020'};
   const labels = {accept:'↑ Increase',hold:'= Hold',drop:'↓ Drop'};
-  document.getElementById('progSuggestions').innerHTML = progSuggestions.map(s=>`
+  el.innerHTML = progSuggestions.map(s=>`
     <div class="prog-card">
       <div class="prog-card-ex" style="color:${colours[s.action]}">${labels[s.action]} — ${s.ex}</div>
       <div class="prog-card-detail">${s.detail}</div>
@@ -1354,6 +1333,9 @@ renderDays();
 renderBlocks();
 renderExercises();
 renderProgSuggestions();
+// Start on week 1 day 1
+switchWeek(1);
+switchDay(1);
 </script>
 </body>
 </html>

@@ -536,10 +536,13 @@ async function loadClientForBuilder() {
       const questionnaire = q && q.length ? q[0] : {};
       
       if (typeof generateProgram === 'function' && rpe && rpe.length) {
+        const q = questionnaire || {};
         const generatedProgram = generateProgram({
-          gymType: questionnaire.raw_data?.gymType || 'commercial',
-          equipment: questionnaire.raw_data?.equipment || [],
-          trainingDays: parseInt(questionnaire.raw_data?.trainingDays) || 3,
+          gymType: q.raw_data?.gymType || q.gym_setup || 'commercial',
+          equipment: q.raw_data?.equipment || [],
+          trainingDays: parseInt(q.days_per_week || q.raw_data?.trainingDays) || 3,
+          sessionLength: parseInt(q.session_length || q.raw_data?.sessionLength) || 60,
+          questionnaire: q,
           rpe: {
             deadlift_1rm: rpe[0].deadlift_1rm || 0,
             squat_raw_1rm: rpe[0].squat_raw_1rm || 0,

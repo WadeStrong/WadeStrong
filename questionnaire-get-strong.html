@@ -300,6 +300,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 4
           <span class="unit">kg</span>
         </div>
         <div class="lift-note">Back squat preferred</div>
+        <div class="hint" style="margin-top:4px;font-size:11px;color:var(--muted)">Best guess is fine — you'll get a chance to do proper RPE testing before your program starts</div>
       </div>
       <div class="lift-field">
         <label>Bench press (1RM)</label>
@@ -631,12 +632,12 @@ async function submitForm() {
   document.getElementById('progressLabel').textContent = 'Completed — submitted to Wade';
   window.scrollTo({top:0, behavior:'smooth'});
 
-  // Gather all form data
+  // Gather ALL form data — everything goes to Supabase
   const firstName = document.getElementById('firstName')?.value?.trim() || '';
   const lastName = document.getElementById('lastName')?.value?.trim() || '';
   const email = document.getElementById('email')?.value?.trim() || '';
   const location = document.getElementById('location')?.value?.trim() || '';
-  const age = document.getElementById('age')?.value || '';
+  const age = document.getElementById('age')?.value?.trim() || '';
   const height = document.getElementById('height')?.value?.trim() || '';
   const weight = document.getElementById('weight')?.value?.trim() || '';
   const occupation = document.getElementById('occupation')?.value?.trim() || '';
@@ -645,20 +646,37 @@ async function submitForm() {
   const sessionLength = document.querySelector('input[name="sessionLength"]:checked')?.value || '';
   const equipment = [...document.querySelectorAll('input[name="equipment"]:checked')].map(el => el.value);
   const goals = [...document.querySelectorAll('input[name="goals"]:checked')].map(el => el.value);
+  const trainingAge = document.querySelector('input[name="trainingAge"]:checked')?.value || '';
+  const trainingTypes = [...document.querySelectorAll('input[name="trainingTypes"]:checked')].map(el => el.value);
+  const fitnessLevel = document.querySelector('input[name="fitnessLevel"]:checked')?.value || '';
+  const currentTraining = document.querySelector('input[name="currentTraining"]:checked')?.value || '';
+  const preferredDays = [...document.querySelectorAll('input[name="preferredDays"]:checked')].map(el => el.value);
+  const trainTime = document.querySelector('input[name="trainTime"]:checked')?.value || '';
+  const sleep = document.querySelector('input[name="sleep"]:checked')?.value || '';
+  const nutrition = document.querySelector('input[name="nutrition"]:checked')?.value || '';
+  const stress = document.querySelector('input[name="stress"]:checked')?.value || '';
+  const physicalJob = document.querySelector('input[name="physicalJob"]:checked')?.value || '';
+  const liftConfidence = document.querySelector('input[name="liftConfidence"]:checked')?.value || '';
+  const referral = document.querySelector('input[name="referral"]:checked')?.value || '';
+  const hasInjuries = document.querySelector('input[name="hasInjuries"]:checked')?.value || 'no';
   const injuries = document.getElementById('injuries')?.value?.trim() || '';
-  const trainingAge = document.querySelector('input[name="trainingAge"]:checked')?.value || document.getElementById('training_age')?.value || '';
+  const injuryDetail = document.getElementById('injuryDetail')?.value?.trim() || '';
   const currentLifts = {
-    deadlift: document.getElementById('deadlift')?.value || null,
-    squat: document.getElementById('squat')?.value || null,
-    bench: document.getElementById('bench')?.value || null,
-    ohp: document.getElementById('ohp')?.value || null,
+    deadlift: document.getElementById('deadlift')?.value ? parseFloat(document.getElementById('deadlift').value) : null,
+    squat: document.getElementById('squat')?.value ? parseFloat(document.getElementById('squat').value) : null,
+    bench: document.getElementById('bench')?.value ? parseFloat(document.getElementById('bench').value) : null,
+    ohp: document.getElementById('ohp')?.value ? parseFloat(document.getElementById('ohp').value) : null,
   };
-  const anythingElse = document.querySelector('textarea[placeholder*="success"]')?.value?.trim() || '';
+  const anythingElse = document.querySelector('textarea[name="anythingElse"], #anythingElse')?.value?.trim() || 
+                       document.querySelectorAll('textarea')[document.querySelectorAll('textarea').length - 1]?.value?.trim() || '';
 
   const formData = { 
     firstName, lastName, email, location, age, height, weight, occupation,
-    gymType, trainingDays, sessionLength, equipment, goals, injuries, 
-    trainingAge, currentLifts, anythingElse 
+    gymType, trainingDays, sessionLength, equipment, goals, trainingAge,
+    trainingTypes, fitnessLevel, currentTraining, preferredDays, trainTime,
+    sleep, nutrition, stress, physicalJob, liftConfidence, referral,
+    injuries: hasInjuries === 'yes' ? (injuryDetail || injuries) : '',
+    currentLifts, anythingElse
   };
 
   // Save to Supabase
@@ -681,22 +699,64 @@ async function submitForm() {
           client_id: clientId,
           email,
           program_type: 'get_strong',
-          // Real column names from Supabase schema
+          // All real Supabase column names
           age: age ? parseInt(age) : null,
           height: height || null,
-          weight: weight || null,
+          weight: weight ? parseFloat(weight) : null,
           location: location || null,
           occupation: occupation || null,
           training_age: trainingAge || null,
+          training_types: trainingTypes.length ? trainingTypes : null,
+          fitness_level: fitnessLevel || null,
+          current_training: currentTraining || null,
           gym_type: gymType || null,
           equipment: equipment.length ? equipment : null,
           training_days_per_week: trainingDays ? parseInt(trainingDays) : null,
+          preferred_days: preferredDays.length ? preferredDays : null,
           session_length_minutes: sessionLength ? parseInt(sessionLength) : null,
+          train_time: trainTime || null,
           goals: goals.length ? goals : null,
-          goal_description: formData.anythingElse || null,
-          injury_status: injuries ? 'reported' : 'none',
-          injury_detail: injuries || null,
+          injury_status: hasInjuries === 'yes' ? 'reported' : 'none',
+          injury_detail: hasInjuries === 'yes' ? (injuryDetail || injuries) : null,
+          sleep_quality: sleep || null,
+          nutrition_quality: nutrition || null,
+          stress_level: stress || null,
+          physical_job: physicalJob || null,
+          referral_source: referral || null,
           additional_notes: anythingElse || null,
+          // Full raw_data for program building
+          raw_data: {
+            ...formData,
+            estimatedLifts: {
+              deadlift: currentLifts.deadlift,
+              squat: currentLifts.squat,
+              bench: currentLifts.bench,
+              ohp: currentLifts.ohp,
+            }
+          },
+        });
+
+        // Save estimated lifts to rpe_results immediately
+        const hasLifts = currentLifts.deadlift || currentLifts.squat || currentLifts.bench || currentLifts.ohp;
+        if (hasLifts) {
+          await db.insert('rpe_results', {
+            client_id: clientId,
+            email,
+            deadlift_1rm: currentLifts.deadlift || null,
+            squat_raw_1rm: currentLifts.squat || null,
+            bench_1rm: currentLifts.bench || null,
+            press_1rm: currentLifts.ohp || null,
+            notes: 'Estimated from questionnaire — update with RPE testing',
+          });
+        }
+        
+        // Also update client record with profile data
+        await db.upsert('clients', {
+          email,
+          age: age ? parseInt(age) : null,
+          height: height || null,
+          weight: weight ? parseFloat(weight) + 'kg' : null,
+          location: location || null,
         });
       }
     }

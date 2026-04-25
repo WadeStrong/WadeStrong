@@ -281,13 +281,26 @@ body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);disp
     <div class="sidebar-section">
       <div class="sidebar-section-title">Client snapshot</div>
       <div class="client-card">
-        <div class="client-card-name" id="sidebarClientName">Dave Mitchell</div>
-        <div class="client-card-meta">42 · Brisbane · Tradie</div>
+        <div class="client-card-name" id="sidebarClientName">Loading...</div>
+        <div class="client-card-meta" id="sidebarClientMeta">—</div>
         <div class="client-stats">
-          <div class="cs"><div class="cs-val">108kg</div><div class="cs-lbl">Bodyweight</div></div>
-          <div class="cs"><div class="cs-val">4 days</div><div class="cs-lbl">Per week</div></div>
-          <div class="cs"><div class="cs-val">None</div><div class="cs-lbl">Injuries</div></div>
-          <div class="cs"><div class="cs-val">Barbell+</div><div class="cs-lbl">Equipment</div></div>
+          <div class="cs"><div class="cs-val" id="snapWeight">—</div><div class="cs-lbl">Bodyweight</div></div>
+          <div class="cs"><div class="cs-val" id="snapDays">—</div><div class="cs-lbl">Per week</div></div>
+          <div class="cs"><div class="cs-val" id="snapInjuries">—</div><div class="cs-lbl">Injuries</div></div>
+          <div class="cs"><div class="cs-val" id="snapGym">—</div><div class="cs-lbl">Gym type</div></div>
+        </div>
+        <!-- RPE maxes -->
+        <div id="snapRpe" style="margin-top:8px;display:none">
+          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">RPE Maxes</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px" id="snapRpeGrid"></div>
+        </div>
+        <!-- Comp info (pre_comp only) -->
+        <div id="snapComp" style="margin-top:8px;display:none">
+          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Competition</div>
+          <div style="font-size:12px;color:var(--iron)" id="snapCompName">—</div>
+          <div style="font-size:11px;color:var(--muted)" id="snapCompDate">—</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px" id="snapCompEvents">—</div>
+          <div style="font-size:11px;margin-top:4px" id="snapWeakEvents" style="color:#c03020"></div>
         </div>
       </div>
     </div>
@@ -530,61 +543,61 @@ async function loadClientForBuilder() {
     if (cname) cname.textContent = name;
     if (cprog) cprog.textContent = prog;
 
-    // Load RPE maxes from Supabase to power % calculations
-    const rpe = await db.select('rpe_results', { email }, { order: 'created_at.desc', limit: 1 });
+    // Load RPE maxes — using real column names from Supabase
+    const rpe = await db.select('rpe_results', { client_id: currentClientId }, { order: 'created_at.desc', limit: 1 });
     if (rpe && rpe.length) {
       const r = rpe[0];
       window.CLIENT_MAXES = {
-        deadlift: r.deadlift_1rm || 0,
-        squat: r.squat_raw_1rm || 0,
-        'bench press': r.bench_1rm || 0,
-        'overhead press': r.press_1rm || 0,
-        'push press': r.press_1rm || 0,
+        deadlift: r.deadlift_1rm || r.deadlift || 0,
+        squat: r.squat_raw_1rm || r.squat || 0,
+        'bench press': r.bench_1rm || r.bench || 0,
+        'overhead press': r.press_1rm || r.ohp || 0,
+        'push press': r.press_1rm || r.ohp || 0,
+        'axle deadlift': r.deadlift_1rm || r.deadlift || 0,
+        'log press': r.press_1rm || r.ohp || 0,
       };
     }
+
+    // Load questionnaire — using REAL column names from Supabase
+    const qResult = await db.select('questionnaire_responses', { client_id: currentClientId }, { order: 'created_at.desc', limit: 1 });
+    const q = qResult && qResult.length ? qResult[0] : {};
+
+    // Update client snapshot panel with real data
+    updateClientSnapshot(c, q, rpe);
 
     // Load existing programs
     const programs = await db.select('programs', { client_id: currentClientId }, { order: 'week_number.asc' });
     if (programs && programs.length) {
       programs.forEach(p => {
-        if (p.sessions) {
-          Object.assign(sessionData, p.sessions);
-        }
+        if (p.sessions) Object.assign(sessionData, p.sessions);
       });
       showToast(`Loaded ${programs.length} week(s) for ${name}`);
-    } else {
-      // No existing program — auto-generate from RPE + questionnaire
-      const q = await db.select('questionnaire_responses', { client_id: currentClientId }, { order: 'created_at.desc', limit: 1 });
-      const questionnaire = q && q.length ? q[0] : {};
+    } else if (rpe && rpe.length) {
+      // Auto-generate using REAL questionnaire column names
+      const gymType = q.gym_type || q.gym_setup || 'commercial';
+      const trainingDays = parseInt(q.training_days_per_week || q.days_per_week) || 3;
+      const sessionLength = parseInt(q.session_length_minutes || q.session_length) || 60;
+      const equipment = Array.isArray(q.equipment) ? q.equipment : [];
       
-      if (typeof generateProgram === 'function' && rpe && rpe.length) {
-        const q = questionnaire || {};
-        const generatedProgram = (typeof generateAnyProgram === 'function' ? generateAnyProgram : generateProgram)({
+      if (typeof generateAnyProgram === 'function' || typeof generateProgram === 'function') {
+        const fn = typeof generateAnyProgram === 'function' ? generateAnyProgram : generateProgram;
+        const generated = fn({
           programType: c.program_type,
-          gymType: q.raw_data?.gymType || q.gym_setup || 'commercial',
-          equipment: q.raw_data?.equipment || [],
-          trainingDays: parseInt(q.days_per_week || q.raw_data?.trainingDays) || 3,
-          sessionLength: parseInt(q.session_length || q.raw_data?.sessionLength) || 60,
+          gymType, equipment, trainingDays, sessionLength,
           questionnaire: q,
           rpe: {
-            deadlift_1rm: rpe[0].deadlift_1rm || 0,
-            squat_raw_1rm: rpe[0].squat_raw_1rm || 0,
-            bench_1rm: rpe[0].bench_1rm || 0,
-            press_1rm: rpe[0].press_1rm || 0,
+            deadlift_1rm: rpe[0].deadlift_1rm || rpe[0].deadlift || 0,
+            squat_raw_1rm: rpe[0].squat_raw_1rm || rpe[0].squat || 0,
+            bench_1rm: rpe[0].bench_1rm || rpe[0].bench || 0,
+            press_1rm: rpe[0].press_1rm || rpe[0].ohp || 0,
           }
         });
-        
-        // Load generated program into sessionData
-        Object.assign(sessionData, generatedProgram);
-        
-        // Show auto-generate banner
-        showAutoGenerateBanner(name, questionnaire.raw_data?.gymType || 'commercial');
-        showToast(`Program auto-generated for ${name} — review and publish ✓`);
-      } else if (rpe && rpe.length) {
-        showToast(`RPE results loaded for ${name} — add program-generator.js to enable auto-build`);
-      } else {
-        showToast(`${name} loaded — awaiting RPE results to auto-generate program`);
+        Object.assign(sessionData, generated);
+        showAutoGenerateBanner(name, gymType, c.program_type);
+        showToast(`Program auto-generated for ${name} ✓`);
       }
+    } else {
+      showToast(`${name} loaded — awaiting RPE testing`);
     }
   } catch(err) {
     console.error('Load client error:', err);
@@ -592,7 +605,134 @@ async function loadClientForBuilder() {
   }
 }
 
-function showAutoGenerateBanner(clientName, gymType) {
+function updateClientSnapshot(c, q, rpe) {
+  const name = [c.first_name, c.last_name].filter(Boolean).join(' ') || c.email;
+  document.getElementById('sidebarClientName').textContent = name;
+
+  // Meta line
+  const metaParts = [
+    c.age || q.age ? (c.age || q.age) + ' yrs' : null,
+    c.location || q.location,
+    q.occupation
+  ].filter(Boolean);
+  document.getElementById('sidebarClientMeta').textContent = metaParts.join(' · ') || '—';
+
+  // Stats
+  const weight = c.weight || q.weight;
+  document.getElementById('snapWeight').textContent = weight || '—';
+  const days = q.training_days_per_week || q.days_per_week;
+  document.getElementById('snapDays').textContent = days ? days + ' days' : '—';
+  const injuryStatus = q.injury_status;
+  document.getElementById('snapInjuries').textContent = injuryStatus === 'none' ? 'None' : injuryStatus === 'minor' ? 'Minor' : injuryStatus === 'significant' ? 'Significant' : (q.injuries || '—');
+  const gymType = q.gym_type || q.gym_setup;
+  document.getElementById('snapGym').textContent = gymType === 'commercial' ? 'Commercial' : gymType === 'home' ? 'Home' : gymType === 'strongman' ? 'Strongman' : (gymType || '—');
+
+  // RPE maxes
+  if (rpe && rpe.length) {
+    const r = rpe[0];
+    const maxes = [
+      { label:'DL', val: r.deadlift_1rm || r.deadlift },
+      { label:'SQ', val: r.squat_raw_1rm || r.squat },
+      { label:'BP', val: r.bench_1rm || r.bench },
+      { label:'OHP', val: r.press_1rm || r.ohp },
+    ].filter(m => m.val);
+    if (maxes.length) {
+      document.getElementById('snapRpe').style.display = 'block';
+      document.getElementById('snapRpeGrid').innerHTML = maxes.map(m =>
+        `<div style="background:var(--chalk);border-radius:4px;padding:4px 6px"><div style="font-size:13px;font-weight:700">${m.val}kg</div><div style="font-size:10px;color:var(--muted)">${m.label}</div></div>`
+      ).join('');
+    }
+  }
+
+  // Comp info for pre_comp
+  if (c.program_type === 'pre_comp') {
+    document.getElementById('snapComp').style.display = 'block';
+    const compName = q.competition_name || q.comp_name || c.comp_name;
+    const compDate = q.competition_date || q.comp_date || c.comp_date;
+    const events = Array.isArray(q.competition_events) ? q.competition_events : (Array.isArray(q.comp_events) ? q.comp_events : []);
+    const weakEvents = Array.isArray(q.weak_events) ? q.weak_events : [];
+    document.getElementById('snapCompName').textContent = compName || '—';
+    document.getElementById('snapCompDate').textContent = compDate ? new Date(compDate).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' }) : '—';
+    document.getElementById('snapCompEvents').textContent = events.length ? 'Events: ' + events.join(', ') : '—';
+    if (weakEvents.length) {
+      document.getElementById('snapWeakEvents').innerHTML = `<span style="color:#c03020;font-weight:600">⚠ Weak: ${weakEvents.join(', ')}</span>`;
+    }
+  }
+
+  // Update client data panel
+  updateClientDataPanel(c, q, rpe);
+}
+
+function updateClientDataPanel(c, q, rpe) {
+  const rpPanel = document.getElementById('rp-client');
+  if (!rpPanel) return;
+
+  // RPE maxes section
+  let rpeHtml = '<div class="data-section"><div class="data-title">RPE 10 Maxes</div>';
+  if (rpe && rpe.length) {
+    const r = rpe[0];
+    const lifts = [
+      { label:'Deadlift', val: r.deadlift_1rm || r.deadlift },
+      { label:'Squat (raw)', val: r.squat_raw_1rm || r.squat },
+      { label:'Squat (wraps)', val: r.squat_wraps_1rm },
+      { label:'Bench press', val: r.bench_1rm || r.bench },
+      { label:'Overhead press', val: r.press_1rm || r.ohp },
+    ].filter(l => l.val);
+    rpeHtml += lifts.map(l => `<div class="data-row"><div class="data-label">${l.label}</div><div class="data-val">${l.val}kg</div></div>`).join('');
+  } else {
+    rpeHtml += '<div style="font-size:13px;color:var(--muted);padding:8px 0">Awaiting RPE testing</div>';
+  }
+  rpeHtml += '</div>';
+
+  // Profile section
+  const gymType = q.gym_type || q.gym_setup;
+  const days = q.training_days_per_week || q.days_per_week;
+  const sessionLen = q.session_length_minutes || q.session_length;
+  const trainingAge = q.training_age;
+  const injuries = q.injury_detail || q.injuries;
+  const goals = Array.isArray(q.goals) ? q.goals.join(', ') : (q.goal_description || q.goals);
+
+  let profileHtml = `<div class="data-section"><div class="data-title">Profile</div>
+    ${gymType ? `<div class="data-row"><div class="data-label">Gym type</div><div class="data-val">${gymType}</div></div>` : ''}
+    ${days ? `<div class="data-row"><div class="data-label">Training days</div><div class="data-val">${days} days/week</div></div>` : ''}
+    ${sessionLen ? `<div class="data-row"><div class="data-label">Session length</div><div class="data-val">${sessionLen} min</div></div>` : ''}
+    ${trainingAge ? `<div class="data-row"><div class="data-label">Training age</div><div class="data-val">${trainingAge}</div></div>` : ''}
+    ${goals ? `<div class="data-row"><div class="data-label">Goals</div><div class="data-val">${goals}</div></div>` : ''}
+    ${injuries ? `<div class="data-row"><div class="data-label">Injuries</div><div class="data-val" style="color:#c03020">${injuries}</div></div>` : '<div class="data-row"><div class="data-label">Injuries</div><div class="data-val">None reported</div></div>'}
+  </div>`;
+
+  // Comp section (pre_comp)
+  let compHtml = '';
+  if (c.program_type === 'pre_comp') {
+    const compName = q.competition_name || q.comp_name;
+    const compDate = q.competition_date || q.comp_date;
+    const compLevel = q.competition_level || q.comp_level;
+    const timeToComp = q.time_to_comp;
+    const weightClass = q.weight_class || q.comp_weight_class;
+    const events = Array.isArray(q.competition_events) ? q.competition_events : (Array.isArray(q.comp_events) ? q.comp_events : []);
+    const strongEvents = Array.isArray(q.strong_events) ? q.strong_events : [];
+    const weakEvents = Array.isArray(q.weak_events) ? q.weak_events : [];
+    const numComps = q.num_previous_comps;
+    const biggestWeakness = q.biggest_weakness;
+
+    compHtml = `<div class="data-section"><div class="data-title">Competition</div>
+      ${compName ? `<div class="data-row"><div class="data-label">Competition</div><div class="data-val">${compName}</div></div>` : ''}
+      ${compDate ? `<div class="data-row"><div class="data-label">Date</div><div class="data-val">${new Date(compDate).toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'})}</div></div>` : ''}
+      ${weightClass ? `<div class="data-row"><div class="data-label">Weight class</div><div class="data-val">${weightClass}</div></div>` : ''}
+      ${compLevel ? `<div class="data-row"><div class="data-label">Level</div><div class="data-val">${compLevel}</div></div>` : ''}
+      ${timeToComp ? `<div class="data-row"><div class="data-label">Time to comp</div><div class="data-val">${timeToComp} weeks</div></div>` : ''}
+      ${numComps !== undefined && numComps !== null ? `<div class="data-row"><div class="data-label">Previous comps</div><div class="data-val">${numComps}</div></div>` : ''}
+      ${events.length ? `<div class="data-row"><div class="data-label">Events</div><div class="data-val">${events.join(', ')}</div></div>` : ''}
+      ${strongEvents.length ? `<div class="data-row"><div class="data-label">Strong events</div><div class="data-val" style="color:var(--green)">${strongEvents.join(', ')}</div></div>` : ''}
+      ${weakEvents.length ? `<div class="data-row"><div class="data-label">Weak events</div><div class="data-val" style="color:#c03020">${weakEvents.join(', ')}</div></div>` : ''}
+      ${biggestWeakness ? `<div class="data-row"><div class="data-label">Biggest weakness</div><div class="data-val">${biggestWeakness}</div></div>` : ''}
+    </div>`;
+  }
+
+  rpPanel.innerHTML = rpeHtml + profileHtml + compHtml;
+}
+
+function showAutoGenerateBanner(clientName, gymType, programType) {
   // Create a banner at the top of the program builder
   const gymLabel = gymType === 'strongman' ? 'Strongman gym' : gymType === 'home' ? 'Home gym' : 'Commercial gym';
   const existing = document.getElementById('autogenBanner');
@@ -604,7 +744,7 @@ function showAutoGenerateBanner(clientName, gymType) {
   banner.innerHTML = `
     <div>
       <div style="font-size:13px;font-weight:700;color:#2c7a4b;margin-bottom:2px">✓ Program auto-generated for ${clientName}</div>
-      <div style="font-size:12px;color:#4a7a5a;line-height:1.5">Based on their RPE results · ${gymLabel} · Review each week and adjust weights/exercises as needed before publishing.</div>
+      <div style="font-size:12px;color:#4a7a5a;line-height:1.5">Based on their RPE results · ${gymLabel} · ${progLabel} · Review and adjust weights/exercises before publishing.</div>
     </div>
     <button onclick="this.parentElement.remove()" style="background:transparent;border:none;font-size:18px;color:#2c7a4b;cursor:pointer;flex-shrink:0">×</button>
   `;
@@ -956,11 +1096,14 @@ function renderExRow(e, blockId) {
 }
 
 function calcPct(weight, exName, rpe) {
-  const maxes = {deadlift:220,squat:180,'bench press':130,'overhead press':90,'romanian deadlift':154,'trap bar deadlift':198};
+  // Use live client maxes if available
+  const maxes = window.CLIENT_MAXES || {};
+  const fallback = {deadlift:0,squat:0,'bench press':0,'overhead press':0,'romanian deadlift':0,'trap bar deadlift':0,'axle deadlift':0,'log press':0};
+  const allMaxes = { ...fallback, ...maxes };
   const key = exName.toLowerCase();
-  const max = Object.entries(maxes).find(([k])=>key.includes(k));
-  if(!max || !weight) return '';
-  return ((weight/max[1])*100).toFixed(1);
+  const match = Object.entries(allMaxes).find(([k]) => key.includes(k) && allMaxes[k] > 0);
+  if (!match || !weight || !match[1]) return '';
+  return ((weight / match[1]) * 100).toFixed(1);
 }
 
 // ── BLOCK OPERATIONS ──

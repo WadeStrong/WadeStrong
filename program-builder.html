@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wade Strong — Program Builder</title>
+<title>Wade Strong  -  Program Builder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
@@ -261,7 +261,7 @@ body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);disp
       <div class="client-avatar" id="clientAvatar">DM</div>
       <div>
         <div class="client-name" id="clientNameDisplay">Loading...</div>
-        <div class="client-prog" id="clientProgDisplay">—</div>
+        <div class="client-prog" id="clientProgDisplay"> - </div>
       </div>
     </div>
   </div>
@@ -282,12 +282,12 @@ body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);disp
       <div class="sidebar-section-title">Client snapshot</div>
       <div class="client-card">
         <div class="client-card-name" id="sidebarClientName">Loading...</div>
-        <div class="client-card-meta" id="sidebarClientMeta">—</div>
+        <div class="client-card-meta" id="sidebarClientMeta"> - </div>
         <div class="client-stats">
-          <div class="cs"><div class="cs-val" id="snapWeight">—</div><div class="cs-lbl">Bodyweight</div></div>
-          <div class="cs"><div class="cs-val" id="snapDays">—</div><div class="cs-lbl">Per week</div></div>
-          <div class="cs"><div class="cs-val" id="snapInjuries">—</div><div class="cs-lbl">Injuries</div></div>
-          <div class="cs"><div class="cs-val" id="snapGym">—</div><div class="cs-lbl">Gym type</div></div>
+          <div class="cs"><div class="cs-val" id="snapWeight"> - </div><div class="cs-lbl">Bodyweight</div></div>
+          <div class="cs"><div class="cs-val" id="snapDays"> - </div><div class="cs-lbl">Per week</div></div>
+          <div class="cs"><div class="cs-val" id="snapInjuries"> - </div><div class="cs-lbl">Injuries</div></div>
+          <div class="cs"><div class="cs-val" id="snapGym"> - </div><div class="cs-lbl">Gym type</div></div>
         </div>
         <!-- RPE maxes -->
         <div id="snapRpe" style="margin-top:8px;display:none">
@@ -297,9 +297,9 @@ body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);disp
         <!-- Comp info (pre_comp only) -->
         <div id="snapComp" style="margin-top:8px;display:none">
           <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Competition</div>
-          <div style="font-size:12px;color:var(--iron)" id="snapCompName">—</div>
-          <div style="font-size:11px;color:var(--muted)" id="snapCompDate">—</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px" id="snapCompEvents">—</div>
+          <div style="font-size:12px;color:var(--iron)" id="snapCompName"> - </div>
+          <div style="font-size:11px;color:var(--muted)" id="snapCompDate"> - </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px" id="snapCompEvents"> - </div>
           <div style="font-size:11px;margin-top:4px" id="snapWeakEvents" style="color:#c03020"></div>
         </div>
       </div>
@@ -329,7 +329,7 @@ body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);disp
   <!-- MAIN CANVAS -->
   <div class="canvas">
     <div class="canvas-header">
-      <div class="canvas-title" id="canvasTitle">WEEK 1 — BUILD</div>
+      <div class="canvas-title" id="canvasTitle">WEEK 1  -  BUILD</div>
       <div class="canvas-header-right">
         <select class="week-type-select" onchange="updateWeekType(this.value)">
           <option value="build">Build</option>
@@ -346,7 +346,7 @@ body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);disp
     <!-- Session canvas -->
     <div class="session-canvas" id="sessionCanvas">
       <div class="session-meta">
-        <input class="session-name-input" id="sessionNameInput" value="LOWER BODY — PULL FOCUS" placeholder="Session name...">
+        <input class="session-name-input" id="sessionNameInput" value="LOWER BODY  -  PULL FOCUS" placeholder="Session name...">
         <input class="session-notes-input" id="sessionNotesInput" placeholder="Session notes for client...">
         <label class="rest-day-toggle">
           <input type="checkbox" id="restDayToggle" onchange="toggleRestDay(this.checked)">
@@ -374,7 +374,7 @@ body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);disp
       <div class="prog-panel-header" onclick="toggleProgPanel()">
         <div class="prog-panel-title">
           <span style="color:var(--amber)">&#9650;</span>
-          Progression suggestions — Week <span id="progWeekNum">1</span>
+          Progression suggestions  -  Week <span id="progWeekNum">1</span>
           <span style="font-size:11px;font-weight:400;color:var(--muted)">Based on last week's RPE feedback</span>
         </div>
         <div class="prog-panel-toggle" id="progToggle">&#x25BC; Hide</div>
@@ -402,7 +402,7 @@ body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);disp
         <button class="ex-add-custom" onclick="openAddExerciseModal()">+ Add custom exercise</button>
       </div>
 
-      <!-- Client data panel — populated from Supabase -->
+      <!-- Client data panel  -  populated from Supabase -->
       <div class="rp-panel" id="rp-client">
         <div style="text-align:center;padding:20px;font-size:13px;color:var(--muted)">Loading client data...</div>
       </div>
@@ -410,7 +410,7 @@ body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);disp
       <!-- Notes panel -->
       <div class="rp-panel" id="rp-notes">
         <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">Program notes (Wade only)</div>
-        <textarea class="notes-textarea" id="progNotes" placeholder="Internal notes about this client's program — not visible to client..."></textarea>
+        <textarea class="notes-textarea" id="progNotes" placeholder="Internal notes about this client's program  -  not visible to client..."></textarea>
         <button class="note-save-btn" onclick="saveDraft(); showToast('Notes saved ✓')">Save notes</button>
 
         <div style="margin-top:20px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">Message client</div>
@@ -506,7 +506,7 @@ async function loadClientForBuilder() {
     if (cname) cname.textContent = name;
     if (cprog) cprog.textContent = prog;
 
-    // Load RPE maxes — using real column names from Supabase
+    // Load RPE maxes  -  using real column names from Supabase
     const rpe = await db.select('rpe_results', { client_id: currentClientId }, { order: 'created_at.desc', limit: 1 });
     if (rpe && rpe.length) {
       const r = rpe[0];
@@ -521,7 +521,7 @@ async function loadClientForBuilder() {
       };
     }
 
-    // Load questionnaire — using REAL column names from Supabase
+    // Load questionnaire  -  using REAL column names from Supabase
     const qResult = await db.select('questionnaire_responses', { client_id: currentClientId }, { order: 'created_at.desc', limit: 1 });
     const q = qResult && qResult.length ? qResult[0] : {};
 
@@ -579,12 +579,12 @@ async function loadClientForBuilder() {
         }
         renderWeeks();
         showAutoGenerateBanner(name, gymType, c.program_type);
-        showToast(`Program auto-generated for ${name} — ${weeks.length} weeks ✓`);
+        showToast(`Program auto-generated for ${name}  -  ${weeks.length} weeks ✓`);
         switchWeek(1);
         switchDay(1);
       }
     } else {
-      // No RPE yet — check for estimates in questionnaire raw_data
+      // No RPE yet  -  check for estimates in questionnaire raw_data
       const rawData = q.raw_data || {};
       const estimates = rawData.estimatedLifts || {};
       const hasEstimates = estimates.deadlift || estimates.squat || estimates.bench || estimates.ohp;
@@ -628,17 +628,17 @@ async function loadClientForBuilder() {
           // Show estimate banner
           const banner = document.createElement('div');
           banner.style.cssText = 'background:#fef3d8;border:1px solid rgba(122,80,16,0.2);border-radius:8px;padding:12px 16px;margin:12px 20px;font-size:13px;color:#7a5010;display:flex;align-items:center;justify-content:space-between;gap:12px';
-          banner.innerHTML = `<div><strong>⚠ Using estimated lift numbers</strong> — Based on questionnaire. Weights will update automatically once ${name} completes RPE testing.</div><button onclick="this.parentElement.remove()" style="background:transparent;border:none;font-size:18px;color:#7a5010;cursor:pointer;flex-shrink:0">×</button>`;
+          banner.innerHTML = `<div><strong>⚠ Using estimated lift numbers</strong>  -  Based on questionnaire. Weights will update automatically once ${name} completes RPE testing.</div><button onclick="this.parentElement.remove()" style="background:transparent;border:none;font-size:18px;color:#7a5010;cursor:pointer;flex-shrink:0">x</button>`;
           const toolbar = document.querySelector('.canvas-header');
           if (toolbar) toolbar.insertAdjacentElement('afterend', banner);
           
-          showToast(`Program built from estimates for ${name} — RPE testing will refine weights`);
+          showToast(`Program built from estimates for ${name}  -  RPE testing will refine weights`);
         }
       } else {
-        // No RPE, no estimates — show empty builder with guidance
+        // No RPE, no estimates  -  show empty builder with guidance
         const banner = document.createElement('div');
         banner.style.cssText = 'background:#e8f0fa;border:1px solid rgba(68,136,204,0.2);border-radius:8px;padding:12px 16px;margin:12px 20px;font-size:13px;color:#1a56c4';
-        banner.innerHTML = `<strong>ℹ Awaiting client data</strong> — ${name} hasn't completed their questionnaire or RPE testing yet. You can still build manually using the exercise library →`;
+        banner.innerHTML = `<strong>ℹ Awaiting client data</strong>  -  ${name} hasn't completed their questionnaire or RPE testing yet. You can still build manually using the exercise library →`;
         const toolbar = document.querySelector('.canvas-header');
         if (toolbar) toolbar.insertAdjacentElement('afterend', banner);
         weeks.length = 0;
@@ -646,7 +646,7 @@ async function loadClientForBuilder() {
         renderWeeks();
         switchWeek(1);
         switchDay(1);
-        showToast(`${name} loaded — build manually or wait for questionnaire`);
+        showToast(`${name} loaded  -  build manually or wait for questionnaire`);
       }
     }
   } catch(err) {
@@ -665,17 +665,17 @@ function updateClientSnapshot(c, q, rpe) {
     c.location || q.location,
     q.occupation
   ].filter(Boolean);
-  document.getElementById('sidebarClientMeta').textContent = metaParts.join(' · ') || '—';
+  document.getElementById('sidebarClientMeta').textContent = metaParts.join(' · ') || ' - ';
 
   // Stats
   const weight = c.weight || q.weight;
-  document.getElementById('snapWeight').textContent = weight || '—';
+  document.getElementById('snapWeight').textContent = weight || ' - ';
   const days = q.training_days_per_week || q.days_per_week;
-  document.getElementById('snapDays').textContent = days ? days + ' days' : '—';
+  document.getElementById('snapDays').textContent = days ? days + ' days' : ' - ';
   const injuryStatus = q.injury_status;
-  document.getElementById('snapInjuries').textContent = injuryStatus === 'none' ? 'None' : injuryStatus === 'minor' ? 'Minor' : injuryStatus === 'significant' ? 'Significant' : (q.injuries || '—');
+  document.getElementById('snapInjuries').textContent = injuryStatus === 'none' ? 'None' : injuryStatus === 'minor' ? 'Minor' : injuryStatus === 'significant' ? 'Significant' : (q.injuries || ' - ');
   const gymType = q.gym_type || q.gym_setup;
-  document.getElementById('snapGym').textContent = gymType === 'commercial' ? 'Commercial' : gymType === 'home' ? 'Home' : gymType === 'strongman' ? 'Strongman' : (gymType || '—');
+  document.getElementById('snapGym').textContent = gymType === 'commercial' ? 'Commercial' : gymType === 'home' ? 'Home' : gymType === 'strongman' ? 'Strongman' : (gymType || ' - ');
 
   // RPE maxes
   if (rpe && rpe.length) {
@@ -701,9 +701,9 @@ function updateClientSnapshot(c, q, rpe) {
     const compDate = q.competition_date || q.comp_date || c.comp_date;
     const events = Array.isArray(q.competition_events) ? q.competition_events : (Array.isArray(q.comp_events) ? q.comp_events : []);
     const weakEvents = Array.isArray(q.weak_events) ? q.weak_events : [];
-    document.getElementById('snapCompName').textContent = compName || '—';
-    document.getElementById('snapCompDate').textContent = compDate ? new Date(compDate).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' }) : '—';
-    document.getElementById('snapCompEvents').textContent = events.length ? 'Events: ' + events.join(', ') : '—';
+    document.getElementById('snapCompName').textContent = compName || ' - ';
+    document.getElementById('snapCompDate').textContent = compDate ? new Date(compDate).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' }) : ' - ';
+    document.getElementById('snapCompEvents').textContent = events.length ? 'Events: ' + events.join(', ') : ' - ';
     if (weakEvents.length) {
       document.getElementById('snapWeakEvents').innerHTML = `<span style="color:#c03020;font-weight:600">⚠ Weak: ${weakEvents.join(', ')}</span>`;
     }
@@ -796,7 +796,7 @@ function showAutoGenerateBanner(clientName, gymType, programType) {
       <div style="font-size:13px;font-weight:700;color:#2c7a4b;margin-bottom:2px">✓ Program auto-generated for ${clientName}</div>
       <div style="font-size:12px;color:#4a7a5a;line-height:1.5">Based on their RPE results · ${gymLabel} · ${progLabel} · Review and adjust weights/exercises before publishing.</div>
     </div>
-    <button onclick="this.parentElement.remove()" style="background:transparent;border:none;font-size:18px;color:#2c7a4b;cursor:pointer;flex-shrink:0">×</button>
+    <button onclick="this.parentElement.remove()" style="background:transparent;border:none;font-size:18px;color:#2c7a4b;cursor:pointer;flex-shrink:0">x</button>
   `;
   
   // Insert after the toolbar
@@ -805,7 +805,7 @@ function showAutoGenerateBanner(clientName, gymType, programType) {
 }
 
 async function saveDraft() {
-  if (!currentClientId) { showToast('No client selected — open from admin CRM'); return; }
+  if (!currentClientId) { showToast('No client selected  -  open from admin CRM'); return; }
   try {
     // Save current week's session data
     await db.insert('programs', {
@@ -818,12 +818,12 @@ async function saveDraft() {
     showToast('Draft saved ✓');
   } catch(err) {
     console.error('Save draft error:', err);
-    showToast('Save failed — check connection');
+    showToast('Save failed  -  check connection');
   }
 }
 
 async function publishProgram() {
-  if (!currentClientId) { showToast('No client selected — open from admin CRM'); return; }
+  if (!currentClientId) { showToast('No client selected  -  open from admin CRM'); return; }
   try {
     // Upsert all weeks
     for (const weekNum of Object.keys(sessionData)) {
@@ -837,7 +837,7 @@ async function publishProgram() {
     showToast('Program published to client portal ✓');
   } catch(err) {
     console.error('Publish error:', err);
-    showToast('Publish failed — check connection');
+    showToast('Publish failed  -  check connection');
   }
 }
 
@@ -859,7 +859,7 @@ async function sendMessageToClient(msg) {
 
 document.addEventListener('DOMContentLoaded', () => { loadClientForBuilder(); });
 
-// Weeks built dynamically — start with 6 weeks default, overridden by program data
+// Weeks built dynamically  -  start with 6 weeks default, overridden by program data
 const weeks = [
   {num:1,type:'build',label:'Week 1'},{num:2,type:'build',label:'Week 2'},
   {num:3,type:'build',label:'Week 3'},{num:4,type:'peak',label:'Week 4'},
@@ -867,11 +867,11 @@ const weeks = [
 ];
 
 const days = [
-  {id:1,name:'Monday',session:'LOWER — PULL',rest:false},
-  {id:2,name:'Tuesday',session:'UPPER — PUSH',rest:false},
+  {id:1,name:'Monday',session:'LOWER  -  PULL',rest:false},
+  {id:2,name:'Tuesday',session:'UPPER  -  PUSH',rest:false},
   {id:3,name:'Wednesday',session:'',rest:true},
-  {id:4,name:'Thursday',session:'LOWER — SQUAT',rest:false},
-  {id:5,name:'Friday',session:'UPPER — PULL',rest:false},
+  {id:4,name:'Thursday',session:'LOWER  -  SQUAT',rest:false},
+  {id:5,name:'Friday',session:'UPPER  -  PULL',rest:false},
   {id:6,name:'Saturday',session:'',rest:true},
   {id:7,name:'Sunday',session:'',rest:true},
 ];
@@ -927,49 +927,49 @@ const exerciseLibrary = {
     {name:'Battle ropes',meta:'Time sets'},
   ],
   'Active recovery': [
-    {name:'Body work — Massage',meta:'Sports or remedial',defaultNote:'Book with a sports massage therapist. Focus on any areas of tension from training this week.'},
-    {name:'Body work — Cupping',meta:'Myofascial release',defaultNote:'Cupping therapy — great for tight lats, glutes and thoracic. Let your therapist know your training load.'},
-    {name:'Body work — Dry needling',meta:'Trigger point release',defaultNote:'Dry needling with a physio or myotherapist. Let them know which areas have been under load this week.'},
-    {name:'Low intensity walk',meta:'Easy pace, flat ground',defaultNote:'Keep it easy — this is recovery, not cardio. Aim for a conversational pace. No hills.'},
-    {name:'Step target',meta:'Editable by Wade',defaultNote:'Hit your step target for the day. Keep the pace easy — this is active recovery, not training.'},
-    {name:'Sauna',meta:'Heat therapy',defaultNote:'15–20 minutes at moderate heat. Hydrate well before and after. Great for recovery and sleep quality.'},
-    {name:'Spa / hot pool',meta:'Hydrotherapy',defaultNote:'Warm water immersion — great for joint recovery. 15–20 minutes. Hydrate well.'},
-    {name:'Magnesium pool / float',meta:'Float therapy',defaultNote:'Magnesium float pools are excellent for recovery — the high magnesium content absorbs through the skin. Aim 45–60 min if available.'},
-    {name:'Cold water immersion',meta:'Ice bath or cold pool',defaultNote:'2–5 minutes in cold water (10–15°C). Excellent for reducing inflammation after heavy training days.'},
-    {name:'Stretching / mobility session',meta:'20–30 min',defaultNote:'Full body stretch focused on areas trained this week. Slow and controlled — hold each stretch 30–60 seconds.'},
-    {name:'Foam rolling',meta:'Full body or targeted',defaultNote:'10–15 minutes. Focus on quads, glutes, lats and thoracic spine. Roll slowly and pause on tight spots.'},
-    {name:'Yoga or pilates',meta:'Recovery class',defaultNote:'Choose a gentle or restorative class — not hot yoga or high intensity. Focus on movement quality.'},
+    {name:'Body work  -  Massage',meta:'Sports or remedial',defaultNote:'Book with a sports massage therapist. Focus on any areas of tension from training this week.'},
+    {name:'Body work  -  Cupping',meta:'Myofascial release',defaultNote:'Cupping therapy  -  great for tight lats, glutes and thoracic. Let your therapist know your training load.'},
+    {name:'Body work  -  Dry needling',meta:'Trigger point release',defaultNote:'Dry needling with a physio or myotherapist. Let them know which areas have been under load this week.'},
+    {name:'Low intensity walk',meta:'Easy pace, flat ground',defaultNote:'Keep it easy  -  this is recovery, not cardio. Aim for a conversational pace. No hills.'},
+    {name:'Step target',meta:'Editable by Wade',defaultNote:'Hit your step target for the day. Keep the pace easy  -  this is active recovery, not training.'},
+    {name:'Sauna',meta:'Heat therapy',defaultNote:'15-20 minutes at moderate heat. Hydrate well before and after. Great for recovery and sleep quality.'},
+    {name:'Spa / hot pool',meta:'Hydrotherapy',defaultNote:'Warm water immersion  -  great for joint recovery. 15-20 minutes. Hydrate well.'},
+    {name:'Magnesium pool / float',meta:'Float therapy',defaultNote:'Magnesium float pools are excellent for recovery  -  the high magnesium content absorbs through the skin. Aim 45-60 min if available.'},
+    {name:'Cold water immersion',meta:'Ice bath or cold pool',defaultNote:'2-5 minutes in cold water (10-15 degreesC). Excellent for reducing inflammation after heavy training days.'},
+    {name:'Stretching / mobility session',meta:'20-30 min',defaultNote:'Full body stretch focused on areas trained this week. Slow and controlled  -  hold each stretch 30-60 seconds.'},
+    {name:'Foam rolling',meta:'Full body or targeted',defaultNote:'10-15 minutes. Focus on quads, glutes, lats and thoracic spine. Roll slowly and pause on tight spots.'},
+    {name:'Yoga or pilates',meta:'Recovery class',defaultNote:'Choose a gentle or restorative class  -  not hot yoga or high intensity. Focus on movement quality.'},
   ],
   'Warm-up / mobility': [
-    {name:'Hip flexor stretch',meta:'2 min each',defaultNote:'Keep movements controlled — gradually increase range. Don't force a cold muscle.'},
-    {name:'Thoracic rotation',meta:'10 each side',defaultNote:'Controlled rotation — don't bounce at end range.'},
-    {name:'Banded pull-aparts',meta:'3×20',defaultNote:'Band Pull-Aparts — 15 reps. No band? Reach arms overhead and pull one elbow across with opposite hand.'},
+    {name:'Hip flexor stretch',meta:'2 min each',defaultNote:'Keep movements controlled  -  gradually increase range. Don\'t force a cold muscle.'},
+    {name:'Thoracic rotation',meta:'10 each side',defaultNote:'Controlled rotation  -  don\'t bounce at end range.'},
+    {name:'Banded pull-aparts',meta:'3x20',defaultNote:'Band Pull-Aparts  -  15 reps. No band? Reach arms overhead and pull one elbow across with opposite hand.'},
     {name:'Goblet squat',meta:'Light, deep'},
     {name:'Cat-cow',meta:'Spine mob'},
     {name:'Shoulder rolls',meta:'Forward & back',defaultNote:'10 forward, 10 back. Controlled circles, not rushed.'},
-    {name:'Chest opener',meta:'Arms wide, breathe deep',defaultNote:'Arms wide, breathe deep. Gradually increase range — don't force it cold.'},
-    {name:'Front dumbbell raise',meta:'Light, controlled',defaultNote:'Light weight only. Slow and controlled — this is a warm-up, not a working set.'},
+    {name:'Chest opener',meta:'Arms wide, breathe deep',defaultNote:'Arms wide, breathe deep. Gradually increase range  -  don\'t force it cold.'},
+    {name:'Front dumbbell raise',meta:'Light, controlled',defaultNote:'Light weight only. Slow and controlled  -  this is a warm-up, not a working set.'},
     {name:'Band dislocates',meta:'Shoulder mobility'},
     {name:'World's greatest stretch',meta:'5 each side'},
     {name:'Ankle circles',meta:'10 each direction'},
     {name:'Glute activation',meta:'Banded or bodyweight'},
-    {name:'Cross-body arm swings',meta:'15–20 reps',defaultNote:'Swing both arms wide open, then cross in front of chest. Start slow, progressively faster. 15–20 reps.'},
+    {name:'Cross-body arm swings',meta:'15-20 reps',defaultNote:'Swing both arms wide open, then cross in front of chest. Start slow, progressively faster. 15-20 reps.'},
     {name:'Wrist circles & finger spreads',meta:'10 circles each direction',defaultNote:'Essential before any lifting, push-ups, or grip work. 10 circles each direction, then spread fingers wide.'},
     {name:'Overhead reach',meta:'Band or bodyweight',defaultNote:'15 reps with band, or reach both arms overhead and gently pull one elbow across with the opposite hand.'},
   ],
 };
 
-// Session data — populated from Supabase or auto-generated
+// Session data  -  populated from Supabase or auto-generated
 const sessionData = {};
 
-// Progression suggestions — populated from session logs
+// Progression suggestions  -  populated from session logs
 const progSuggestions = [];
 
 // ── RENDER WEEKS ──
 function renderWeeks() {
   const wl = document.getElementById('weekList');
   if (!weeks.length) {
-    wl.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:8px">No weeks yet — add one below</div>';
+    wl.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:8px">No weeks yet  -  add one below</div>';
     return;
   }
   wl.innerHTML = weeks.map(w=>{
@@ -985,7 +985,7 @@ function switchWeek(n) {
   currentWeek = n;
   const w = weeks.find(x=>x.num===n);
   if (!w) return;
-  document.getElementById('canvasTitle').textContent = `WEEK ${n} — ${w.type.toUpperCase()}`;
+  document.getElementById('canvasTitle').textContent = `WEEK ${n}  -  ${w.type.toUpperCase()}`;
   document.querySelector('.week-type-select').value = w.type;
   currentDay = 1;
   renderWeeks();
@@ -1007,7 +1007,7 @@ function addWeek() {
 function updateWeekType(type) {
   const w = weeks.find(x=>x.num===currentWeek);
   if(w) { w.type=type; renderWeeks(); }
-  document.getElementById('canvasTitle').textContent = `WEEK ${currentWeek} — ${type.toUpperCase()}`;
+  document.getElementById('canvasTitle').textContent = `WEEK ${currentWeek}  -  ${type.toUpperCase()}`;
 }
 
 // ── RENDER DAYS ──
@@ -1061,7 +1061,7 @@ function toggleActiveRest(on) {
     if(d) d.rest = false;
     document.getElementById('sessionCanvas').style.opacity = '1';
     // Suggest active recovery exercises
-    showToast('Active rest day — add recovery activities from the library →');
+    showToast('Active rest day  -  add recovery activities from the library →');
     switchRpTab('exercises', null);
     document.querySelectorAll('.rp-tab').forEach(t => t.classList.toggle('active', t.textContent === 'Exercises'));
     document.querySelectorAll('.rp-panel').forEach(p => p.classList.remove('active'));
@@ -1090,7 +1090,7 @@ function renderBlocks() {
     dayData = sessionData[currentDay];
   }
   if (!dayData || !dayData.blocks || !dayData.blocks.length) {
-    area.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);font-size:14px">No exercises yet — add a block below or use the exercise library →</div>';
+    area.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted);font-size:14px">No exercises yet  -  add a block below or use the exercise library →</div>';
     return;
   }
   area.innerHTML = dayData.blocks.map(b=>renderBlock(b)).join('');
@@ -1143,10 +1143,10 @@ function renderExRow(e, blockId) {
     <input class="ex-input" type="text" value="${e.reps}" placeholder="5" oninput="updateEx('${blockId}','${e.id}','reps',this.value)">
     <input class="ex-input" type="number" min="0" value="${e.weight}" placeholder="kg" oninput="updateEx('${blockId}','${e.id}','weight',this.value)">
     <select class="ex-input ex-rpe ${rpeClass}" onchange="updateEx('${blockId}','${e.id}','rpe',this.value);this.className='ex-input ex-rpe r'+this.value">
-      <option value="">—</option>
+      <option value=""> - </option>
       ${[6,7,8,9,10].map(n=>`<option value="${n}"${e.rpe==n?' selected':''}>${n}</option>`).join('')}
     </select>
-    <input class="ex-input${highlight}" type="text" value="${pct}" placeholder="%" oninput="updateEx('${blockId}','${e.id}','pct',this.value)" title="${parseFloat(pct)>95?'High % — check fatigue':''}">
+    <input class="ex-input${highlight}" type="text" value="${pct}" placeholder="%" oninput="updateEx('${blockId}','${e.id}','pct',this.value)" title="${parseFloat(pct)>95?'High %  -  check fatigue':''}">
     <button class="ex-note-btn${hasNote?' has-note':''}" onclick="openNoteModal('${blockId}','${e.id}')" title="${hasNote ? e.note : 'Add note'}">✎</button>
     <button class="ex-delete-btn" onclick="deleteExercise('${blockId}','${e.id}')">&#215;</button>
   </div>`;
@@ -1305,12 +1305,12 @@ function renderExercises(filter='') {
     html+=`<div class="ex-category"><div class="ex-category-title">${cat}</div>`;
     if(cat === 'Active recovery' && !q) {
       html+=`<div style="background:#e6f4ed;border:1px solid rgba(44,122,75,0.2);border-radius:5px;padding:8px 10px;margin-bottom:8px;font-size:11px;color:#2c7a4b;line-height:1.6">
-        <strong>Active rest day:</strong> Choose 1–2 activities. The goal is blood flow and recovery — not training. Keep everything low intensity.
+        <strong>Active rest day:</strong> Choose 1-2 activities. The goal is blood flow and recovery  -  not training. Keep everything low intensity.
       </div>`;
     }
     if(cat === 'Warm-up / mobility' && !q) {
       html+=`<div style="background:#fef3d8;border:1px solid rgba(122,80,16,0.2);border-radius:5px;padding:8px 10px;margin-bottom:8px;font-size:11px;color:#7a5010;line-height:1.6">
-        <strong>Warm-up note:</strong> Spend 5–10 minutes total. Keep movements controlled, not bouncy. Gradually increase range of motion — don't force a cold muscle into a deep stretch right away.
+        <strong>Warm-up note:</strong> Spend 5-10 minutes total. Keep movements controlled, not bouncy. Gradually increase range of motion  -  don't force a cold muscle into a deep stretch right away.
       </div>`;
     }
     filtered.forEach(e=>{
@@ -1343,18 +1343,18 @@ function addCustomExercise() {
 function renderProgSuggestions() {
   const el = document.getElementById('progSuggestions');
   if (!progSuggestions.length) {
-    el.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:8px">No progression data yet — available after first week is logged.</div>';
+    el.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:8px">No progression data yet  -  available after first week is logged.</div>';
     return;
   }
   const colours = {accept:'var(--green)',hold:'var(--amber)',drop:'#c03020'};
   const labels = {accept:'↑ Increase',hold:'= Hold',drop:'↓ Drop'};
   el.innerHTML = progSuggestions.map(s=>`
     <div class="prog-card">
-      <div class="prog-card-ex" style="color:${colours[s.action]}">${labels[s.action]} — ${s.ex}</div>
+      <div class="prog-card-ex" style="color:${colours[s.action]}">${labels[s.action]}  -  ${s.ex}</div>
       <div class="prog-card-detail">${s.detail}</div>
       <div class="prog-card-actions">
         <button class="prog-accept" onclick="acceptSuggestion('${s.ex}')">Accept</button>
-        <button class="prog-tweak" onclick="showToast('Tweak mode — edit weights above')">Tweak</button>
+        <button class="prog-tweak" onclick="showToast('Tweak mode  -  edit weights above')">Tweak</button>
       </div>
     </div>`).join('');
 }
@@ -1378,7 +1378,7 @@ function switchRpTab(id, el) {
 // ── MODALS ──
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function openClientModal() { showToast('Client switcher — coming in admin panel'); }
+function openClientModal() { showToast('Client switcher  -  coming in admin panel'); }
 
 // ── EXERCISE NOTES ──
 let noteBlockId = null;
@@ -1435,7 +1435,7 @@ const initParams = new URLSearchParams(window.location.search);
 if (initParams.get('client') || initParams.get('email')) {
   loadClientForBuilder();
 } else {
-  // No client — just show the builder ready to use
+  // No client  -  just show the builder ready to use
   switchWeek(1);
   switchDay(1);
   showToast('Open from Admin CRM to load a client');

@@ -693,6 +693,24 @@ async function submitForm() {
     });
   } catch(err) { console.error('Email error:', err); }
 
+  // Send alert email to Wade
+  try {
+    await fetch('https://wade-send-email.nameless-wind-f1be.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'wade_questionnaire_alert',
+        to: 'info@wadestrong.com.au',
+        data: {
+          clientName: firstName + ' ' + lastName,
+          clientEmail: email,
+          gymType: gymType,
+          goals: Array.isArray(goals) ? goals.join(', ') : goals
+        }
+      })
+    });
+  } catch(err) { console.error('Wade email error:', err); }
+
   // Redirect to RPE next steps after 4 seconds
   setTimeout(() => {
     window.location.href = 'rpe10-nextsteps.html';

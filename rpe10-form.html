@@ -333,14 +333,36 @@ async function submitRPE() {
     press_5rm: getValue('press_5rm'),
   };
 
-  // Save to Supabase
+  // Save to Supabase using correct column names
   try {
     if (typeof db !== 'undefined' && email) {
       const clients = await db.select('clients', { email });
       const clientId = clients && clients[0] ? clients[0].id : null;
-      await db.insert('rpe_results', { client_id: clientId, email, ...rpeData });
+      if (clientId) {
+        await db.insert('rpe_results', {
+          client_id: clientId,
+          email,
+          // Real column names from Supabase
+          deadlift_1rm: rpeData.deadlift_1rm || null,
+          deadlift_3rm: rpeData.deadlift_3rm || null,
+          deadlift_5rm: rpeData.deadlift_5rm || null,
+          squat_raw_1rm: rpeData.squat_raw_1rm || null,
+          squat_raw_3rm: rpeData.squat_raw_3rm || null,
+          squat_raw_5rm: rpeData.squat_raw_5rm || null,
+          squat_wraps_1rm: rpeData.squat_wraps_1rm || null,
+          squat_wraps_3rm: rpeData.squat_wraps_3rm || null,
+          squat_wraps_5rm: rpeData.squat_wraps_5rm || null,
+          bench_1rm: rpeData.bench_1rm || null,
+          bench_3rm: rpeData.bench_3rm || null,
+          bench_5rm: rpeData.bench_5rm || null,
+          press_1rm: rpeData.press_1rm || null,
+          press_3rm: rpeData.press_3rm || null,
+          press_5rm: rpeData.press_5rm || null,
+        });
+        showToast && showToast('RPE results saved ✓');
+      }
     }
-  } catch(err) { console.error('Supabase save error:', err); }
+  } catch(err) { console.error('Supabase RPE save error:', err); }
 
   // Fire Slack to Wade
   try {

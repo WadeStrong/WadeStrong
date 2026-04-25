@@ -664,7 +664,7 @@ async function submitForm() {
   // Save to Supabase
   try {
     if (typeof db !== 'undefined') {
-      // Upsert client with all profile fields
+      // Upsert client
       await db.upsert('clients', {
         email, first_name: firstName, last_name: lastName,
         program_type: 'get_strong', status: 'new',
@@ -673,20 +673,30 @@ async function submitForm() {
         height: height || null,
         weight: weight || null,
       });
-      // Get client ID and save questionnaire
+      // Get client ID then save questionnaire with REAL column names
       const clients = await db.select('clients', { email });
       const clientId = clients && clients[0] ? clients[0].id : null;
       if (clientId) {
         await db.insert('questionnaire_responses', {
-          client_id: clientId, email,
+          client_id: clientId,
+          email,
           program_type: 'get_strong',
-          training_age: trainingAge,
-          goals: goals,
-          injuries: injuries,
-          gym_setup: gymType,
-          days_per_week: trainingDays ? parseInt(trainingDays) : null,
-          session_length: sessionLength,
-          raw_data: formData
+          // Real column names from Supabase schema
+          age: age ? parseInt(age) : null,
+          height: height || null,
+          weight: weight || null,
+          location: location || null,
+          occupation: occupation || null,
+          training_age: trainingAge || null,
+          gym_type: gymType || null,
+          equipment: equipment.length ? equipment : null,
+          training_days_per_week: trainingDays ? parseInt(trainingDays) : null,
+          session_length_minutes: sessionLength ? parseInt(sessionLength) : null,
+          goals: goals.length ? goals : null,
+          goal_description: formData.anythingElse || null,
+          injury_status: injuries ? 'reported' : 'none',
+          injury_detail: injuries || null,
+          additional_notes: anythingElse || null,
         });
       }
     }

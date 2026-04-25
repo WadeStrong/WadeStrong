@@ -103,7 +103,10 @@ body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);disp
 .session-name-input:focus{border-bottom:2px solid var(--rust)}
 .session-notes-input{flex:1;padding:7px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--font-body);font-size:13px;color:var(--iron);background:var(--white);outline:none;min-width:0}
 .session-notes-input:focus{border-color:var(--rust)}
-.rest-day-toggle{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.rest-day-toggle{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap;padding:6px 12px;border-radius:5px;border:1px solid var(--border);background:var(--white);transition:all 0.15s}
+.rest-day-toggle:hover{border-color:var(--iron);color:var(--iron)}
+.rest-day-toggle.active-rest-toggle{border-color:var(--green);color:var(--green);background:var(--green-bg)}
+.rest-day-toggle.active-rest-day-toggle{border-color:var(--amber);color:var(--amber);background:var(--amber-bg)}
 .rest-day-toggle input{accent-color:var(--rust);cursor:pointer}
 
 /* blocks */
@@ -1079,8 +1082,11 @@ function toggleRestDay(on) {
   if(on) {
     document.getElementById('activeRestToggle').checked = false;
     if(d) d.activeRest = false;
+    document.getElementById('sessionCanvas').style.opacity = '0.4';
+    showToast(d.name + ' set as Rest day');
+  } else {
+    document.getElementById('sessionCanvas').style.opacity = '1';
   }
-  document.getElementById('sessionCanvas').style.opacity = on ? '0.4' : '1';
   renderDays();
 }
 

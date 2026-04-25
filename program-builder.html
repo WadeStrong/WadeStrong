@@ -93,6 +93,7 @@ body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);disp
 .day-tab:hover{border-color:var(--iron);color:var(--iron)}
 .day-tab.active{background:var(--iron);color:var(--white);border-color:var(--iron)}
 .day-tab.rest-day{border-style:dashed;color:rgba(107,101,96,0.5)}
+.day-tab.active-rest-day{border-style:dashed;color:#2c7a4b;border-color:#2c7a4b}
 .day-tab-add{padding:6px 10px;border-radius:5px;font-size:13px;cursor:pointer;border:1px dashed var(--border-med);background:transparent;color:var(--muted)}
 .day-tab-add:hover{border-color:var(--rust);color:var(--rust)}
 
@@ -337,6 +338,10 @@ body{font-family:var(--font-body);background:var(--chalk);color:var(--iron);disp
         <label class="rest-day-toggle">
           <input type="checkbox" id="restDayToggle" onchange="toggleRestDay(this.checked)">
           Rest day
+        </label>
+        <label class="rest-day-toggle" style="margin-left:8px">
+          <input type="checkbox" id="activeRestToggle" onchange="toggleActiveRest(this.checked)">
+          Active rest
         </label>
       </div>
 
@@ -729,6 +734,20 @@ const exerciseLibrary = {
     {name:'Rowing',meta:'Erg'},
     {name:'Battle ropes',meta:'Time sets'},
   ],
+  'Active recovery': [
+    {name:'Body work — Massage',meta:'Sports or remedial',defaultNote:'Book with a sports massage therapist. Focus on any areas of tension from training this week.'},
+    {name:'Body work — Cupping',meta:'Myofascial release',defaultNote:'Cupping therapy — great for tight lats, glutes and thoracic. Let your therapist know your training load.'},
+    {name:'Body work — Dry needling',meta:'Trigger point release',defaultNote:'Dry needling with a physio or myotherapist. Let them know which areas have been under load this week.'},
+    {name:'Low intensity walk',meta:'Easy pace, flat ground',defaultNote:'Keep it easy — this is recovery, not cardio. Aim for a conversational pace. No hills.'},
+    {name:'Step target',meta:'Editable by Wade',defaultNote:'Hit your step target for the day. Keep the pace easy — this is active recovery, not training.'},
+    {name:'Sauna',meta:'Heat therapy',defaultNote:'15–20 minutes at moderate heat. Hydrate well before and after. Great for recovery and sleep quality.'},
+    {name:'Spa / hot pool',meta:'Hydrotherapy',defaultNote:'Warm water immersion — great for joint recovery. 15–20 minutes. Hydrate well.'},
+    {name:'Magnesium pool / float',meta:'Float therapy',defaultNote:'Magnesium float pools are excellent for recovery — the high magnesium content absorbs through the skin. Aim 45–60 min if available.'},
+    {name:'Cold water immersion',meta:'Ice bath or cold pool',defaultNote:'2–5 minutes in cold water (10–15°C). Excellent for reducing inflammation after heavy training days.'},
+    {name:'Stretching / mobility session',meta:'20–30 min',defaultNote:'Full body stretch focused on areas trained this week. Slow and controlled — hold each stretch 30–60 seconds.'},
+    {name:'Foam rolling',meta:'Full body or targeted',defaultNote:'10–15 minutes. Focus on quads, glutes, lats and thoracic spine. Roll slowly and pause on tight spots.'},
+    {name:'Yoga or pilates',meta:'Recovery class',defaultNote:'Choose a gentle or restorative class — not hot yoga or high intensity. Focus on movement quality.'},
+  ],
   'Warm-up / mobility': [
     {name:'Hip flexor stretch',meta:'2 min each',defaultNote:'Keep movements controlled — gradually increase range. Don't force a cold muscle.'},
     {name:'Thoracic rotation',meta:'10 each side',defaultNote:'Controlled rotation — don't bounce at end range.'},
@@ -816,8 +835,8 @@ function updateWeekType(type) {
 function renderDays() {
   const dt = document.getElementById('dayTabs');
   dt.innerHTML = days.map(d=>`
-    <button class="day-tab${d.id===currentDay?' active':''}${d.rest?' rest-day':''}" onclick="switchDay(${d.id})">
-      ${d.name}${d.rest?' (Rest)':''}
+    <button class="day-tab${d.id===currentDay?' active':''}${d.rest?' rest-day':''}${d.activeRest?' active-rest-day':''}" onclick="switchDay(${d.id})">
+      ${d.name}${d.rest?' (Rest)':d.activeRest?' (Active)':''}
     </button>`).join('') +
     `<button class="day-tab-add" onclick="addDay()">+ Day</button>`;
 }
@@ -842,7 +861,32 @@ function addDay() {
 function toggleRestDay(on) {
   const d = days.find(x=>x.id===currentDay);
   if(d) d.rest = on;
+  if(on) {
+    document.getElementById('activeRestToggle').checked = false;
+    if(d) d.activeRest = false;
+  }
   document.getElementById('sessionCanvas').style.opacity = on ? '0.4' : '1';
+  renderDays();
+}
+
+function toggleActiveRest(on) {
+  const d = days.find(x=>x.id===currentDay);
+  if(d) d.activeRest = on;
+  if(on) {
+    document.getElementById('restDayToggle').checked = false;
+    if(d) d.rest = false;
+    document.getElementById('sessionCanvas').style.opacity = '1';
+    // Suggest active recovery exercises
+    showToast('Active rest day — add recovery activities from the library →');
+    switchRpTab('exercises', null);
+    document.querySelectorAll('.rp-tab').forEach(t => t.classList.toggle('active', t.textContent === 'Exercises'));
+    document.querySelectorAll('.rp-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('rp-exercises').classList.add('active');
+    document.getElementById('exSearch').value = 'active recovery';
+    filterExercises('active recovery');
+  } else {
+    filterExercises('');
+  }
   renderDays();
 }
 
@@ -1044,6 +1088,11 @@ function renderExercises(filter='') {
     const filtered = exs.filter(e=>e.name.toLowerCase().includes(q)||cat.toLowerCase().includes(q));
     if(!filtered.length) return;
     html+=`<div class="ex-category"><div class="ex-category-title">${cat}</div>`;
+    if(cat === 'Active recovery' && !q) {
+      html+=`<div style="background:#e6f4ed;border:1px solid rgba(44,122,75,0.2);border-radius:5px;padding:8px 10px;margin-bottom:8px;font-size:11px;color:#2c7a4b;line-height:1.6">
+        <strong>Active rest day:</strong> Choose 1–2 activities. The goal is blood flow and recovery — not training. Keep everything low intensity.
+      </div>`;
+    }
     if(cat === 'Warm-up / mobility' && !q) {
       html+=`<div style="background:#fef3d8;border:1px solid rgba(122,80,16,0.2);border-radius:5px;padding:8px 10px;margin-bottom:8px;font-size:11px;color:#7a5010;line-height:1.6">
         <strong>Warm-up note:</strong> Spend 5–10 minutes total. Keep movements controlled, not bouncy. Gradually increase range of motion — don't force a cold muscle into a deep stretch right away.

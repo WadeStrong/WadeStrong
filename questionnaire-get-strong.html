@@ -632,25 +632,46 @@ async function submitForm() {
   window.scrollTo({top:0, behavior:'smooth'});
 
   // Gather all form data
-  const firstName = document.getElementById('firstName')?.value || document.getElementById('first_name')?.value || '';
-  const lastName = document.getElementById('lastName')?.value || document.getElementById('last_name')?.value || '';
-  const email = document.getElementById('email')?.value || '';
-  const location = document.getElementById('location')?.value || '';
+  const firstName = document.getElementById('firstName')?.value?.trim() || '';
+  const lastName = document.getElementById('lastName')?.value?.trim() || '';
+  const email = document.getElementById('email')?.value?.trim() || '';
+  const location = document.getElementById('location')?.value?.trim() || '';
+  const age = document.getElementById('age')?.value || '';
+  const height = document.getElementById('height')?.value?.trim() || '';
+  const weight = document.getElementById('weight')?.value?.trim() || '';
+  const occupation = document.getElementById('occupation')?.value?.trim() || '';
   const gymType = document.querySelector('input[name="gymType"]:checked')?.value || '';
-  const trainingDays = document.querySelector('input[name="trainingDays"]:checked')?.value || document.getElementById('trainingDays')?.value || '';
+  const trainingDays = document.querySelector('input[name="trainingDays"]:checked')?.value || '';
+  const sessionLength = document.querySelector('input[name="sessionLength"]:checked')?.value || '';
+  const equipment = [...document.querySelectorAll('input[name="equipment"]:checked')].map(el => el.value);
   const goals = [...document.querySelectorAll('input[name="goals"]:checked')].map(el => el.value);
-  const injuries = document.getElementById('injuries')?.value || '';
-  const anythingElse = document.querySelector('textarea[placeholder*="success"]')?.value || '';
+  const injuries = document.getElementById('injuries')?.value?.trim() || '';
+  const trainingAge = document.querySelector('input[name="trainingAge"]:checked')?.value || document.getElementById('training_age')?.value || '';
+  const currentLifts = {
+    deadlift: document.getElementById('deadlift')?.value || null,
+    squat: document.getElementById('squat')?.value || null,
+    bench: document.getElementById('bench')?.value || null,
+    ohp: document.getElementById('ohp')?.value || null,
+  };
+  const anythingElse = document.querySelector('textarea[placeholder*="success"]')?.value?.trim() || '';
 
-  const formData = { firstName, lastName, email, location, gymType, trainingDays, goals, injuries, anythingElse };
+  const formData = { 
+    firstName, lastName, email, location, age, height, weight, occupation,
+    gymType, trainingDays, sessionLength, equipment, goals, injuries, 
+    trainingAge, currentLifts, anythingElse 
+  };
 
   // Save to Supabase
   try {
     if (typeof db !== 'undefined') {
-      // Upsert client
+      // Upsert client with all profile fields
       await db.upsert('clients', {
         email, first_name: firstName, last_name: lastName,
-        program_type: 'get_strong', status: 'new', location: location || null
+        program_type: 'get_strong', status: 'new',
+        location: location || null,
+        age: age ? parseInt(age) : null,
+        height: height || null,
+        weight: weight || null,
       });
       // Get client ID and save questionnaire
       const clients = await db.select('clients', { email });
@@ -659,9 +680,12 @@ async function submitForm() {
         await db.insert('questionnaire_responses', {
           client_id: clientId, email,
           program_type: 'get_strong',
-          training_age: document.getElementById('training_age')?.value || '',
+          training_age: trainingAge,
           goals: goals,
           injuries: injuries,
+          gym_setup: gymType,
+          days_per_week: trainingDays ? parseInt(trainingDays) : null,
+          session_length: sessionLength,
           raw_data: formData
         });
       }

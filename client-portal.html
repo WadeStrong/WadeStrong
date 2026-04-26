@@ -547,79 +547,151 @@ body{font-family:var(--font-b);background:var(--chalk);color:var(--iron);display
   </div>
 
   <!-- ══ COMP DAY PANEL ══ -->
-  <div class="panel" id="panel-comp">
-    <div class="panel-title">Comp Day</div>
+  <div class="panid="panel-comp">
 
-    <!-- Competition details -->
-    <div class="comp-header">
-      <div class="comp-bg">COMP</div>
-      <div class="comp-label">Competition</div>
-      <div class="comp-name">Strongman Corporation<br>Arnold's Pro/Am</div>
-      <div class="comp-meta">
-        <div class="comp-meta-item"><div class="comp-meta-label">Date</div><div class="comp-meta-val">15 June 2025</div></div>
-        <div class="comp-meta-item"><div class="comp-meta-label">Location</div><div class="comp-meta-val">Ohio, USA</div></div>
-        <div class="comp-meta-item"><div class="comp-meta-label">Weight class</div><div class="comp-meta-val">Under 90kg</div></div>
-        <div class="comp-meta-item"><div class="comp-meta-label">Federation</div><div class="comp-meta-val">Strongman Corp</div></div>
+    <!-- ─ RACE DAY (Hyrox) view ─ -->
+    <div id="view-race" style="display:none">
+      <div class="panel-title">Race Day</div>
+
+      <!-- Race header -->
+      <div class="comp-header">
+        <div class="comp-bg">RACE</div>
+        <div class="comp-label">Your Race</div>
+        <div class="comp-name" id="race-name">—</div>
+        <div class="comp-meta">
+          <div class="comp-meta-item"><div class="comp-meta-label">Date</div><div class="comp-meta-val" id="race-date">—</div></div>
+          <div class="comp-meta-item"><div class="comp-meta-label">Location</div><div class="comp-meta-val" id="race-location">—</div></div>
+          <div class="comp-meta-item"><div class="comp-meta-label">Division</div><div class="comp-meta-val" id="race-division">—</div></div>
+          <div class="comp-meta-item"><div class="comp-meta-label">Target time</div><div class="comp-meta-val" id="race-target">—</div></div>
+        </div>
+      </div>
+
+      <!-- Gear checklist -->
+      <div class="card">
+        <div class="card-title">Race day gear checklist</div>
+        <div id="raceGearChecklist"></div>
+      </div>
+
+      <!-- Fuelling -->
+      <div class="card">
+        <div class="card-title">Fuelling plan</div>
+        <div class="rule-card rule-card-green">
+          <div class="rule-title">🍌 Race morning (3–4 hrs before)</div>
+          <div class="rule-text">High-carb, low-fibre, low-fat breakfast. Oats, banana, white toast + jam. No new foods on race day. Coffee if that's your normal — not if it isn't.</div>
+        </div>
+        <div class="rule-card rule-card-blue">
+          <div class="rule-title">💧 Hydration</div>
+          <div class="rule-text">500ml water on waking. Sip consistently until 30 min before race start. Electrolytes during warm-up. No chugging — you don't want a full stomach on the sled push.</div>
+        </div>
+        <div class="rule-card rule-card-rust">
+          <div class="rule-title">⚡ During the race</div>
+          <div class="rule-text">For most athletes under 90 min — water only is fine. If you're targeting 90+ min, a gel at station 4 (Rowing) can help. Practice this in your RoxSim first, never try it for the first time on race day.</div>
+        </div>
+      </div>
+
+      <!-- Warm up -->
+      <div class="card">
+        <div class="card-title">Warm up plan</div>
+        <div class="rule-card rule-card-rust">
+          <div class="rule-title">⏱ 30–40 min before wave start</div>
+          <div class="rule-text">Easy 5 min jog → dynamic stretching 5 min → 200m Ski Erg easy → 10 air squats + 5 burpees → done. Keep it minimal. You are not warming up for a strength session — save the legs.</div>
+        </div>
+      </div>
+
+      <!-- Race rules -->
+      <div class="card">
+        <div class="card-title">Rules & counting</div>
+        <div class="rule-card rule-card-blue">
+          <div class="rule-title">📊 Lap counting</div>
+          <div class="rule-text">Most venues use a lap counter lanyard or chip system — confirm at registration. For Wall Balls, a judge counts your reps. If you lose count, ask your judge — they are required to help. Do not guess.</div>
+        </div>
+        <div class="rule-card rule-card-rust">
+          <div class="rule-title">🏃 The running course</div>
+          <div class="rule-text">Each 1km loop is clearly marked. Stay left, pass right. Do not stop at the station entrance until you cross the timing mat — your run time keeps ticking until then.</div>
+        </div>
+        <div class="rule-card rule-card-green">
+          <div class="rule-title">❌ No-reps & penalties</div>
+          <div class="rule-text">Each missed rep = 15 sec time penalty. Wall Balls height, Burpee broad jump distance and Lunge knee-to-floor are the most commonly penalised. When in doubt, go a little deeper.</div>
+        </div>
+      </div>
+
+      <!-- ─ STRATEGY SECTION ─ -->
+      <div style="margin-top:8px">
+        <div class="panel-title" style="font-size:18px;margin-bottom:4px">Race Strategy</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">One strategy focus per week. Read it before your RoxSim and practice it deliberately. Small refinements = big time gains.</p>
+
+        <!-- This week's pick -->
+        <div id="strategyThisWeek" style="margin-bottom:20px"></div>
+
+        <!-- All strategy cards -->
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px">All strategy topics</div>
+        <div id="strategyAllCards"></div>
       </div>
     </div>
 
-    <!-- Weight cut -->
-    <div class="card">
-      <div class="card-title">Weight Cut Plan</div>
-      <p style="font-size:14px;color:var(--muted);line-height:1.7">Current: <strong style="color:var(--iron)">91.5kg</strong> · Target: <strong style="color:var(--iron)">89.9kg</strong><br>Water cut only in final 24hrs. No food restriction. Rehydrate immediately after weigh-in with electrolytes + carbs.</p>
-    </div>
+    <!-- ─ COMP DAY (Pre-Comp / Strongman) view ─ -->
+    <div id="view-comp" style="display:none">
+      <div class="panel-title">Comp Day</div>
 
-    <!-- Warm up -->
-    <div class="card">
-      <div class="card-title">Warm Up Plan</div>
-      <p style="font-size:14px;color:var(--muted);line-height:1.7">Arrive 90 min before first event. General movement 10 min → event-specific warm ups 20 min → final heavy single 15 min before start. Keep it minimal — save energy for the platform.</p>
-    </div>
-
-    <!-- Events -->
-    <div class="card">
-      <div class="card-title">Events & Attempt Selection</div>
-      <div id="eventsList"></div>
-    </div>
-
-    <!-- Competition rules -->
-    <div class="card">
-      <div class="card-title">Competition Rules & Tactics</div>
-      <div class="rule-card rule-card-rust">
-        <div class="rule-title">🎯 Order of competition</div>
-        <div class="rule-text">Athletes compete in <strong>reverse placing order</strong> — last place goes first, leader goes last. If you're leading after an event, you compete last in the next one and can watch everyone lift first. Use it.</div>
+      <!-- Competition details -->
+      <div class="comp-header">
+        <div class="comp-bg">COMP</div>
+        <div class="comp-label">Competition</div>
+        <div class="comp-name">Strongman Corporation<br>Arnold's Pro/Am</div>
+        <div class="comp-meta">
+          <div class="comp-meta-item"><div class="comp-meta-label">Date</div><div class="comp-meta-val">15 June 2025</div></div>
+          <div class="comp-meta-item"><div class="comp-meta-label">Location</div><div class="comp-meta-val">Ohio, USA</div></div>
+          <div class="comp-meta-item"><div class="comp-meta-label">Weight class</div><div class="comp-meta-val">Under 90kg</div></div>
+          <div class="comp-meta-item"><div class="comp-meta-label">Federation</div><div class="comp-meta-val">Strongman Corp</div></div>
+        </div>
       </div>
-      <div class="rule-card rule-card-blue">
-        <div class="rule-title">📊 Attempt selection</div>
-        <div class="rule-text"><ul><li>Declare your next attempt immediately after each lift</li><li>Openers must be 95%+ certainty — a missed opener costs points AND confidence</li><li>Wade may adjust your thirds based on what others lift</li></ul></div>
+
+      <!-- Weight cut -->
+      <div class="card">
+        <div class="card-title">Weight Cut Plan</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.7">Current: <strong style="color:var(--iron)">91.5kg</strong> · Target: <strong style="color:var(--iron)">89.9kg</strong><br>Water cut only in final 24hrs. No food restriction. Rehydrate immediately after weigh-in with electrolytes + carbs.</p>
       </div>
-      <div class="rule-card rule-card-green">
-        <div class="rule-title">🏅 Points & placing</div>
-        <div class="rule-text">Consistency beats heroics. A 2nd, 2nd, 2nd beats a 1st, 1st, bomb-out. Wade programs all events — not just your strongest.</div>
+
+      <!-- Warm up -->
+      <div class="card">
+        <div class="card-title">Warm Up Plan</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.7">Arrive 90 min before first event. General movement 10 min → event-specific warm ups 20 min → final heavy single 15 min before start. Keep it minimal — save energy for the platform.</p>
       </div>
-      <div class="rule-card rule-card-rust" style="margin-top:8px">
-        <div class="rule-title">💬 Wade's tactical notes</div>
-        <div class="rule-text">You're a contender in this field. If you podium event 1 you go last in event 2 — use it. Watch the top 3 and know your number before you touch the bar. Your strongest events are late in the day. Stay patient early.</div>
+
+      <!-- Events -->
+      <div class="card">
+        <div class="card-title">Events & Attempt Selection</div>
+        <div id="eventsList"></div>
+      </div>
+
+      <!-- Competition strategy -->
+      <div class="card">
+        <div class="card-title">Competition Tactics</div>
+        <div class="rule-card rule-card-rust">
+          <div class="rule-title">🎯 Order of competition</div>
+          <div class="rule-text">Athletes compete in <strong>reverse placing order</strong> — last place goes first, leader goes last. If you're leading after an event, you compete last in the next one and can watch everyone lift first. Use it.</div>
+        </div>
+        <div class="rule-card rule-card-blue">
+          <div class="rule-title">📊 Attempt selection</div>
+          <div class="rule-text"><ul><li>Declare your next attempt immediately after each lift</li><li>Openers must be 95%+ certainty — a missed opener costs points AND confidence</li><li>Wade may adjust your thirds based on what others lift</li></ul></div>
+        </div>
+        <div class="rule-card rule-card-green">
+          <div class="rule-title">🏅 Points & placing</div>
+          <div class="rule-text">Consistency beats heroics. A 2nd, 2nd, 2nd beats a 1st, 1st, bomb-out. Wade programs all events — not just your strongest.</div>
+        </div>
+      </div>
+
+      <!-- ─ COMP STRATEGY SECTION ─ -->
+      <div style="margin-top:8px">
+        <div class="panel-title" style="font-size:18px;margin-bottom:4px">Comp Strategy</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">One strategy focus per week. Wade assigns the topic — read it, then apply it deliberately in training.</p>
+        <div id="compStrategyThisWeek" style="margin-bottom:20px"></div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px">All topics</div>
+        <div id="compStrategyAllCards"></div>
       </div>
     </div>
 
-    <!-- Wade's notes -->
-    <div class="card">
-      <div class="card-title">Wade's Notes</div>
-      <div style="background:var(--chalk);border-radius:6px;padding:14px;border-left:3px solid var(--rust);font-size:14px;color:var(--muted);line-height:1.8">You've put in the work. Trust the training. Stay in your own lane — don't watch what anyone else is lifting. Your openers are conservative on purpose, we want three whites. Attack your thirds. — <strong style="color:var(--iron)">Wade</strong></div>
-    </div>
-
-    <!-- Athlete notes -->
-    <div class="card">
-      <div class="card-title">Your Questions & Notes</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Questions go straight to Wade in messages — he'll reply and update the plan if needed.</div>
-      <div id="compNotesList"></div>
-      <textarea class="form-textarea" id="compNoteInput" placeholder="e.g. Should I go heavier on my log opener? Nervous about the atlas stones..."></textarea>
-      <button class="btn-iron" onclick="sendCompNote()" style="margin-top:8px">Send to Wade →</button>
-    </div>
-  </div>
-
-  <!-- ══ MESSAGES PANEL ══ -->
-  <div class="panel" id="panel-messages">
+  el" id="panel-messages">
     <div class="panel-title">Messages</div>
     <div class="msg-thread" id="msgThread"></div>
   </div>
@@ -639,13 +711,250 @@ body{font-family:var(--font-b);background:var(--chalk);color:var(--iron);display
   <button class="bnav-item" onclick="switchTab('progress',this)"><div class="bnav-icon">📈</div>Progress</button>
   <button class="bnav-item" onclick="switchTab('profile',this)"><div class="bnav-icon">👤</div>Profile</button>
   <button class="bnav-item" onclick="switchTab('recovery',this)"><div class="bnav-icon">🔄</div>Recovery</button>
-  <button class="bnav-item" onclick="switchTab('comp',this)"><div class="bnav-icon">🏆</div>Comp</button>
+  <button class="bnav-item" onclick="switchTab('comp',this)" id="bnav-comp" style="display:none"><div class="bnav-icon" id="bnav-comp-icon">🏆</div><span id="bnav-comp-label">Comp</span></button>
   <button class="bnav-item" onclick="switchTab('messages',this)"><div class="bnav-icon">💬</div>Messages</button>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
+// ── STRATEGY DATA ─────────────────────────────────────────────
+
+const HYROX_STRATEGIES = [
+  {
+    id: 'ski_erg_technique',
+    icon: '⛷️',
+    week: 1,
+    title: 'Ski Erg — max output technique',
+    sub: 'Drive from the whole body, not just the arms',
+    content: `<p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:12px">The Ski Erg feels like an arm exercise — it isn't. The athletes who are fast on it use a full-body hip hinge to generate power, not just a shoulder pull.</p>
+    <div class="rule-card rule-card-rust"><div class="rule-title">The movement</div><div class="rule-text">Stand tall → reach overhead → hinge at the hips, drive your arms down and through, finishing with hands near your hips and a slight knee bend. Think of it as a standing crunch with a pull.</div></div>
+    <div class="rule-card rule-card-blue"><div class="rule-title">Damper setting</div><div class="rule-text">Most athletes do best between 4–6. Higher isn't better — it just slows your stroke rate. Test what lets you hold a fast, consistent rhythm.</div></div>
+    <div class="rule-card rule-card-green"><div class="rule-title">Practice this week</div><div class="rule-text">In your RoxSim, do 3 × 10 strokes focusing only on the hip hinge. Feel the lat engagement. Then settle into race pace and hold it.</div></div>`
+  },
+  {
+    id: 'sled_push_pacing',
+    icon: '🛷',
+    week: 2,
+    title: 'Sled Push — don't blow your legs',
+    sub: 'The biggest rookie mistake in Hyrox',
+    content: `<p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:12px">The Sled Push is Station 2 — your legs are still fresh and it's tempting to go hard. Resist it. Athletes who sprint the sled are cooked by the Burpee Broad Jump and never recover.</p>
+    <div class="rule-card rule-card-rust"><div class="rule-title">The form</div><div class="rule-text">Low body position, hands on the handles with arms straight, drive through the heel. Shorter, faster steps beat long strides. Keep hips low — if your hips rise, you've lost power.</div></div>
+    <div class="rule-card rule-card-blue"><div class="rule-title">The pacing rule</div><div class="rule-text">You should finish the sled push feeling like you could do it again. If you're gasping, you went too hard. Aim for 85% effort — controlled and powerful, not frantic.</div></div>
+    <div class="rule-card rule-card-green"><div class="rule-title">Practice this week</div><div class="rule-text">After your RoxSim sled push, immediately run 400m. Notice how your legs feel. If they're dead, back off the sled intensity next session.</div></div>`
+  },
+  {
+    id: 'burpee_broad_jump',
+    icon: '🦘',
+    week: 3,
+    title: 'Burpee Broad Jump — keep moving',
+    sub: 'The mental station — pacing over speed',
+    content: `<p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:12px">80m of burpee broad jumps sounds brutal. It is. The key is to set a pace you can hold from rep 1 to the end — not to sprint and stop.</p>
+    <div class="rule-card rule-card-rust"><div class="rule-title">Technique</div><div class="rule-text">Jump as far forward as possible with each rep — horizontal distance is the goal. Land softly, hands down, kick feet back, chest touches the floor, jump up and forward. No resting with hands on knees.</div></div>
+    <div class="rule-card rule-card-blue"><div class="rule-title">Mental strategy</div><div class="rule-text">Break the 80m into four 20m sections in your head. Set a pace you can hold all the way through. Slowing down in the last 20m is fine — stopping is where you lose time.</div></div>
+    <div class="rule-card rule-card-green"><div class="rule-title">Practice this week</div><div class="rule-text">Do 40m of burpee broad jumps immediately after a hard run. Practice jumping as far as possible each rep — distance efficiency means fewer total reps.</div></div>`
+  },
+  {
+    id: 'rowing_splits',
+    icon: '🚣',
+    week: 4,
+    title: 'Rowing — pacing your 1000m',
+    sub: 'Negative splits win the erg',
+    content: `<p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:12px">You've run 4km and done 3 stations before you hit the rower. The temptation is to smash it — don't. A controlled start lets you build into it and finish strong.</p>
+    <div class="rule-card rule-card-rust"><div class="rule-title">Target split</div><div class="rule-text">Know your goal split before race day. Practice at that exact pace in every RoxSim. The screen should show your /500m split — lock onto it and don't deviate in the first 200m.</div></div>
+    <div class="rule-card rule-card-blue"><div class="rule-title">The technique reminder</div><div class="rule-text">Legs → lean back → arms. Recover in reverse: arms away → lean forward → legs. Under fatigue, athletes collapse to all-arms rowing. Focus: drive through the legs first.</div></div>
+    <div class="rule-card rule-card-green"><div class="rule-title">Practice this week</div><div class="rule-text">Row 1000m at exactly your target race split. Not faster. Consistency is the skill — anyone can sprint 250m.</div></div>`
+  },
+  {
+    id: 'farmers_carry_grip',
+    icon: '💼',
+    week: 5,
+    title: 'Farmers Carry — grip & turns',
+    sub: 'Where grip fails, races fall apart',
+    content: `<p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:12px">200m with heavy kettlebells sounds manageable. After 5km of running it's a different story. Grip endurance is the primary limiter for most athletes.</p>
+    <div class="rule-card rule-card-rust"><div class="rule-title">Grip strategy</div><div class="rule-text">If you set down, set down deliberately — don't drop them. Shake out for 5 seconds, re-grip, go. Setting down once and recovering beats grinding to a halt with failing grip. Aim to minimise total set-downs.</div></div>
+    <div class="rule-card rule-card-blue"><div class="rule-title">The turns</div><div class="rule-text">At each 100m turn, you stop momentarily. Use this to re-grip, adjust posture, take one deep breath. Don't rush the turn — it costs you 3 seconds but saves 10 on the next leg.</div></div>
+    <div class="rule-card rule-card-green"><div class="rule-title">Practice this week</div><div class="rule-text">Do 200m at race weight in your RoxSim. Count how many times you set down. Target: one fewer set-down each week until you're unbroken.</div></div>`
+  },
+  {
+    id: 'wall_balls_sets',
+    icon: '🏀',
+    week: 6,
+    title: 'Wall Balls — 100 reps at the end',
+    sub: 'The make-or-break final station',
+    content: `<p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:12px">Wall Balls closes the race. You're 8km into running, you've done 6 stations, and now you need 100 reps. Most athletes blow up here because they go too fast early.</p>
+    <div class="rule-card rule-card-rust"><div class="rule-title">The set strategy</div><div class="rule-text">A proven approach: 25-20-15-10-10-10-10. Start with a comfortable first set, then manage the rest. If you can do 50 unbroken, great — but breaking early and maintaining rhythm beats going unbroken and hitting a wall at rep 60.</div></div>
+    <div class="rule-card rule-card-blue"><div class="rule-title">Target height</div><div class="rule-text">Men: 3.05m. Women: 2.75m. Practice to this exact height — not close to it. A no-rep here costs 15 seconds. Throw it to the top of the target, not just above it.</div></div>
+    <div class="rule-card rule-card-green"><div class="rule-title">Practice this week</div><div class="rule-text">After a hard run, do 100 wall balls. Don't stop the clock when you rest — your total time is your race time. Build the mental toughness to keep moving even when your legs are shot.</div></div>`
+  },
+  {
+    id: 'activewear_shoes',
+    icon: '👟',
+    week: 1,
+    title: 'Activewear & shoe choices',
+    sub: 'What to wear and why it matters',
+    content: `<p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:12px">Hyrox is a hybrid event — you need footwear that handles running efficiently AND the functional stations. This is not the day for your maximum cushion marathon shoe.</p>
+    <div class="rule-card rule-card-rust"><div class="rule-title">Best shoe choice</div><div class="rule-text">A versatile training shoe with moderate cushion and a grippy outsole. Nike Metcon, Reebok Nano, or NOBULL Trainer are popular. HYROX has an official shoe partnership with PUMA — the Deviate Nitro is purpose-built for the event. Avoid pure running shoes — they're slippery on the sled and unstable for carries.</div></div>
+    <div class="rule-card rule-card-blue"><div class="rule-title">Clothing</div><div class="rule-text">Tight-fitting shorts or compression shorts for the sled push — loose shorts catch on the handles. A breathable top. Gloves are allowed and can help with farmers carry grip. No headphones during the race at most venues — check your event rules.</div></div>
+    <div class="rule-card rule-card-green"><div class="rule-title">Race day tip</div><div class="rule-text">Wear exactly what you've trained in. Race day is not the day to break in new shoes or try a new top. Comfort and familiarity matter more than looking good.</div></div>`
+  },
+  {
+    id: 'fuelling_sims',
+    icon: '🍌',
+    week: 2,
+    title: 'Fuelling for RoxSims & race day',
+    sub: 'What to eat and when',
+    content: `<p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:12px">A RoxSim is 60–90 minutes of high-intensity work. What you eat beforehand directly affects your performance. Use your sim sessions to test your race day nutrition plan.</p>
+    <div class="rule-card rule-card-rust"><div class="rule-title">Before a RoxSim (2–3 hrs)</div><div class="rule-text">A solid carb-based meal: oats, rice, pasta, or bread with a protein source. Give it 2–3 hours to settle. Avoid anything high in fat or fibre — you don't want digestive issues mid-burpee.</div></div>
+    <div class="rule-card rule-card-blue"><div class="rule-title">Pre-session snack (30–60 min)</div><div class="rule-text">Banana, white rice cake, or a small amount of honey. Fast-digesting carbs only. Stay away from protein bars and heavy food.</div></div>
+    <div class="rule-card rule-card-green"><div class="rule-title">During the RoxSim</div><div class="rule-text">Water only for most athletes. If your sim goes over 75 minutes, try a gel at the midpoint (after the Rowing station). Never try a gel in the race that you haven't tested in training.</div></div>`
+  },
+  {
+    id: 'partner_transitions',
+    icon: '🤝',
+    week: 3,
+    title: 'Partner transitions (Doubles)',
+    sub: 'How to hand off efficiently',
+    content: `<p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:12px">In Doubles, you run together but split the station reps however you choose. A good handoff strategy and pre-agreed split plan can save 2–3 minutes over the course of a race.</p>
+    <div class="rule-card rule-card-rust"><div class="rule-title">How to split the reps</div><div class="rule-text">Play to your strengths. If one partner is stronger on upper body, they take more Ski Erg reps. If one has better endurance, they take more Wall Balls late. Pre-agree the split for every station before the race — don't negotiate mid-station.</div></div>
+    <div class="rule-card rule-card-blue"><div class="rule-title">The physical handoff</div><div class="rule-text">For Farmers Carry and Sled Push, there is no mid-station handoff — one partner completes a full leg before swapping. For Wall Balls and Rowing, you can swap at any rep. Have a clear signal (tap on shoulder) so there's no confusion.</div></div>
+    <div class="rule-card rule-card-green"><div class="rule-title">Practice this week</div><div class="rule-text">Do a full RoxSim with your partner and practice the handoff at every station. Timing the transition cleanly is a skill — it takes practice to make it seamless on race day.</div></div>`
+  },
+  {
+    id: 'counting_laps',
+    icon: '🔢',
+    week: 4,
+    title: 'Keeping count — laps & reps',
+    sub: 'Don't let confusion cost you time',
+    content: `<p style="font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:12px">Mid-race, your brain is not functioning at full capacity. Have a system for counting before you start — not when you're 7km in.</p>
+    <div class="rule-card rule-card-rust"><div class="rule-title">Running laps</div><div class="rule-text">Most venues use a timing chip that tracks laps automatically — but confirm this at registration. If you're manually tracking, use your watch lap function at each station entrance. Your judge or lap counter will alert you to your final lap.</div></div>
+    <div class="rule-card rule-card-blue"><div class="rule-title">Station reps (Wall Balls)</div><div class="rule-text">Your judge counts for you and must correct you if you're wrong. If you lose count, look at your judge and ask — they will tell you. Do not guess. A 15 second penalty per missed rep adds up fast.</div></div>
+    <div class="rule-card rule-card-green"><div class="rule-title">Sled push legs</div><div class="rule-text">It's 4 × 12.5m. Count legs out loud: "one, two, three, four." Under fatigue athletes sometimes stop after 3. Your judge will stop you finishing if you short the distance — trust the process.</div></div>`
+  },
+];
+
+const COMP_STRATEGIES = [
+  {
+    id: 'attempt_selection',
+    icon: '🎯',
+    week: 1,
+    title: 'Attempt selection strategy',
+    sub: 'The opener is everything',
+    content: `<div class="rule-card rule-card-rust"><div class="rule-title">The opener rule</div><div class="rule-text">Your opener must be something you can lift on your worst day, after a bad warm-up, with cold hands. It's not a statement — it's the foundation. A missed opener costs points, confidence, and momentum.</div></div>
+    <div class="rule-card rule-card-blue"><div class="rule-title">Second attempts</div><div class="rule-text">Seconds are your working weight — what you're capable of on a good day. Wade will advise based on your training numbers. Don't chase what others are lifting.</div></div>
+    <div class="rule-card rule-card-green"><div class="rule-title">Third attempts</div><div class="rule-text">Thirds depend on the competitive situation. If you need to chase points, go for it. If the placing is secure, take a safe third that locks in the result. Wade may adjust this live based on what others lift.</div></div>`
+  },
+  {
+    id: 'event_order',
+    icon: '📋',
+    week: 2,
+    title: 'Understanding event order',
+    sub: 'Competing last has advantages',
+    content: `<div class="rule-card rule-card-rust"><div class="rule-title">Reverse order rule</div><div class="rule-text">Athletes compete in reverse placing order — last place goes first, current leader goes last. This means if you're winning, you get to watch every other competitor before you lift.</div></div>
+    <div class="rule-card rule-card-blue"><div class="rule-title">How to use it</div><div class="rule-text">If you're going last, know exactly what you need to lift before you approach the bar. Wade will calculate your required attempts based on what's already been lifted.</div></div>
+    <div class="rule-card rule-card-green"><div class="rule-title">Consistency beats heroics</div><div class="rule-text">A 2nd, 2nd, 2nd beats a 1st, 1st, bomb-out. The athlete who goes 9 for 9 on attempts almost always finishes ahead of the one swinging for records.</div></div>`
+  },
+  {
+    id: 'warm_up_plan',
+    icon: '🔥',
+    week: 3,
+    title: 'Competition warm-up strategy',
+    sub: 'Save energy for the platform',
+    content: `<div class="rule-card rule-card-rust"><div class="rule-title">Arrive early</div><div class="rule-text">Aim to arrive 90 minutes before your first event. Use the first 30 minutes to register, walk the venue, find the warm-up area, and get your head right.</div></div>
+    <div class="rule-card rule-card-blue"><div class="rule-title">Warm-up structure</div><div class="rule-text">General movement 10 min → event-specific warm-ups 20 min → final heavy single or heavy set 15 min before start. Keep it minimal. Your training has prepared you — the warm-up is activation, not extra training.</div></div>
+    <div class="rule-card rule-card-green"><div class="rule-title">The final lift</div><div class="rule-text">Your last warm-up set should feel heavy but fast. If it feels slow, lower the weight. You are priming the nervous system, not testing your max.</div></div>`
+  },
+  {
+    id: 'recovery_between_events',
+    icon: '🧊',
+    week: 4,
+    title: 'Recovery between events',
+    sub: 'What to do in the gaps',
+    content: `<div class="rule-card rule-card-rust"><div class="rule-title">Immediately after an event</div><div class="rule-text">Walk — don't sit down immediately. Keep blood moving. Get calories and fluids in within 15 minutes. Simple carbs + electrolytes first, protein within 30 minutes.</div></div>
+    <div class="rule-card rule-card-blue"><div class="rule-title">Between events</div><div class="rule-text">Stay warm, stay loose. Light movement between events keeps the nervous system primed. Avoid sitting in cold or air-conditioned areas — muscle temperature drops faster than you expect.</div></div>
+    <div class="rule-card rule-card-green"><div class="rule-title">Mental reset</div><div class="rule-text">After a good event — stay level. After a bad event — let it go. Each event is independent. The athlete who can reset mentally between events consistently outperforms their talent level.</div></div>`
+  },
+];
+
+function getWeekNumber() {
+  return (CLIENT && CLIENT.week) ? parseInt(CLIENT.week) : 1;
+}
+
+function renderStrategyPanel() {
+  const week = getWeekNumber();
+
+  // ─ Hyrox strategy ─
+  const thisWeekEl = document.getElementById('strategyThisWeek');
+  const allCardsEl = document.getElementById('strategyAllCards');
+  if (!thisWeekEl || !allCardsEl) return;
+
+  // Find this week's assigned strategy (cycle through by week)
+  const weekStrategy = HYROX_STRATEGIES[(week - 1) % HYROX_STRATEGIES.length];
+
+  thisWeekEl.innerHTML = `
+    <div style="background:var(--iron);border-radius:8px;padding:20px;margin-bottom:4px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:12px;right:14px;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--rust);text-transform:uppercase">Week ${week} Focus</div>
+      <div style="font-size:28px;margin-bottom:10px">${weekStrategy.icon}</div>
+      <div style="font-family:var(--font-d);font-size:22px;color:#fff;letter-spacing:1px;margin-bottom:6px">${weekStrategy.title}</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:16px">${weekStrategy.sub}</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.6);line-height:1.6">Read this before your RoxSim this week. Tap to open the full strategy below.</div>
+    </div>`;
+
+  // All strategy cards as expandable items
+  allCardsEl.innerHTML = HYROX_STRATEGIES.map((s, i) => `
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden">
+      <div onclick="toggleStrategy('hstrat-${i}')" style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer">
+        <div style="font-size:20px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--chalk);border-radius:6px;flex-shrink:0">${s.icon}</div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:700;margin-bottom:2px">${s.title}</div>
+          <div style="font-size:11px;color:var(--muted)">${s.sub}</div>
+        </div>
+        ${s === weekStrategy ? '<div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--rust);flex-shrink:0">This week</div>' : ''}
+        <div id="hstrat-${i}-arrow" style="color:var(--muted);font-size:18px;transition:transform 0.2s;flex-shrink:0">›</div>
+      </div>
+      <div id="hstrat-${i}" style="display:none;padding:0 16px 16px">${s.content}</div>
+    </div>`).join('');
+
+  // ─ Comp strategy ─
+  const compThisWeekEl = document.getElementById('compStrategyThisWeek');
+  const compAllCardsEl = document.getElementById('compStrategyAllCards');
+  if (!compThisWeekEl || !compAllCardsEl) return;
+
+  const compWeekStrategy = COMP_STRATEGIES[(week - 1) % COMP_STRATEGIES.length];
+
+  compThisWeekEl.innerHTML = `
+    <div style="background:var(--iron);border-radius:8px;padding:20px;margin-bottom:4px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:12px;right:14px;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--rust);text-transform:uppercase">Week ${week} Focus</div>
+      <div style="font-size:28px;margin-bottom:10px">${compWeekStrategy.icon}</div>
+      <div style="font-family:var(--font-d);font-size:22px;color:#fff;letter-spacing:1px;margin-bottom:6px">${compWeekStrategy.title}</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:16px">${compWeekStrategy.sub}</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.6);line-height:1.6">Apply this deliberately in training this week. Tap to read the full breakdown.</div>
+    </div>`;
+
+  compAllCardsEl.innerHTML = COMP_STRATEGIES.map((s, i) => `
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden">
+      <div onclick="toggleStrategy('cstrat-${i}')" style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer">
+        <div style="font-size:20px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--chalk);border-radius:6px;flex-shrink:0">${s.icon}</div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:700;margin-bottom:2px">${s.title}</div>
+          <div style="font-size:11px;color:var(--muted)">${s.sub}</div>
+        </div>
+        ${s === compWeekStrategy ? '<div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--rust);flex-shrink:0">This week</div>' : ''}
+        <div id="cstrat-${i}-arrow" style="color:var(--muted);font-size:18px;transition:transform 0.2s;flex-shrink:0">›</div>
+      </div>
+      <div id="cstrat-${i}" style="display:none;padding:0 16px 16px">${s.content}</div>
+    </div>`).join('');
+}
+
+function toggleStrategy(id) {
+  const el = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  if (!el) return;
+  const isOpen = el.style.display !== 'none';
+  el.style.display = isOpen ? 'none' : 'block';
+  if (arrow) arrow.style.transform = isOpen ? '' : 'rotate(90deg)';
+}
+
 // ── DATA ──────────────────────────────────────────────────────
 let CLIENT = { name:'Loading...', initials:'..', short:'...', program:'', week:1, totalWeeks:6 };
 let clientId = null;

@@ -1233,8 +1233,11 @@ function renderSessions(week) {
 }
 
 function renderBlock(b, sid) {
+  const isWarmup = (b.type === 'warmup') || (b.name || '').toLowerCase().includes('warm');
+  const coachingNote = b.coachingNote || (isWarmup ? 'Spend 5–10 minutes total. Keep movements controlled, not bouncy. Gradually increase range of motion — don\'t force a cold muscle into a deep stretch right away.' : '');
   return `
   <div style="margin-bottom:14px">
+    ${coachingNote ? `<div style="background:#fef3d8;border:1px solid rgba(122,80,16,0.15);border-radius:6px;padding:9px 12px;margin-bottom:8px;display:flex;gap:8px;align-items:flex-start"><div style="font-size:14px;flex-shrink:0">🌡️</div><div style="font-size:12px;color:#7a5010;line-height:1.6">${coachingNote}</div></div>` : ''}
     <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:8px">
       ${b.name} <span style="font-weight:400;color:rgba(107,101,96,0.6)">· Rest ${b.rest}s</span>
     </div>
